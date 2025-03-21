@@ -1,0 +1,6 @@
+.angular
+.vscode
+dist/
+build/
+node_module
+

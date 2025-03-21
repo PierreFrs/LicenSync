@@ -1,0 +1,59 @@
+# app-pf/docker-compose.yml
+
+services:
+  frontend:
+    extends:
+      file: ./frontend/docker-compose.yml
+      service: frontend
+
+  fix-permissions:
+    extends:
+      file: ./backend-microservices/backend/docker-compose.yml
+      service: fix-permissions
+
+  database:
+    extends:
+      file: ./backend-microservices/backend/docker-compose.yml
+      service: database
+
+  backend:
+    extends:
+      file: ./backend-microservices/backend/docker-compose.yml
+      service: backend
+
+  event-logger-service:
+    extends:
+      file: ./backend-microservices/event-logger/docker-compose.yml
+      service: event-logger-service
+
+  event-logger-db:
+    extends:
+      file: ./backend-microservices/event-logger/docker-compose.yml
+      service: event-logger-db
+
+  api-gateway:
+    extends:
+      file: ./api-gateway/docker-compose.yml
+      service: api-gateway
+
+  prometheus:
+    extends:
+      file: ./observability/docker-compose.yml
+      service: prometheus
+
+  grafana:
+    extends:
+      file: ./observability/docker-compose.yml
+      service: grafana
+
+volumes:
+    mssql_data:
+    file_data:
+    storage_node_modules:
+    prometheus_data:
+    grafana_data:
+    mongodb_data:
+
+networks:
+    licensync_network:
+        driver: bridge

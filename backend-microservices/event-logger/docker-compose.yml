@@ -1,0 +1,36 @@
+# backend-microservices/event-logger/docker-compose.yml
+
+services:
+  event-logger-service:
+    build: event-logger
+    container_name: event-logger-service
+    ports:
+      - "3001:3001"
+    env_file:
+      - ../../.env
+    environment:
+      - PORT=${EVENT_LOGGER_SERVICE_PORT}
+      - MONGODB_URI=${MONGODB_URI}
+    depends_on:
+      - event-logger-db
+    networks:
+      - licensync_network
+
+  event-logger-db:
+    image: mongo:latest
+    container_name: event-logger-db
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - licensync_network
+
+volumes:
+  mongodb_data:
+
+networks:
+  licensync_network:
+    driver: bridge
+
+

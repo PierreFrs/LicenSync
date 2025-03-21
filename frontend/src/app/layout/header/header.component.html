@@ -1,0 +1,19 @@
+<header class="flex items-center xl:justify-between h-8 xl:h-12 p-1 xl:p-2 bg-secondary-bg sticky top-0 z-50">
+  <button routerLink="/" class="h-full flex items-center xl:ml-4">
+    <img src="../../../assets/images/logos/licensync-blue.png" class="h-full" alt="licensync blue logo">
+    <img src="../../../assets/images/logos/licensync-title-grey.png" class="h-full" alt="licensync grey title">
+  </button>
+  <div class="h-full flex gap-8 mr-4 items-center">
+    @if (isUserPage) {
+      <app-upload-link
+        [userId]="userId"
+        class="hidden xl:block"
+      ></app-upload-link>
+    }
+    @if (accountService.currentUser()) {
+      <app-user-menu class="hidden xl:block"></app-user-menu>
+    }
+  </div>
+</header>
+@if (busyService.loading) {
+<mat-progress-bar mode="indeterminate" class="z-50 mt-12 h-60"></mat-progress-bar> }

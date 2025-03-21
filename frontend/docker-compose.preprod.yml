@@ -1,0 +1,21 @@
+# frontend/docker-compose.preprod.yml
+services:
+
+### Application ###
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/prod/Dockerfile
+    ports:
+      - "3032:80"
+    restart: always
+    networks:
+      - licensync_network
+    pull_policy: build
+
+### Networks ###
+
+networks:
+  licensync_network:
+    driver: bridge

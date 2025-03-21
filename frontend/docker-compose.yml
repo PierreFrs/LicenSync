@@ -1,0 +1,31 @@
+services:
+
+### Application ###
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    ports:
+      - "4200:4200"
+    volumes:
+      - .:/app:cached
+      - storage_node_modules:/app/node_modules
+    networks:
+      - licensync_network
+    develop:
+        watch:
+        - action: sync
+          path: .
+          target: development
+
+### Volumes ###
+
+volumes:
+  storage_node_modules:
+
+### Networks ###
+
+networks:
+  licensync_network:
+    driver: bridge

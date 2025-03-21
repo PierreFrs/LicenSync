@@ -1,0 +1,17 @@
+mat-grid-tile {
+  width: 100%;
+  height: 100%;
+    app-track-card {
+      width: 100%;
+      height: 100%;
+    }
+}
+
+::ng-deep .mat-mdc-paginator {
+  border-radius: 6px;
+  width: 440px;
+
+  .mat-mdc-paginator-page-size-label {
+    display: none;
+  }
+}

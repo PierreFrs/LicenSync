@@ -1,0 +1,20 @@
+services:
+
+### API Gateway ###
+    api-gateway:
+        build:
+            context: .
+            dockerfile: prod/Dockerfile
+        container_name: api-gateway
+        restart: unless-stopped
+        ports:
+        - "3036:80"
+        pull_policy: build
+        networks:
+        - licensync_network
+        depends_on:
+        - backend
+        - event-logger-service
+        - frontend
+        - prometheus
+        - grafana

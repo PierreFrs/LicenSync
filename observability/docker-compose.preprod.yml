@@ -1,0 +1,40 @@
+services:
+
+### Monitoring ###
+
+  prometheus:
+    build:
+        context: .
+        dockerfile: preprod/Dockerfile
+    container_name: prometheus
+    ports:
+      - "3033:9090"
+    volumes:
+      - prometheus_data:/prometheus
+    depends_on:
+      - backend
+    networks:
+      - licensync_network
+
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3034:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - licensync_network
+    depends_on:
+      - prometheus
+
+### Volumes ###
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  licensync_network:
+    driver: bridge

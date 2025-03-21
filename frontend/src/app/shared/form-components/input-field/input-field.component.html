@@ -1,0 +1,13 @@
+<mat-form-field appearance="outline" class="w-full">
+  <mat-label>{{ label }}</mat-label>
+  <input
+    matInput
+    [formControl]="control"
+    [placeholder]="placeholder"
+    [type]="type">
+  <mat-error *ngIf="control.invalid && control.touched">
+    <span *ngIf="control.errors?.['required']">{{ errorMessage }}</span>
+    <span *ngIf="control.errors?.['minlength']">Le {{label}} doit faire au minimum {{stringLength}} caractères.</span>
+  </mat-error>
+</mat-form-field>
+

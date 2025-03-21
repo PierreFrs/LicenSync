@@ -1,0 +1,33 @@
+<div class="flex flex-col gap-4 p-4">
+  <h2 class="dialog-title">Authentification du titre {{data.trackTitle}}</h2>
+  <div *ngIf="data"
+        class="flex flex-col gap-4"
+  >
+    <div>
+      <p class="font-bold">Hachage du titre détenu sur la base de données :</p>
+      <p class="break-words"
+         data-cy="database-hash"
+      >{{ data.databaseHash }}</p>
+    </div>
+    <div>
+      <p class="font-bold"
+
+      >Hachage récupéré sur Ethereum :</p>
+      <p class="break-words"
+         data-cy="blockchain-hash"
+      >{{ data.blockchainHash }}</p>
+    </div>
+
+  </div>
+  <p *ngIf="data.databaseHash === data.blockchainHash"
+     class="success-text"
+  >Authentification réussie !</p>
+  <p *ngIf="data.databaseHash !== data.blockchainHash"
+     class="warn-text"
+  >Echec de l'authentification...</p>
+  <button mat-button
+          (click)="dialogRef.close()"
+          color="accent"
+  >Fermer la fenêtre</button>
+</div>
+

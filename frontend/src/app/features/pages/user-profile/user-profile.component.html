@@ -1,0 +1,11 @@
+<div class="content-fit max-w-screen-2xl flex flex-col align-center" [ngClass]="padding$ | async">
+  <h1>Mon compte</h1>
+
+  <h2>Nom : {{accountService.currentUser()?.lastName}}</h2>
+  <h2>Prénom : {{accountService.currentUser()?.firstName}}</h2>
+  <h2>Email : {{accountService.currentUser()?.email}}</h2>
+  <h2>Téléphone : {{accountService.currentUser()?.userInfo?.phoneNumber}}</h2>
+  <h2>Nom d'utilisateur : {{accountService.currentUser()?.userInfo?.userName}}</h2>
+  <h2>Nombre de titres protégés : {{tracksArrayLength}}</h2>
+</div>
+

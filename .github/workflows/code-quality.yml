@@ -1,0 +1,68 @@
+name: Code Quality
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - main
+      - preprod
+
+jobs:
+  angular_checks:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./frontend
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18.17.1
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Audit for vulnerabilities
+        run: npm audit --audit-level=high
+
+      - name: Run ESLint
+        run: npx eslint 'src/**/*.ts' --quiet
+
+      - name: Verify Package Integrity
+        run: npm ci --prefer-offline --ignore-scripts
+
+      - name: Run Angular Tests
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+
+  aspnet_checks:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./backend-microservices/backend/API
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 8.x
+
+      - name: Verify NuGet Package Integrity
+        run: dotnet restore --locked-mode
+
+      - name: Run dotnet list package --vulnerable
+        run: |
+          OUTPUT=$(dotnet list package --vulnerable)
+          echo "$OUTPUT"
+          [[ "$OUTPUT" == *"has the following vulnerable"* ]] && exit 1 || exit 0
+
+      - name: Format Code
+        run: dotnet format
+
+      - name: Run .NET Analyzers
+        run: dotnet build /warnaserror /p:TreatWarningsAsErrors=true /p:EnforceCodeStyleInBuild=true
+
+      - name: Run .NET Tests
+        run: dotnet test --no-restore --verbosity normal

@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "start:docker:preprod": "docker compose -f docker-compose.preprod.yml up --build",
+    "rebuild:docker:dev": "docker compose down && docker compose -f docker-compose.yml up --build",
+    "start:docker:dev": "docker compose -f docker-compose.yml up --build",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.6"
+  }
+}

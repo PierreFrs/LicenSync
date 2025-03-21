@@ -1,0 +1,182 @@
+<mat-card class="content-fit flex flex-col items-center" [ngClass]="{cardLargeLayout: cardLargeLayout}">
+
+  <mat-card-header class="flex justify-center mb-4">
+    @if (imageURL !== null) {
+      <img
+        mat-card-xl-image
+        src="{{imageURL}}"
+        alt="Visual of {{track?.trackTitle}}"
+      >
+    } @else {
+      <span class="material-symbols-outlined text-7xl mr-2">imagesmode</span>
+    }
+  </mat-card-header>
+
+  <mat-card-content>
+    <div class="flex flex-col gap-4">
+
+      <mat-card-title>{{track?.trackTitle}}</mat-card-title>
+
+      @if (track?.albumTitle) {
+        <div class="flex gap-2">
+          <h3 class="font-bold">Album :</h3>
+          <p>{{track?.albumTitle}}</p>
+        </div>
+      }
+
+      <div>
+        <h3 class="font-bold">Artistes :</h3>
+
+        @if ((track?.artistsMusicAndLyrics?.length || 0) > 0) {
+          <p class="indent-8 font-bold">Musique et paroles :</p>
+          <ul>
+            @for (artist of track?.artistsMusicAndLyrics; track artist) {
+              <li class="indent-16">{{artist}}</li>
+            }
+          </ul>
+        }
+
+        @if ((track?.artistsLyrics?.length || 0) > 0) {
+          <p class="indent-8 font-bold">Paroles :
+            <ul>
+            @for (artist of track?.artistsLyrics; track artist) {
+              <li class="indent-16">{{artist}}</li>
+            }
+          </ul>
+        }
+
+        @if ((track?.artistsMusic?.length || 0) > 0) {
+          <p class="indent-8 font-bold">Musique :</p>
+          <ul>
+            @for (artist of track?.artistsMusic; track artist) {
+              <li class="indent-16">{{artist}}</li>
+            }
+          </ul>
+        }
+      </div>
+
+      <div class="flex gap-2" *ngIf="track?.recordLabel">
+        <h3 class="font-bold">Label :</h3>
+        <p>{{track?.recordLabel}}</p>
+      </div>
+
+      <div *ngIf="track?.firstGenre">
+        <h3 class="font-bold">Genre principal :</h3>
+        <p>{{ track?.firstGenre }}</p>
+      </div>
+
+      <div *ngIf="track?.secondaryGenre">
+        <h3 class="font-bold">Genre secondaire :</h3>
+        <p>{{ track?.secondaryGenre }}</p>
+      </div>
+
+      <div class="flex gap-2">
+        <h3 class="font-bold">Date d'ajout :</h3>
+        <p>{{track?.creationDate | date: 'dd/MM/yy - HH:mm'}}</p>
+      </div>
+
+      <div class="flex gap-2">
+        <h3 class="font-bold">Durée :</h3>
+        <p>{{track?.length}}</p>
+      </div>
+
+
+      <div [ngClass]="{centeredBlockchainData: cardLargeLayout}">
+        @if (!track?.blockchainHash) {
+          <div [ngClass]="{centeredBlockchainData: cardLargeLayout, alignLeftBlockchainData: !cardLargeLayout}">
+            <h3 class="font-bold">Protéger le titre :</h3>
+            @if (!isLoading && operationSuccess === "neutral") {
+              <mat-card-actions>
+                <button (click)="authenticateTrack()"
+                        [disabled]="isLoading"
+                        [attr.aria-label]="'Protection track button'"
+                        class="size-16 p-2 rounded-full hover:bg-gray-200 hover:shadow-md"
+                        data-cy="protect-track-button"
+                >
+                  <img src="assets/images/logos/licensync-grey.png"
+                       alt="licensync logo as a button"
+                  >
+                </button>
+              </mat-card-actions>
+            }
+
+            @if (isLoading) {
+              <mat-spinner diameter="20" color="primary"></mat-spinner>
+            }
+
+            @if (!isLoading && operationSuccess === "success") {
+              <mat-icon style="color: green;">check_circle</mat-icon>
+            }
+
+            @if (!isLoading && operationSuccess === "failure") {
+              <mat-icon style="color: red;">cancel</mat-icon>
+            }
+          </div>
+        }
+
+        @if (message) {
+          <div class="message">{{ message }}</div>
+        }
+
+        @if (track?.blockchainHash) {
+          <div class="flex">
+            <mat-icon style="color: green;">check_circle</mat-icon>
+            Morceau protégé !
+          </div>
+
+          <div [ngClass]="{centeredBlockchainData: cardLargeLayout, alignLeftBlockchainData: !cardLargeLayout}">
+            <h3 class="font-bold mt-4">Authentifier le titre protégé :</h3>
+            @if (!isLoading) {
+              <mat-card-actions>
+                <button (click)="fetchHashesAndOpenDialog()"
+                        [disabled]="isLoading"
+                        [attr.aria-label]="'Authentication track button'"
+                        class="size-16 p-2 rounded-full hover:bg-gray-200 hover:shadow-md"
+                        data-cy="check-hash-button"
+                >
+                  <img src="assets/images/logos/licensync-grey.png"
+                       alt="licensync logo as a button"
+                  >
+                </button>
+                @if(isLoading) {
+                  <mat-spinner *ngIf="isLoading"
+                               diameter="20"
+                               color="primary"
+                  ></mat-spinner>
+                }
+              </mat-card-actions>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="flex flex-col items-center">
+        @if (!showConfirm) {
+          <button mat-raised-button
+                  color="warn"
+                  (click)="toggleShowConfirm()"
+                  data-cy="delete-track-button"
+          >
+            <span>Supprimer</span>
+          </button>
+        }
+        @if (showConfirm) {
+          <div>
+            <p class="mb-4">Etes vous sûr ?</p>
+            <button mat-raised-button
+                    color="warn"
+                    (click)="deleteTrack()"
+                    data-cy="confirm-delete-track-button"
+            >
+              <span>Supprimer</span>
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
+
+

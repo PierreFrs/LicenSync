@@ -1,0 +1,48 @@
+# backend-microservices/backend/docker-compose.preprod.yml
+
+services:
+
+### Application ###
+
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: "10001:0"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "${PASSWORD}"
+    ports:
+      - "3030:1433"
+    restart: always
+    volumes:
+      - mssql_data:/var/opt/mssql
+    networks:
+      - licensync_network
+
+  backend:
+    build:
+      context: .
+      dockerfile: ./API/docker/prod/Dockerfile
+    ports:
+      - "3031:8080"
+    restart: always
+    volumes:
+      - file_data:/src/backend/Uploads
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+    depends_on:
+      - database
+    networks:
+      - licensync_network
+    pull_policy: build
+
+### Volumes ###
+
+volumes:
+  mssql_data:
+  file_data:
+
+### Networks ###
+
+networks:
+  licensync_network:
+    driver: bridge

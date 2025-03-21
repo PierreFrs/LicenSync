@@ -1,0 +1,72 @@
+# .NET Core
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.dbmdl
+*.jfm
+*.dbproj.schemaview
+*.pfx
+*.publishsettings
+orleans.codegen.cs
+../backend-microservices/backend/backend/bin
+../backend-microservices/backend/backend/obj
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code directories
+.vscode/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# JetBrains Rider
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Angular
+/dist/
+/node_modules/
+npm-debug.log*
+
+# Hardhat
+cache/
+artifacts/
+
+# MSSQL
+*.mdf
+*.ldf
+*.bak
+*.trn
+
+# Environment configuration
+.env
+.env.example
+.env.prod
+.env.debug
+
+# Logs
+*.log
+
+# Ignore all bin and obj folders
+**/bin/
+**/obj/
+
+# Ignore cypress videos
+**/cypress/videos/

@@ -1,0 +1,84 @@
+<div class="flex flex-col w-full">
+  <h3 class="mb-4 text-xl xl:ml-4">Titres :</h3>
+<!--  Paginator-->
+  <div class="flex flex-col-reverse md:flex-row md:flex- columns-3 items-center gap-x-12">
+    @if(!isSmallScreen) {
+      <mat-paginator (page)="handlePageEvent($event)"
+                     [length]="tracks?.count"
+                     [pageSize]="appParams.pageSize"
+                     [showFirstLastButtons]="true"
+                     [pageSizeOptions]="pageSizeOptions"
+                     [pageIndex]="appParams.pageIndex - 1"
+                     aria-label="Select page"
+                     data-cy="paginator"
+                     class="mt-2"
+      >
+      </mat-paginator>
+    }
+
+    <div class="flex justify-between items-center">
+      <form #searchForm="ngForm"
+            (ngSubmit)="onSearchChange()"
+            class="relative flex items-center w-full max-w-xs mx-4"
+      >
+        <input type="search"
+               class="w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg flex justify-end items-center"
+               placeholder="Rechercher"
+               name="search"
+               [(ngModel)]="appParams.search"
+        />
+        <button mat-icon-button
+                type="submit"
+                class="absolute right-12"
+        >
+          <mat-icon>search</mat-icon>
+        </button>
+      </form>
+      <button mat-stroked-button [matMenuTriggerFor]="sortMenu">
+        <mat-icon>swap_vert</mat-icon>
+        Trier
+      </button>
+    </div>
+  </div>
+
+<!--  List-->
+  <div class="flex flex-col gap-8 justify-center w-full mt-3">
+    <mat-grid-list [cols]="cols"
+                   [rowHeight]="rowHeight"
+                   [gutterSize]="gutterSize"
+    >
+      @for (track of tracks?.data; track track.id) {
+        <mat-grid-tile>
+          <app-track-card
+            [track]="track"
+            data-cy="track-card"
+          ></app-track-card>
+        </mat-grid-tile>
+      }
+    </mat-grid-list>
+  </div>
+
+  @if(isSmallScreen) {
+    <mat-paginator (page)="handlePageEvent($event)"
+                   [length]="tracks?.count"
+                   [pageSize]="appParams.pageSize"
+                   [showFirstLastButtons]="true"
+                   [pageSizeOptions]="pageSizeOptions"
+                   [pageIndex]="appParams.pageIndex - 1"
+                   aria-label="Select page"
+                   data-cy="paginator"
+                   class="mt-2"
+    >
+    </mat-paginator>
+  }
+</div>
+
+<mat-menu #sortMenu="matMenu">
+  <mat-selection-list [multiple]="false" (selectionChange)="onSortChange($event)">
+    @for (sort of sortOptions; track $index) {
+      <mat-list-option [value]="sort.value" [selected]="appParams.sort === sort.value">
+        {{sort.name}}
+      </mat-list-option>
+    }
+  </mat-selection-list>
+</mat-menu>

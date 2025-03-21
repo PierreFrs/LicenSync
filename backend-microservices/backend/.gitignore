@@ -1,0 +1,72 @@
+# .NET Core
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.dbmdl
+*.jfm
+*.dbproj.schemaview
+*.pfx
+*.publishsettings
+orleans.codegen.cs
+API/bin/
+**/obj/
+
+# Rider
+.idea/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Folder config file
+Desktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# VS Code directories
+.vscode/
+
+# Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# JetBrains Rider
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Angular
+/dist/
+/node_modules/
+*.log
+npm-debug.log*
+
+# Hardhat
+cache/
+artifacts/
+
+# MSSQL
+*.mdf
+*.ldf
+*.bak
+*.trn
+*.log
+
+# Potential mock SQL data 
+
+
+# Environment configuration
+.env
+

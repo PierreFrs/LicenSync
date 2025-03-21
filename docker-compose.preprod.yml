@@ -1,0 +1,57 @@
+# app-pf/docker-compose.preprod.yml
+
+services:
+  frontend:
+    extends:
+      file: ./frontend/docker-compose.preprod.yml
+      service: frontend
+    env_file:
+      - ./stack.env
+
+  database:
+    extends:
+      file: ./backend-microservices/backend/docker-compose.preprod.yml
+      service: database
+
+  backend:
+    extends:
+      file: ./backend-microservices/backend/docker-compose.preprod.yml
+      service: backend
+    env_file:
+      - ./stack.env
+
+  event-logger-service:
+    extends:
+      file: ./backend-microservices/event-logger/docker-compose.preprod.yml
+      service: event-logger-service
+
+  event-logger-db:
+    extends:
+      file: ./backend-microservices/event-logger/docker-compose.preprod.yml
+      service: event-logger-db
+
+  api-gateway:
+    extends:
+      file: ./api-gateway/docker-compose.preprod.yml
+      service: api-gateway
+
+  prometheus:
+    extends:
+      file: ./observability/docker-compose.preprod.yml
+      service: prometheus
+
+  grafana:
+    extends:
+      file: ./observability/docker-compose.preprod.yml
+      service: grafana
+
+volumes:
+  mssql_data:
+  file_data:
+  prometheus_data:
+  grafana_data:
+  mongodb_data:
+
+networks:
+  licensync_network:
+    driver: bridge

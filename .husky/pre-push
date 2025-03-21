@@ -1,0 +1,18 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "Running Cypress tests before push..."
+
+# Navigate to the frontend directory
+cd frontend || { echo "Failed to navigate to frontend/"; exit 1; }
+
+# Run Cypress tests
+npm run cypress:run
+
+# Check if Cypress tests passed
+if [ $? -ne 0 ]; then
+  echo "Cypress tests failed. Push aborted."
+  exit 1
+fi
+
+echo "Cypress tests passed. Proceeding with push."

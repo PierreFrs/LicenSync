@@ -1,0 +1,16 @@
+@mixin responsive-dialog {
+  .custom-dialog-container {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+  }
+
+  @media (min-width: 768px) {
+    .custom-dialog-container {
+      width: 600px;
+      padding: 20px;
+    }
+  }
+}

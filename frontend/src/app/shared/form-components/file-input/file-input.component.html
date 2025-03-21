@@ -1,0 +1,48 @@
+<div class="flex flex-col">
+  <mat-label class="underline">{{ label }}</mat-label>
+  <div class="flex gap-1">
+    <button
+      type="button"
+      mat-icon-button
+      aria-label="Bouton de chargement du fichier"
+      (click)="triggerFileInput()"
+    >
+      <span class="material-symbols-outlined size-6" onCLick="fileInput.click()">upload</span>
+    </button>
+    <p>Format : {{ acceptedFormats }}</p>
+  </div>
+  <input
+    type="file"
+    [attr.id]="id"
+    [attr.accept]="acceptedFormats"
+    (change)="onFileSelected($event)"
+    style="display:none;"
+    #fileInput
+  >
+  <div class="flex align-middle gap-2">
+    <p>{{ fileName }}</p>
+    <button
+      type="button"
+      *ngIf="fileName"
+      mat-icon-button
+      aria-label="Bouton de suppression du fichier"
+      (click)="clearFile()"
+    >
+      <span class="material-symbols-outlined size-6">cancel</span>
+    </button>
+  </div>
+
+  <div>
+    <p *ngIf="control?.hasError('required') && formSubmitted" class="text-red-600">
+      Un fichier est requis.
+    </p>
+    <div *ngIf="control?.touched">
+      <p *ngIf="control.hasError('requiredFileType')" class="text-red-600">
+        Extensions valides: {{ acceptedFormats }}.
+      </p>
+      <p *ngIf="control?.hasError('maxFileSize')" class="text-red-600">
+        Le fichier doit être inférieure à {{ control.errors?.['maxFileSize']?.maxSize | fileSize}}, le votre pèse {{ control.errors?.['maxFileSize']?.actualSize | fileSize}}.
+      </p>
+    </div>
+  </div>
+</div>

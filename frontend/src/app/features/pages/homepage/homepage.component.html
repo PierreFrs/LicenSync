@@ -1,0 +1,17 @@
+<div class="content-fit max-w-screen-2xl flex flex-col justify-center align-center items-center" [ngClass]="padding$ | async">
+  <h1 class="text-4xl">Empowering artists, one block at a time</h1>
+  <div class="mt-12">
+    <img src="/assets/images/logos/licensync-blue.png" alt="licensync logo" class="size-40">
+    <img src="/assets/images/logos/licensync-title-catch.png" alt="licensync title" class="w-40">
+  </div>
+  <div class="flex flex-col justify-center items-center mt-8">
+    <button mat-flat-button
+            routerLink="/account/register"
+            class="w-fit py-2 light-primary-text hover-light-accent-bg"
+            color="accent"
+    >S'inscrire</button>
+    <p class="w-full text-center mt-2">Déjà inscrit ? <button routerLink="/account/login" class="underline text-blue-600 hover:text-blue-400 mt-1">Se connecter</button></p>
+    <p class="mt-3">Reprenez le controle sur vos création grâce à l'authentification blockchain LicenSync.</p>
+  </div>
+</div>
+
