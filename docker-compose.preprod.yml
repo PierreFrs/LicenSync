@@ -8,6 +8,11 @@ services:
     env_file:
       - ./stack.env
 
+  fix-permissions:
+    extends:
+      file: ./backend-microservices/backend/docker-compose.yml
+      service: fix-permissions
+      
   database:
     extends:
       file: ./backend-microservices/backend/docker-compose.preprod.yml
