@@ -4,6 +4,23 @@ services:
 
 ### Application ###
 
+  fix-permissions:
+    image: alpine:latest
+    command:
+      [
+        "sh",
+        "-c",
+        "mkdir -p /var/opt/mssql/.system && chown -R 10001:0 /var/opt/mssql && chmod -R 770 /var/opt/mssql",
+      ]
+    volumes:
+      - mssql_data:/var/opt/mssql
+    networks:
+      - licensync_network
+    deploy:
+      mode: replicated
+      replicas: 1
+    restart: "no"
+
   database:
     image: mcr.microsoft.com/mssql/server:2022-latest
     user: "10001:0"
