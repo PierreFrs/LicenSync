@@ -55,6 +55,6 @@ volumes:
 networks:
   licensync_network:
     driver: bridge
-  nginx-proxy-manager_default:
+  nginx_proxy_manager_npm_network:
     external:
-      name: nginx-proxy-manager_default
+      name: nginx_proxy_manager_npm_network
