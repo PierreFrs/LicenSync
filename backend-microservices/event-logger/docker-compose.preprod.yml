@@ -17,6 +17,7 @@ services:
       - event-logger-db
     networks:
       - licensync_network
+      - nginx_proxy_manager_npm_network
 
   event-logger-db:
     image: mongo:latest
@@ -38,5 +39,7 @@ volumes:
 networks:
   licensync_network:
     driver: bridge
-
+  nginx_proxy_manager_npm_network:
+    external:
+      name: nginx_proxy_manager_npm_network
 

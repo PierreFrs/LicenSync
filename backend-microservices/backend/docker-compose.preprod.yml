@@ -33,6 +33,7 @@ services:
       - database
     networks:
       - licensync_network
+      - nginx_proxy_manager_npm_network
     pull_policy: build
 
 ### Volumes ###
@@ -46,3 +47,6 @@ volumes:
 networks:
   licensync_network:
     driver: bridge
+  nginx_proxy_manager_npm_network:
+    external:
+      name: nginx_proxy_manager_npm_network

@@ -12,9 +12,17 @@ services:
         pull_policy: build
         networks:
         - licensync_network
+        - nginx_proxy_manager_npm_network
         depends_on:
         - backend
         - event-logger-service
         - frontend
         - prometheus
         - grafana
+
+networks:
+    licensync_network:
+        driver: bridge
+    nginx_proxy_manager_npm_network:
+        external:
+            name: nginx_proxy_manager_npm_network
