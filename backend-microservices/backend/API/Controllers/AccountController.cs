@@ -20,6 +20,7 @@ public class AccountController(SignInManager<AppUser> signInManager, IMapper map
 {
     [HttpPost]
     [Route("register")]
+    [AllowAnonymous]
     public async Task<ActionResult<AppUserDto>> Register([FromBody] RegisterDto registerDto)
     {
         var user = new AppUser
