@@ -10,9 +10,9 @@ services:
 
   fix-permissions:
     extends:
-      file: ./backend-microservices/backend/docker-compose.yml
+      file: ./backend-microservices/backend/docker-compose.preprod.yml
       service: fix-permissions
-      
+
   database:
     extends:
       file: ./backend-microservices/backend/docker-compose.preprod.yml
