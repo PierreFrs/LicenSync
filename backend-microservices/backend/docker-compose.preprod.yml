@@ -6,7 +6,7 @@ services:
 
   database:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    user: root
+    user: "10001:0"
     environment:
       ACCEPT_EULA: "Y"
       SA_PASSWORD: "${PASSWORD}"
