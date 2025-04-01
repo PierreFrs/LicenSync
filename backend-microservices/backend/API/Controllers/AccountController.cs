@@ -43,7 +43,7 @@ public class AccountController(SignInManager<AppUser> signInManager, IMapper map
                 Password = registerDto.Password,
             };
 
-            Login(loginDto);
+            await Login(loginDto);
             return Ok();
         }
 
