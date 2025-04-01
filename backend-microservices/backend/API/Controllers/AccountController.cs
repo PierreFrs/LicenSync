@@ -36,6 +36,14 @@ public class AccountController(SignInManager<AppUser> signInManager, IMapper map
         if (result.Succeeded)
         {
             await signInManager.UserManager.AddToRoleAsync(user, "User");
+
+            var loginDto = new LoginDto
+            {
+                Email = registerDto.Email,
+                Password = registerDto.Password,
+            };
+
+            Login(loginDto);
             return Ok();
         }
 
