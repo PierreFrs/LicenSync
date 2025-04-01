@@ -20,12 +20,13 @@ services:
 
   database:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
     user: "10001:0"
     env_file:
       - ../../.env
     environment:
       ACCEPT_EULA: "Y"
-      SA_PASSWORD: "${PASSWORD}"
+      MSSQL_SA_PASSWORD: "${PASSWORD}"
       MSSQL_PID: "Developer"
     ports:
       - "5014:1433"

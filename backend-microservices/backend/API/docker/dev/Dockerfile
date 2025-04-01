@@ -42,10 +42,4 @@ WORKDIR /app
 # Copy the build output to the final image
 COPY --from=build /app/build .
 
-# Copy the entrypoint script
-COPY API/entrypoint.sh ./
-
-# Grant permissions to the entrypoint script
-RUN chmod +x ./entrypoint.sh
-
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["dotnet", "API.dll"]
