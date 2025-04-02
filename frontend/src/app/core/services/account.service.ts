@@ -32,8 +32,14 @@ export class AccountService {
   }
 
   register(values: RegisterValues) {
+    let params = new HttpParams();
+    params = params.append('useCookies', 'true');
     const headers = { 'Content-Type': 'application/json' };
-    return this._httpClient.post(`${this.baseUrl}/Account/register`, values, { headers });
+
+    return this._httpClient.post(`${this.baseUrl}/Account/register`, values, {
+      params,
+      headers
+    });
   }
 
   getUserInfos() {

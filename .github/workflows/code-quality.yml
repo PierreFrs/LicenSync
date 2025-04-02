@@ -19,13 +19,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 18.17.1
+          node-version: 22.14.0
 
       - name: Install Dependencies
         run: npm install
 
       - name: Audit for vulnerabilities
-        run: npm audit --audit-level=high
+        run: npm audit --audit-level=moderate
 
       - name: Run ESLint
         run: npx eslint 'src/**/*.ts' --quiet

@@ -7,8 +7,7 @@ RUN npm install -g @angular/cli
 WORKDIR /app
 
 COPY . /app
-COPY ./entrypoint.sh /app/entrypoint.sh
 
-RUN chmod +x /app/entrypoint.sh
+RUN npm install
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["ng", "serve", "--host", "0.0.0.0"]
