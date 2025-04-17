@@ -15,7 +15,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-public class AccountController(SignInManager<AppUser> signInManager, IMapper mapper)
+public class AccountController(
+    SignInManager<AppUser> signInManager, 
+    IMapper mapper,
+    ILogger<AccountController> logger)
     : BaseApiController
 {
     [HttpPost]
@@ -58,7 +61,7 @@ public class AccountController(SignInManager<AppUser> signInManager, IMapper map
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "An error occurred during user registration.");
+            logger.LogError(ex, "An error occurred during user registration.");
 
             return StatusCode(500, "An unexpected error occurred. Please try again later.");
         }
