@@ -23,35 +23,47 @@ public class AccountController(SignInManager<AppUser> signInManager, IMapper map
     [AllowAnonymous]
     public async Task<ActionResult<AppUserDto>> Register([FromBody] RegisterDto registerDto)
     {
-        var user = new AppUser
+        try
         {
-            FirstName = registerDto.FirstName,
-            LastName = registerDto.LastName,
-            Email = registerDto.Email,
-            UserName = registerDto.Email,
-        };
-
-        var result = await signInManager.UserManager.CreateAsync(user, registerDto.Password);
-
-        if (result.Succeeded)
-        {
-            await signInManager.UserManager.AddToRoleAsync(user, "User");
-
-            var loginDto = new LoginDto
+            var user = new AppUser
             {
+                FirstName = registerDto.FirstName,
+                LastName = registerDto.LastName,
                 Email = registerDto.Email,
-                Password = registerDto.Password,
+                UserName = registerDto.Email,
             };
 
-            await Login(loginDto);
-            return Ok();
+            var result = await signInManager.UserManager.CreateAsync(user, registerDto.Password);
+
+            if (result.Succeeded)
+            {
+                await signInManager.UserManager.AddToRoleAsync(user, "User");
+
+                var loginDto = new LoginDto
+                {
+                    Email = registerDto.Email,
+                    Password = registerDto.Password,
+                };
+
+                await Login(loginDto);
+                return Ok();
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return BadRequest(ModelState);
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred during user registration.");
 
-        foreach (var error in result.Errors)
-            ModelState.AddModelError(string.Empty, error.Description);
-
-        return BadRequest(ModelState);
+            return StatusCode(500, "An unexpected error occurred. Please try again later.");
+        }
     }
+
 
     [HttpPost]
     [Route("login")]
