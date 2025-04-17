@@ -22,8 +22,7 @@ services:
 
 networks:
     licensync_network:
-        driver: bridge
+      driver: bridge
     nginx_proxy_manager_npm_network:
-        external:
-            name: nginx_proxy_manager_npm_network
-            external: true
+      name: nginx_proxy_manager_npm_network
+      external: true
