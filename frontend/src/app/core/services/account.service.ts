@@ -5,6 +5,7 @@ import {map} from "rxjs/operators";
 import {LoginValues} from "../models/login.model";
 import {RegisterValues} from "../models/register.model";
 import {environment} from "../../../environments/environment";
+import {BehaviorSubject, tap} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import {environment} from "../../../environments/environment";
 export class AccountService {
   private readonly _httpClient = inject(HttpClient);
   private readonly baseUrl = environment.BASE_URL;
+  isAuth$ = new BehaviorSubject<boolean>(false);
 
   currentUser = signal<User | null>(null);
 
@@ -23,7 +25,12 @@ export class AccountService {
     return this._httpClient.post(`${this.baseUrl}/Account/login`, values, {
       params,
       headers
-    });
+    })
+      .pipe(
+        tap(() => {
+          this.isAuth$.next(true);
+        })
+      );
   }
 
   refreshAccessToken() {
@@ -52,7 +59,13 @@ export class AccountService {
   }
 
   logout() {
-    return this._httpClient.post(`${this.baseUrl}/Account/logout`, {});
+    return this._httpClient.post(`${this.baseUrl}/Account/logout`, {})
+      .pipe(
+        tap(() => {
+          this.isAuth$.next(false);
+          this.currentUser.set(null);
+        })
+      );
   }
 
   updateUserInfos(userInfo: UserInfo) {
@@ -60,6 +73,12 @@ export class AccountService {
   }
 
   getAuthState() {
-    return this._httpClient.get<{isAuthenticated: boolean}>(`${this.baseUrl}/Account/auth-status`);
+    return this._httpClient.get<{isAuthenticated: boolean}>(`${this.baseUrl}/Account/auth-status`)
+      .pipe(
+      map(response => {
+        this.isAuth$.next(response.isAuthenticated);
+        return response.isAuthenticated;
+      })
+    );
   }
 }
