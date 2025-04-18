@@ -32,6 +32,10 @@ public static class DatabaseMigration
             {
                 logger.LogInformation("Environment is Production. Applying database migrations...");
                 await dbContext.Database.MigrateAsync();
+                logger.LogInformation("Seeding the database...");
+                await AppContextSeed.SeedAsync(dbContext);
+                logger.LogInformation("Database seeding completed.");
+
             }
         }
         catch (Exception ex)
