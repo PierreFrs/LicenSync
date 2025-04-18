@@ -43,8 +43,7 @@ public static class AppContextSeed
         if (!await dbContext.Artists.AnyAsync())
             await SeedArtists(dbContext);
 
-        if (!await dbContext.Roles.AnyAsync())
-            await SeedRoles(dbContext);
+        await SeedRoles(dbContext);
 
         if (!await dbContext.Users.AnyAsync())
             await SeedAppUsers(dbContext);
@@ -457,21 +456,22 @@ public static class AppContextSeed
 
     private static async Task SeedRoles(ApplicationDbContext dbContext)
     {
-        await dbContext.Roles.AddRangeAsync(
-            new IdentityRole
+        var roles = new List<IdentityRole>
+    {
+        new IdentityRole { Id = "1", Name = "Admin", NormalizedName = "ADMIN" },
+        new IdentityRole { Id = "2", Name = "User", NormalizedName = "USER" }
+    };
+
+        foreach (var role in roles)
+        {
+            var roleExists = await dbContext.Roles.AnyAsync(r => r.Name == role.Name);
+            if (!roleExists)
             {
-                Id = "1",
-                Name = "Admin",
-                NormalizedName = "ADMIN",
-            },
-            new IdentityRole
-            {
-                Id = "2",
-                Name = "User",
-                NormalizedName = "USER",
+                await dbContext.Roles.AddAsync(role);
             }
-        );
+        }
 
         await dbContext.SaveChangesAsync();
     }
+
 }
