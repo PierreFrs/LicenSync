@@ -4,7 +4,7 @@ import {User, UserInfo} from "../models/user";
 import {LoginValues} from "../models/login.model";
 import {RegisterValues} from "../models/register.model";
 import {environment} from "../../../environments/environment";
-import {BehaviorSubject, tap} from "rxjs";
+import {BehaviorSubject, switchMap, tap} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -28,8 +28,8 @@ export class AccountService {
       .pipe(
         tap(() => {
           this.isAuth$.next(true);
-          this.getUser();
-        })
+        }),
+        switchMap(() => this.getUser())
       );
   }
 
@@ -66,6 +66,7 @@ export class AccountService {
         tap(() => {
           this.isAuth$.next(false);
           this.user$.next(null);
+          this.userId$.next(null);
         })
       );
   }

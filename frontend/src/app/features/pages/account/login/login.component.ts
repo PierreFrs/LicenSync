@@ -10,7 +10,6 @@ import {LoginValues} from "../../../../core/models/login.model";
 import {TextInputComponent} from "../../../../shared/form-components/text-input/text-input.component";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {userId} from "../../../../core/functions/user-id";
-import {filter} from "rxjs/operators";
 
 @Component({
   selector: 'app-login',
@@ -50,14 +49,9 @@ export class LoginComponent {
       };
 
       this.accountService.login(loginValues).subscribe({
-        next: () => {
-            if (this.userId$) {
-              this.userId$.pipe(
-                filter(userId => !!userId),
-              ).subscribe(userId => {
-                this.router.navigateByUrl(`/user/${userId}`)
-                }
-              )
+        next: (user) => {
+            if (user && user.id) {
+                this.router.navigateByUrl(`/user/${user.id}`)
             } else {
               this.snack.error('Failed to retrieve user info:');
             }
