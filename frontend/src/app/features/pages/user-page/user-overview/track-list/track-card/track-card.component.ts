@@ -27,12 +27,10 @@ export class TrackCardComponent implements OnInit {
 
   imageURL: string | null = null;
   cardWidth = 'w-80';
-  @Input() track?: TrackCard;
+  @Input({required: true}) track!: TrackCard;
 
   ngOnInit() {
-    if (this.track) {
       this.fetchTrackPicture(this.track.id);
-    }
   }
 
   private fetchTrackPicture(trackId: string) {
