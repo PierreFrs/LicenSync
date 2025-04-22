@@ -72,14 +72,14 @@ export class FileInputComponent implements ControlValueAccessor, OnChanges {
   registerOnChange(fn: (file: File | null) => void): void {
     this.onChange = fn;
   }
-  
+
   registerOnTouched(): void {}
 
   triggerFileInput() {
     this.fileInput.nativeElement.click();
   }
 
-  onFileSelected(event: Event): void {
+  onFileSelected(event: Event) {
     const element = event.target as HTMLInputElement;
     const file = element.files ? element.files[0] : null;
     if (file) {

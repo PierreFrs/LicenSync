@@ -296,7 +296,7 @@ export class TrackUploadDialogComponent implements OnInit, OnDestroy {
 
   private handleTrackUploadSuccess(response: TrackCard): void {
     console.log('Track uploaded successfully', response);
-    this.dialogRef.close(response); // Pass the response if needed
+    this.dialogRef.close(response);
   }
 
   get audioFileControl(): FormControl {
