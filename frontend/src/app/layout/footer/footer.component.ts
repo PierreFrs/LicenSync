@@ -6,7 +6,8 @@ import {filter} from "rxjs";
 import {UserService} from "../../core/services/entity-services/users/user.service";
 import {UserMenuComponent} from "../../shared/user-menu/user-menu.component";
 import {AccountService} from "../../core/services/account.service";
-import {isAuth} from "../../core/functions/auth";
+import {userId} from "../../core/functions/user-id";
+import {user} from "../../core/functions/user";
 
 @Component({
   selector: 'app-footer',
@@ -27,7 +28,8 @@ export class FooterComponent implements OnInit{
   isUserPage: boolean = false;
   isTrackPage: boolean = false;
   isHomePage: boolean = false;
-  userId: string | null = null;
+  userId$ = userId();
+  user$ = user();
 
   accountService = inject(AccountService);
 
@@ -43,7 +45,6 @@ export class FooterComponent implements OnInit{
       this.isUserPage = this.userService.isUserRoute(this.router.url);
       this.isTrackPage = this.userService.isTrackRoute(this.router.url);
       this.isHomePage = this.userService.isHomeRoute(this.router.url);
-      this.userId = this.userService.getUserIdFromRoute();
     });
   }
 

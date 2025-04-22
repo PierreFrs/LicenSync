@@ -6,11 +6,11 @@
   <div class="h-full flex gap-8 mr-4 items-center">
     @if (isUserPage) {
       <app-upload-link
-        [userId]="userId"
+        [userId]="userId$ | async"
         class="hidden xl:block"
       ></app-upload-link>
     }
-    @if (accountService.currentUser()) {
+    @if (user$ | async) {
       <app-user-menu class="hidden xl:block"></app-user-menu>
     }
   </div>

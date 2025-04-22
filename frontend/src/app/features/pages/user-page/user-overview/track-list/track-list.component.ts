@@ -14,7 +14,6 @@ import {
   BreakpointState,
 } from '@angular/cdk/layout';
 import { TrackService } from '../../../../../core/services/entity-services/tracks/track.service';
-import { AccountService } from '../../../../../core/services/account.service';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import {
   MatListOption,
@@ -49,13 +48,11 @@ import { FormsModule } from '@angular/forms';
 export class TrackListComponent implements OnInit, OnDestroy {
   private readonly responsive = inject(BreakpointObserver);
   private readonly trackService = inject(TrackService);
-  private readonly accountService = inject(AccountService);
 
   cols = 1;
   rowHeight = '116px';
   gutterSize = '16px';
   isSmallScreen = false;
-  userId: string = '';
   sortOptions = [
     { name: 'Dates de sorties ascendantes', value: 'releaseAsc' },
     { name: 'Dates de sorties descendantes', value: 'releaseDesc' },
@@ -70,8 +67,8 @@ export class TrackListComponent implements OnInit, OnDestroy {
   private readonly subscriptions = new Subscription();
 
   ngOnInit() {
-    this.subscribeToUserInfos();
     this.subscribeToResponsiveBreakpoints();
+    this.getTrackCardListByUserId();
   }
 
   get tracks() {
@@ -100,20 +97,6 @@ export class TrackListComponent implements OnInit, OnDestroy {
       this.appParams.pageIndex = 1;
       this.getTrackCardListByUserId();
     }
-  }
-
-  private subscribeToUserInfos() {
-    this.subscriptions.add(
-      this.accountService.getUserInfos().subscribe({
-        next: (response) => {
-          this.userId = response.id;
-          this.getTrackCardListByUserId();
-        },
-        error: (err) => {
-          console.error('Error fetching user info:', err);
-        },
-      })
-    );
   }
 
   private subscribeToResponsiveBreakpoints() {

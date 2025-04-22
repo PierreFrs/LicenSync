@@ -1,7 +1,7 @@
 <footer class="flex justify-between xl:justify-center items-center h-12 w-full p-3 bg-secondary-bg sticky bottom-0">
   @if (isUserPage) {
     <app-upload-link
-      [userId]="userId"
+      [userId]="userId$ | async"
       class="xl:hidden"
       data-cy="open-upload-dialog"
     ></app-upload-link>
@@ -21,7 +21,7 @@
   <img src="../../../assets/images/logos/licensync-title.png" class="align-middle h-10" alt="licensync blue title">
 </button>
 
-  @if(accountService.currentUser()) {
+  @if(user$ | async) {
     <app-user-menu class="xl:hidden"></app-user-menu>
   } @else {
     <div></div>

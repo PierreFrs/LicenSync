@@ -10,6 +10,8 @@ import {filter} from "rxjs";
 import {NavigationEnd, Router} from "@angular/router";
 import {AccountService} from "../../core/services/account.service";
 import {UserService} from "../../core/services/entity-services/users/user.service";
+import {user} from "../../core/functions/user";
+import {AsyncPipe} from "@angular/common";
 
 @Component({
   selector: 'app-user-menu',
@@ -22,7 +24,8 @@ import {UserService} from "../../core/services/entity-services/users/user.servic
     MatMenu,
     MatIcon,
     MatDivider,
-    UserPageLinkComponent
+    UserPageLinkComponent,
+    AsyncPipe
   ],
   templateUrl: './user-menu.component.html',
 })
@@ -34,6 +37,7 @@ export class UserMenuComponent implements OnInit {
   isTrackPage: boolean = false;
   router = inject(Router);
   userService = inject(UserService);
+  user$ = user();
 
   constructor() {
     this.checkScreenSize();
@@ -46,8 +50,6 @@ export class UserMenuComponent implements OnInit {
   private checkScreenSize() {
     this.isXlScreen = window.matchMedia('(min-width: 1280px)').matches;
   }
-
-  protected readonly matMenuTrigger = MatMenuTrigger;
 
   private fetchRouteInfo() {
     this.router.events.pipe(

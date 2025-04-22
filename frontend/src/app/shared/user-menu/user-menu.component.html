@@ -5,7 +5,7 @@
   @if (!isXlScreen && !menuTrigger.menuOpen || isXlScreen && menuTrigger.menuOpen) {
     <mat-icon>arrow_drop_up</mat-icon>
   }
-  <span>{{accountService.currentUser()?.email}}</span>
+  <span>{{(user$ | async)?.email}}</span>
 </button>
 
 

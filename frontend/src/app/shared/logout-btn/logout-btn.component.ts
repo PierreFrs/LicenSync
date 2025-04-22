@@ -22,7 +22,8 @@ export class LogoutBtnComponent {
   logout() {
     this.accountService.logout().subscribe( {
       next: () => {
-        this.accountService.currentUser.set(null);
+        this.accountService.user$.next(null);
+        this.accountService.userId$.next(null);
         this.router.navigateByUrl('/account/login');
       }
     });

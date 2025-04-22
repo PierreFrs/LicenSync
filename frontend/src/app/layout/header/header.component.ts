@@ -7,6 +7,9 @@ import {UserMenuComponent} from "../../shared/user-menu/user-menu.component";
 import {AccountService} from "../../core/services/account.service";
 import {BusyService} from "../../core/services/busy.service";
 import {MatProgressBar} from "@angular/material/progress-bar";
+import {userId} from "../../core/functions/user-id";
+import {AsyncPipe} from "@angular/common";
+import {user} from "../../core/functions/user";
 
 @Component({
   selector: 'app-header',
@@ -15,7 +18,8 @@ import {MatProgressBar} from "@angular/material/progress-bar";
     UploadLinkComponent,
     UserMenuComponent,
     RouterLink,
-    MatProgressBar
+    MatProgressBar,
+    AsyncPipe
   ],
   templateUrl: './header.component.html'
 })
@@ -27,7 +31,8 @@ export class HeaderComponent implements OnInit {
 
   isUserPage: boolean = false;
   isTrackPage: boolean = false;
-  userId: string | null = null;
+  userId$ = userId();
+  user$ = user();
 
   ngOnInit() {
     this.fetchRouteInfo();
@@ -39,7 +44,6 @@ export class HeaderComponent implements OnInit {
     ).subscribe(() => {
       this.isUserPage = this.userService.isUserRoute(this.router.url);
       this.isTrackPage = this.userService.isTrackRoute(this.router.url);
-      this.userId = this.userService.getUserIdFromRoute();
     });
   }
 }
