@@ -104,6 +104,7 @@ describe('Get tracks by user id', () => {
   it('should go to the new track file and verify the data', () => {
     cy.wait(1000);
     cy.visit(`${baseFrontendUrl}/track/${track.id}`);
+
     cy.contains('New track');
     cy.contains('John Doe');
     cy.contains('The Wall');

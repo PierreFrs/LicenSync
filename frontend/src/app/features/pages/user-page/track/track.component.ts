@@ -1,4 +1,4 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import { Subscription } from 'rxjs';
 import {MatCardModule} from "@angular/material/card";
@@ -25,6 +25,7 @@ import {TrackCard} from "../../../../core/models/track-card.model";
   styleUrls: ['./track.component.scss']
 })
 export class TrackComponent implements OnInit, OnDestroy {
+  @Input() id!: string;
   private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private location = inject(Location);
@@ -33,7 +34,6 @@ export class TrackComponent implements OnInit, OnDestroy {
   private trackService = inject(TrackService);
   private blockchainService = inject(BlockchainService);
 
-  trackId: string | null = null;
   track?: TrackCard;
   imageURL: string | null = null;
   operationSuccess: string | null = "neutral";
@@ -45,23 +45,10 @@ export class TrackComponent implements OnInit, OnDestroy {
   private subscriptions = new Subscription();
 
   ngOnInit() {
-    this.fetchTrackIdFromRoute();
-    if (this.trackId) {
-      this.fetchSelectedTrack(this.trackId);
+    if (this.id) {
+      this.fetchSelectedTrack(this.id);
     }
     this.subscribeToResponsiveBreakpoints();
-  }
-
-  private fetchTrackIdFromRoute() {
-    const id = this.activatedRoute.snapshot.paramMap.get('id');
-    if (!id) {
-      this.router.navigate(['/not-found']).then((navigated) => {
-        if (!navigated) {
-          console.warn('Navigation to 404 failed');
-        }
-      });
-    }
-    this.trackId = id;
   }
 
   private fetchSelectedTrack(trackId: string): void {
@@ -132,7 +119,7 @@ export class TrackComponent implements OnInit, OnDestroy {
   }
 
   authenticateTrack(): void {
-    if (this.trackId === null) {
+    if (this.id === null) {
       console.error('trackId is null');
       return;
     }
@@ -140,14 +127,14 @@ export class TrackComponent implements OnInit, OnDestroy {
     this.operationSuccess = "neutral";
     this.isLoading = true;
 
-    this.blockchainService.storeHash(this.trackId).subscribe({
+    this.blockchainService.storeHash(this.id).subscribe({
       next: (response: TransactionReceipt) => {
         this.isLoading = false;
         this.operationSuccess = response ? 'success' : 'failure';
 
         if (this.operationSuccess === 'success') {
           this.message = "Authentication réussie !!";
-          this.fetchSelectedTrack(this.trackId!);
+          this.fetchSelectedTrack(this.id!);
           } else {
           this.message = "Echec de l'authentification...";
         }
@@ -162,12 +149,12 @@ export class TrackComponent implements OnInit, OnDestroy {
   }
 
   fetchHashesAndOpenDialog(): void {
-    if (!this.trackId) {
+    if (!this.id) {
       console.error('Track ID is null or undefined');
       return;
     }
     this.isLoading = true;
-    this.blockchainService.compareHashes(this.trackId).subscribe({
+    this.blockchainService.compareHashes(this.id).subscribe({
       next: (hashes) => {
         this.isLoading = false;
         this.openDialogWithHashes(hashes);
@@ -192,12 +179,12 @@ export class TrackComponent implements OnInit, OnDestroy {
   }
 
   deleteTrack(): void {
-    if (!this.trackId) {
+    if (!this.id) {
       console.error('trackId is null');
       return;
     }
 
-    this.trackService.deleteTrack(this.trackId);
+    this.trackService.deleteTrack(this.id);
 
     if (this.trackService.trackCardList()) {
       this.operationSuccess = "success";
