@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
 import {MatCard} from "@angular/material/card";
 import {MatButton} from "@angular/material/button";
@@ -10,6 +10,7 @@ import {LoginValues} from "../../../../core/models/login.model";
 import {TextInputComponent} from "../../../../shared/form-components/text-input/text-input.component";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {userId} from "../../../../core/functions/user-id";
+import {LoginFormModel} from "../../../../core/models/forms/login-form.type";
 
 @Component({
   selector: 'app-login',
@@ -26,7 +27,6 @@ import {userId} from "../../../../core/functions/user-id";
   ]
 })
 export class LoginComponent {
-  private fb = inject(FormBuilder)
   private accountService = inject(AccountService)
   private router = inject(Router)
   private snack = inject(SnackbarService);
@@ -36,9 +36,9 @@ export class LoginComponent {
   padding$ = this.responsiveService.padding$;
   validationErrors?: string[];
 
-  loginForm = this.fb.group({
-    email: ['', Validators.required],
-    password: ['', Validators.required]
+  loginForm = new FormGroup<LoginFormModel>({
+    email: new FormControl('', {nonNullable: true, validators : [Validators.required, Validators.email]}),
+    password: new FormControl('', {nonNullable: true, validators : [Validators.required]})
   });
 
   onSubmit() {
