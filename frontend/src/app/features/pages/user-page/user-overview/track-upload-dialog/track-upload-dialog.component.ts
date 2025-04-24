@@ -3,7 +3,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {
   AbstractControl,
   FormArray,
-  FormBuilder, FormControl,
+  FormControl,
   FormGroup,
   ReactiveFormsModule, ValidationErrors, ValidatorFn,
   Validators
@@ -26,7 +26,8 @@ import {InputFieldComponent} from "../../../../../shared/form-components/input-f
 import {SelectFieldComponent} from "../../../../../shared/form-components/select-field/select-field.component";
 import {FileInputComponent} from "../../../../../shared/form-components/file-input/file-input.component";
 import {TrackCard} from "../../../../../core/models/entities/track-card.model";
-import {ArtistWithCOntribuionLabel} from "../../../../../core/models/entities/artist.model";
+import {TrackUploadForm} from "../../../../../core/models/forms/track-upload-form.type";
+import {ArtistUploadForm} from "../../../../../core/models/forms/artist-upload-form.type";
 
 @Component({
   selector: 'app-track-upload-dialog',
@@ -46,7 +47,6 @@ import {ArtistWithCOntribuionLabel} from "../../../../../core/models/entities/ar
   encapsulation: ViewEncapsulation.None
 })
 export class TrackUploadDialogComponent implements OnInit, OnDestroy {
-  private readonly formBuilder = inject(FormBuilder);
   private readonly dialogRef = inject(MatDialogRef<TrackUploadDialogComponent>);
   private readonly trackService = inject(TrackService);
   private readonly albumService = inject(AlbumService);
@@ -77,18 +77,18 @@ export class TrackUploadDialogComponent implements OnInit, OnDestroy {
   }
 
   private initializeForm() {
-    this.trackUploadForm = this.formBuilder.group({
-      artists: this.formBuilder.array([]),
-      trackTitle: ['', [Validators.required]],
-      userId: [this.data.userId],
-      recordLabel: [''],
-      firstGenre: [''],
-      secondaryGenre: [''],
-      albumTitle: [''],
-      audioFile: [null, [Validators.required, requiredFileType('mp3'), maxFileSize(20971520)]],
-      visualFile: [null, [requiredFileType(['jpg', 'png']), maxFileSize(5242880)]],
-      newAlbumTitle: [''],
-      newAlbumVisual: [null, [requiredFileType(['jpg', 'png']), maxFileSize(5242880)]],
+    this.trackUploadForm = new FormGroup<TrackUploadForm>({
+      artists: new FormArray<FormGroup<ArtistUploadForm>>([]),
+      trackTitle: new FormControl('', {nonNullable: true, validators: [Validators.required]}),
+      userId: new FormControl(this.data.userId, {nonNullable: true}),
+      recordLabel: new FormControl(''),
+      firstGenre: new FormControl(''),
+      secondaryGenre: new FormControl(''),
+      albumTitle: new FormControl(''),
+      audioFile: new FormControl<File | null>(null as unknown as File, {validators: [Validators.required, requiredFileType('mp3'), maxFileSize(20971520)]}),
+      visualFile: new FormControl(null, {validators: [requiredFileType(['jpg', 'png']), maxFileSize(5242880)]}),
+      newAlbumTitle: new FormControl(''),
+      newAlbumVisual: new FormControl(null, {validators: [requiredFileType(['jpg', 'png']), maxFileSize(5242880)]}),
     });
     this.addArtistContribution();
   }
@@ -154,26 +154,23 @@ export class TrackUploadDialogComponent implements OnInit, OnDestroy {
     this._unsubscribeAll.complete();
   }
 
-  get artistsFormArray(): FormArray {
-    return this.trackUploadForm.get('artists') as FormArray;
+  get artistsFormArray(): FormArray<FormGroup<ArtistUploadForm>> {
+    return this.trackUploadForm.get('artists') as FormArray<FormGroup<ArtistUploadForm>>;
   }
 
   addArtistContribution(): void {
-    this.artists.push(this.createArtistGroup());
+    this.artistsFormArray.push(this.createArtistGroup());
   }
   removeArtistContribution(index: number): void {
-    this.artists.removeAt(index);
-  }
-  private createArtistGroup(): FormGroup {
-    return this.formBuilder.group({
-      firstname: ['', [Validators.required, Validators.minLength(2)]],
-      lastname: ['', [Validators.required, Validators.minLength(2)]],
-      contributionLabel: ['', [Validators.required]]
-    });
+    this.artistsFormArray.removeAt(index);
   }
 
-  get artists(): FormArray {
-    return this.trackUploadForm.get('artists') as FormArray;
+  private createArtistGroup(): FormGroup<ArtistUploadForm> {
+    return new FormGroup<ArtistUploadForm>({
+      firstname: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+      lastname: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+      contributionLabel: new FormControl('', { nonNullable: true, validators: [Validators.required] })
+    });
   }
 
   submit(): void {
@@ -194,13 +191,14 @@ export class TrackUploadDialogComponent implements OnInit, OnDestroy {
   }
 
   private processArtists(): void {
-    const formValue = this.trackUploadForm.value;
+    const artistControls = this.artistsFormArray.controls;
 
     this.artistsLyrics = [];
     this.artistsMusic = [];
     this.artistsMusicAndLyrics = [];
 
-    formValue.artists.forEach((artist: ArtistWithCOntribuionLabel) => {
+    artistControls.forEach(control => {
+      const artist = control.value;
       const artistName = `${artist.firstname} ${artist.lastname}`;
       const contribution = artist.contributionLabel;
 
@@ -226,7 +224,7 @@ export class TrackUploadDialogComponent implements OnInit, OnDestroy {
     this.albumService.postAlbum(albumDto, albumVisual).subscribe({
       next: (album: Album) => {
         console.log('Album created successfully', album);
-        // Set the albumTitle in the form to the new album's title
+        // Set the albumTitle in the form for the new album's title
         this.trackUploadForm.get('albumTitle')?.setValue(album.albumTitle);
         const formData = this.prepareFormData();
         this.uploadTrack(formData);
