@@ -1,13 +1,15 @@
 #app-pf/frontend/docker/dev/Dockerfile
 
-FROM node:22
-
-RUN npm install -g @angular/cli
+FROM node:22-alpine
 
 WORKDIR /app
 
-COPY . /app
+COPY package.json package-lock.json ./
 
 RUN npm install
 
-ENTRYPOINT ["ng", "serve", "--host", "0.0.0.0"]
+COPY . .
+
+EXPOSE 4200
+
+ENTRYPOINT ["npm", "start"]
