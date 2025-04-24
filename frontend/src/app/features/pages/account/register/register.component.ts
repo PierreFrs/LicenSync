@@ -1,16 +1,15 @@
 import {Component, inject} from '@angular/core';
-import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
 import {MatCard} from "@angular/material/card";
-import {MatError, MatFormField, MatLabel} from "@angular/material/form-field";
-import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {AccountService} from "../../../../core/services/account.service";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
-import {AsyncPipe, JsonPipe, NgClass} from "@angular/common";
+import {AsyncPipe, NgClass} from "@angular/common";
 import {ResponsiveService} from "../../../../core/services/responsive.service";
 import {RegisterValues} from "../../../../core/models/register.model";
 import {TextInputComponent} from "../../../../shared/form-components/text-input/text-input.component";
+import {RegisterFormModel} from "../../../../core/models/forms/register-form.type";
 
 @Component({
   selector: 'app-register',
@@ -19,12 +18,7 @@ import {TextInputComponent} from "../../../../shared/form-components/text-input/
   imports: [
     ReactiveFormsModule,
     MatCard,
-    MatFormField,
-    MatLabel,
-    MatInput,
     MatButton,
-    JsonPipe,
-    MatError,
     TextInputComponent,
     AsyncPipe,
     NgClass,
@@ -32,7 +26,6 @@ import {TextInputComponent} from "../../../../shared/form-components/text-input/
   ]
 })
 export class RegisterComponent {
-  private fb = inject(FormBuilder);
   private accountService = inject(AccountService);
   private router = inject(Router);
   private snack = inject(SnackbarService);
@@ -41,11 +34,11 @@ export class RegisterComponent {
   padding$ = this.responsiveService.padding$;
   validationErrors?: string[];
 
-  registerForm = this.fb.group({
-    firstName: ['', Validators.required],
-    lastName: ['', Validators.required],
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.pattern('^(?=.*)(?=.*[a-z])(?=.*[A-Z]).{8,}$')]]
+  registerForm = new FormGroup<RegisterFormModel>({
+    firstName: new FormControl('', {nonNullable: true, validators : [Validators.required]}),
+    lastName: new FormControl('', {nonNullable: true, validators : [Validators.required]}),
+    email: new FormControl('', {nonNullable: true, validators : [Validators.required, Validators.email]}),
+    password: new FormControl('', {nonNullable: true, validators : [Validators.required, Validators.pattern('^(?=.*)(?=.*[a-z])(?=.*[A-Z]).{8,}$')]})
   });
 
   onSubmit() {
