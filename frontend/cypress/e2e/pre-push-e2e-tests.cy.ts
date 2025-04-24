@@ -1,5 +1,5 @@
 import {environment} from "../../src/environments/environment";
-import {Track} from "../../src/app/core/models/track.model";
+import {Track} from "../../src/app/core/models/entities/track.model";
 
 describe('Backend Connectivity', () => {
   it('should reach the backend API', () => {

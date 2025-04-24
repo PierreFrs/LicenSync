@@ -1,9 +1,9 @@
 import {Observable, of, tap} from "rxjs";
-import {Track} from "../../../models/track.model";
+import {Track} from "../../../models/entities/track.model";
 import {inject, Injectable, signal} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {catchError, filter, map} from "rxjs/operators";
-import {TrackCard} from "../../../models/track-card.model";
+import {TrackCard} from "../../../models/entities/track-card.model";
 import {Pagination} from "../../../models/pagination.model";
 import {AppParams} from "../../../models/app-params";
 import {environment} from "../../../../../environments/environment";

@@ -1,7 +1,7 @@
 import {GenreService} from "./genre.service";
 import {TestBed} from "@angular/core/testing";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-import {Genre} from "../../../models/genre.model";
+import {Genre} from "../../../models/entities/genre.model";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {environment} from "../../../../../environments/environment";
 

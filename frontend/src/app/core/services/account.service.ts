@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
-import {User, UserInfo} from "../models/user";
+import {User, UserInfo} from "../models/entities/user";
 import {LoginValues} from "../models/login.model";
 import {RegisterValues} from "../models/register.model";
 import {environment} from "../../../environments/environment";

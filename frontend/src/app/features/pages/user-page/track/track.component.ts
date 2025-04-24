@@ -15,7 +15,7 @@ import {ImagesModule} from "../../../../core/modules/images.module";
 import {TransactionReceipt} from "../../../../core/models/transaction-receipt.model";
 import {HashesComparisonModel} from "../../../../core/models/hashes-comparison.model";
 import {DialogDataModel} from "../../../../core/models/authentication-dialog-data-model.model";
-import {TrackCard} from "../../../../core/models/track-card.model";
+import {TrackCard} from "../../../../core/models/entities/track-card.model";
 
 @Component({
   selector: 'app-track',

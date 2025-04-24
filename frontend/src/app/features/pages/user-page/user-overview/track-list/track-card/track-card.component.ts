@@ -6,7 +6,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { CommonModule } from '@angular/common';
 import { ImagesModule } from '../../../../../../core/modules/images.module';
 import { TrackService } from '../../../../../../core/services/entity-services/tracks/track.service';
-import { TrackCard } from '../../../../../../core/models/track-card.model';
+import { TrackCard } from '../../../../../../core/models/entities/track-card.model';
 
 @Component({
   selector: 'app-track-card',

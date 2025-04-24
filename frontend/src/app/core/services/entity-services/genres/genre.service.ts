@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import {Observable} from "rxjs";
-import {Genre} from "../../../models/genre.model";
+import {Genre} from "../../../models/entities/genre.model";
 import {environment} from "../../../../../environments/environment";
 
 @Injectable({

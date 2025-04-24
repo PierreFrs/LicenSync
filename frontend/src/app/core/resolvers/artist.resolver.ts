@@ -1,6 +1,6 @@
 import {ArtistService} from "../services/entity-services/artists/artist.service";
 import {ActivatedRouteSnapshot, ResolveFn} from "@angular/router";
-import {Artist} from "../models/artist.model";
+import {Artist} from "../models/entities/artist.model";
 import {inject} from "@angular/core";
 
 export const artistResolver: ResolveFn<Artist[]> = (

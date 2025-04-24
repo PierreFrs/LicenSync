@@ -1,4 +1,4 @@
-import {TransactionReceipt} from "./transaction-receipt.model";
+import {TransactionReceipt} from "../transaction-receipt.model";
 
 export type Track = {
   id: string;

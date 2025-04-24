@@ -1,10 +1,10 @@
 import {TrackService} from "./track.service";
 import {TestBed} from "@angular/core/testing";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-import {Track} from "../../../models/track.model";
+import {Track} from "../../../models/entities/track.model";
 import {HttpErrorResponse} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
-import {TrackCard} from "../../../models/track-card.model";
+import {TrackCard} from "../../../models/entities/track-card.model";
 import {AccountService} from "../../account.service";
 import {of} from "rxjs";
 

@@ -13,9 +13,9 @@ import {CommonModule} from "@angular/common";
 import {MatSelectModule} from "@angular/material/select";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
-import {Album} from "../../../../../core/models/album.model";
-import {Genre} from "../../../../../core/models/genre.model";
-import {Contribution} from "../../../../../core/models/contribution.model";
+import {Album} from "../../../../../core/models/entities/album.model";
+import {Genre} from "../../../../../core/models/entities/genre.model";
+import {Contribution} from "../../../../../core/models/entities/contribution.model";
 import {TrackService} from "../../../../../core/services/entity-services/tracks/track.service";
 import {AlbumService} from "../../../../../core/services/entity-services/albums/album.service";
 import {GenreService} from "../../../../../core/services/entity-services/genres/genre.service";
@@ -25,8 +25,8 @@ import {maxFileSize} from "../../../../../core/validation/max-file-size/max-file
 import {InputFieldComponent} from "../../../../../shared/form-components/input-field/input-field.component";
 import {SelectFieldComponent} from "../../../../../shared/form-components/select-field/select-field.component";
 import {FileInputComponent} from "../../../../../shared/form-components/file-input/file-input.component";
-import {TrackCard} from "../../../../../core/models/track-card.model";
-import {ArtistWithCOntribuionLabel} from "../../../../../core/models/artist.model";
+import {TrackCard} from "../../../../../core/models/entities/track-card.model";
+import {ArtistWithCOntribuionLabel} from "../../../../../core/models/entities/artist.model";
 
 @Component({
   selector: 'app-track-upload-dialog',
