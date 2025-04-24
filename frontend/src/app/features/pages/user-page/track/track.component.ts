@@ -1,6 +1,6 @@
 import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import { Subscription } from 'rxjs';
+import {Router} from "@angular/router";
+import {Subscription} from 'rxjs';
 import {MatCardModule} from "@angular/material/card";
 import {CommonModule, Location} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
@@ -26,7 +26,6 @@ import {TrackCard} from "../../../../core/models/track-card.model";
 })
 export class TrackComponent implements OnInit, OnDestroy {
   @Input() id!: string;
-  private activatedRoute = inject(ActivatedRoute);
   private router = inject(Router);
   private location = inject(Location);
   private dialog = inject(MatDialog);

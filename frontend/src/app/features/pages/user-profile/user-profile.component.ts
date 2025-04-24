@@ -1,9 +1,8 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {AccountService} from "../../../core/services/account.service";
 import {TrackService} from "../../../core/services/entity-services/tracks/track.service";
 import {AsyncPipe, NgClass} from "@angular/common";
 import {ResponsiveService} from "../../../core/services/responsive.service";
-import {userId} from "../../../core/functions/user-id";
 import {user} from "../../../core/functions/user";
 import {Subscription} from "rxjs";
 
@@ -17,10 +16,10 @@ import {Subscription} from "rxjs";
   templateUrl: './user-profile.component.html',
 })
 export class UserProfileComponent implements OnInit, OnDestroy{
+  @Input() id!: string;
   accountService = inject(AccountService);
   private trackService = inject(TrackService);
   private responsiveService = inject(ResponsiveService);
-  userId$ = userId();
   user$ = user();
   tracksArrayLength = 0;
   padding$ = this.responsiveService.padding$;
@@ -36,13 +35,9 @@ export class UserProfileComponent implements OnInit, OnDestroy{
 
   private getTracksArrayLength() {
     this.subscription.add(
-      this.userId$.subscribe(id => {
-        if (id) {
-          this.trackService.getTracksByUserId(id).subscribe({
-            next: (tracks) => {
-              this.tracksArrayLength = tracks.length;
-            }
-          });
+      this.trackService.getTracksByUserId(this.id).subscribe({
+        next: (tracks) => {
+          this.tracksArrayLength = tracks.length;
         }
       })
     )

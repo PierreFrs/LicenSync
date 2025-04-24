@@ -1,6 +1,5 @@
 import {Component, inject} from '@angular/core';
 import {Router} from "@angular/router";
-import {MatButton} from "@angular/material/button";
 import {MatMenuItem} from "@angular/material/menu";
 import {MatIcon} from "@angular/material/icon";
 import {AccountService} from "../../core/services/account.service";
@@ -9,7 +8,6 @@ import {AccountService} from "../../core/services/account.service";
   selector: 'app-logout-btn',
   templateUrl: './logout-btn.component.html',
   imports: [
-    MatButton,
     MatMenuItem,
     MatIcon
   ],
