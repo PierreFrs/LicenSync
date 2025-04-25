@@ -18,7 +18,12 @@
     }
   }
 <button routerLink="/">
-  <img src="../../../assets/images/logos/licensync-title.png" class="align-middle h-10" alt="licensync blue title">
+  <img ngSrc="../../../assets/images/logos/licensync-footer-title.png"
+       class="align-middle"
+       alt="licensync blue title"
+       height="50" width="100"
+       priority
+  >
 </button>
 
   @if(user$ | async) {

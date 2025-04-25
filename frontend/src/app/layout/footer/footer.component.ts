@@ -1,7 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {NavigationEnd, Router, RouterLink} from '@angular/router';
 import {UploadLinkComponent} from "../../shared/upload-link/upload-link.component";
-import {CommonModule, Location} from '@angular/common';
+import {CommonModule, Location, NgOptimizedImage} from '@angular/common';
 import {filter} from "rxjs";
 import {UserService} from "../../core/services/entity-services/users/user.service";
 import {UserMenuComponent} from "../../shared/user-menu/user-menu.component";
@@ -16,7 +16,8 @@ import {user} from "../../core/functions/user";
     UploadLinkComponent,
     CommonModule,
     UserMenuComponent,
-    RouterLink
+    RouterLink,
+    NgOptimizedImage
   ],
   templateUrl: './footer.component.html'
 })
