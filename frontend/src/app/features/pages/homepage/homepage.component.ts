@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {RouterLink} from "@angular/router";
-import {AsyncPipe, NgClass} from "@angular/common";
+import {AsyncPipe, NgClass, NgOptimizedImage} from "@angular/common";
 import {ResponsiveService} from "../../../core/services/responsive.service";
 import {MatButton} from "@angular/material/button";
 
@@ -12,7 +12,8 @@ import {MatButton} from "@angular/material/button";
     RouterLink,
     AsyncPipe,
     NgClass,
-    MatButton
+    MatButton,
+    NgOptimizedImage
   ],
   styleUrl: './homepage.component.scss'
 })
