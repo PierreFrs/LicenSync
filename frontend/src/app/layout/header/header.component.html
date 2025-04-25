@@ -1,7 +1,11 @@
 <header class="flex items-center xl:justify-between h-8 xl:h-12 p-1 xl:p-2 bg-secondary-bg sticky top-0 z-50">
   <button routerLink="/" class="h-full flex items-center xl:ml-4">
-    <img src="../../../assets/images/logos/licensync-blue.png" class="h-full" alt="licensync blue logo">
-    <img src="../../../assets/images/logos/licensync-title-grey.png" class="h-full" alt="licensync grey title">
+    <img ngSrc="../../../assets/images/logos/licensync-header-blue-logo.png"
+         alt="licensync blue logo"
+         width="32" height="32">
+    <img ngSrc="../../../assets/images/logos/licensync-header-title-grey.png"
+         alt="licensync grey title"
+         width="64" height="32">
   </button>
   <div class="h-full flex gap-8 mr-4 items-center">
     @if (isUserPage) {

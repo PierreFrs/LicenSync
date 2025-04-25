@@ -8,7 +8,7 @@ import {AccountService} from "../../core/services/account.service";
 import {BusyService} from "../../core/services/busy.service";
 import {MatProgressBar} from "@angular/material/progress-bar";
 import {userId} from "../../core/functions/user-id";
-import {AsyncPipe} from "@angular/common";
+import {AsyncPipe, NgOptimizedImage} from "@angular/common";
 import {user} from "../../core/functions/user";
 
 @Component({
@@ -19,7 +19,8 @@ import {user} from "../../core/functions/user";
     UserMenuComponent,
     RouterLink,
     MatProgressBar,
-    AsyncPipe
+    AsyncPipe,
+    NgOptimizedImage
   ],
   templateUrl: './header.component.html'
 })
