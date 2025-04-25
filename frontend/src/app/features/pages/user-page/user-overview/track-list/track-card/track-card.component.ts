@@ -3,7 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { ImagesModule } from '../../../../../../core/modules/images.module';
 import { TrackService } from '../../../../../../core/services/entity-services/tracks/track.service';
 import { TrackCard } from '../../../../../../core/models/entities/track-card.model';
@@ -18,6 +18,7 @@ import { TrackCard } from '../../../../../../core/models/entities/track-card.mod
     CommonModule,
     ImagesModule,
     RouterLink,
+    NgOptimizedImage,
   ],
   templateUrl: './track-card.component.html',
   styleUrls: ['./track-card.component.scss'],
