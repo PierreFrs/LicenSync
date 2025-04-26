@@ -12,12 +12,12 @@
       <app-upload-link
         [userId]="userId$ | async"
         class="hidden xl:block"
-      ></app-upload-link>
+      />
     }
     @if (user$ | async) {
-      <app-user-menu class="hidden xl:block"></app-user-menu>
+      <app-user-menu class="hidden xl:block"/>
     }
   </div>
 </header>
 @if (busyService.loading) {
-<mat-progress-bar mode="indeterminate" class="z-50 mt-12 h-60"></mat-progress-bar> }
+<mat-progress-bar mode="indeterminate" class="z-50 mt-12 h-60"/> }

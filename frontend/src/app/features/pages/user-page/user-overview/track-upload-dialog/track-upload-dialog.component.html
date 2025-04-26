@@ -15,8 +15,7 @@
       [required]="true"
       formControlName="trackTitle"
       data-cy="track-title-input"
-    >
-    </app-input-field>
+    />
 
     <div formArrayName="artists" class="flex flex-col justify-center mb-4">
       <div *ngFor="let artist of artistsFormArray.controls; let i = index" [formGroupName]="i" class="flex flex-col">
@@ -31,8 +30,7 @@
           [displayWith]="'label'"
           [valueField]="'label'"
           data-cy="artist-contribution-select"
-        >
-        </app-select-field>
+        />
 
         <app-input-field
           label="Prénom"
@@ -43,8 +41,7 @@
           [stringLength]="2"
           formControlName="firstname"
           data-cy="artist-firstname-input"
-        >
-        </app-input-field>
+        />
 
         <app-input-field
           label="Nom"
@@ -55,8 +52,7 @@
           [stringLength]="2"
           formControlName="lastname"
           data-cy="artist-lastname-input"
-        >
-        </app-input-field>
+        />
 
         <button type="button"
                 (click)="removeArtistContribution(i)"
@@ -81,8 +77,7 @@
       [displayWith]="'albumTitle'"
       [valueField]="'albumTitle'"
       data-cy="album-select"
-    >
-    </app-select-field>
+    />
 
     <!-- Option to Create a New Album -->
     <button type="button" (click)="toggleNewAlbum()" class="underline" data-cy="create-new-album-button">
@@ -99,9 +94,9 @@
         [required]="true"
         formControlName="newAlbumTitle"
         data-cy="new-album-title-input"
-      ></app-input-field>
+      />
 
-      <div *ngIf="newAlbumTitleControl?.hasError('albumTitleExists') && (newAlbumTitleControl?.dirty || newAlbumTitleControl?.touched)" class="text-red-600">
+      <div *ngIf="(newAlbumTitleControl?.dirty || newAlbumTitleControl?.touched) && newAlbumTitleControl?.hasError('albumTitleExists')" class="text-red-600">
         Un album avec ce titre existe déjà.
       </div>
 
@@ -112,7 +107,7 @@
         id="newAlbumVisualInput"
         [control]="newAlbumVisualControl"
         data-cy="new-album-visual-file-input"
-      ></app-file-input>
+      />
     </div>
 
     <app-input-field
@@ -121,8 +116,7 @@
       [type]="'text'"
       formControlName="recordLabel"
       data-cy="record-label-input"
-    >
-    </app-input-field>
+    />
 
     <app-select-field
       label="Genre principal"
@@ -132,8 +126,7 @@
       [displayWith]="'label'"
       [valueField]="'label'"
       data-cy="primary-genre-select"
-    >
-    </app-select-field>
+    />
 
     <app-select-field
       label="Genre secondaire"
@@ -143,8 +136,7 @@
       [displayWith]="'label'"
       [valueField]="'label'"
       data-cy="secondary-genre-select"
-    >
-    </app-select-field>
+    />
 
     <app-file-input
       formControlName="audioFile"
@@ -154,8 +146,7 @@
       [control]="audioFileControl"
       [formSubmitted]="formSubmitted"
       data-cy="audio-file-input"
-    >
-    </app-file-input>
+    />
 
     <app-file-input
       formControlName="visualFile"
@@ -164,8 +155,7 @@
       id="visualFileInput"
       [control]="visualFileControl"
       data-cy="visual-file-input"
-    >
-    </app-file-input>
+    />
 
     <div class="w-full flex justify-center mt-2">
       <button
@@ -195,6 +185,4 @@
       <span class="text-light-font">Fermer</span>
     </button>
   </div>
-
 </div>
-
