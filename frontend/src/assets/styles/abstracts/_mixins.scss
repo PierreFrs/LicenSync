@@ -1,0 +1,35 @@
+﻿// Mixin pour le thème clair
+@mixin theme-light {
+  body {
+    background-color: $main-bg-light;
+    color: $dark-font-light;
+    font-family: $body-font;
+    font-weight: 500;
+  }
+
+  .accent {
+    background-color: $accent-bg-light;
+  }
+
+  .warning {
+    color: $warn-light;
+  }
+}
+
+// Mixin pour le thème sombre
+@mixin theme-dark {
+  body {
+    background-color: $main-bg-dark;
+    color: $dark-font-dark;
+    font-family: $body-font;
+    font-weight: 500;
+  }
+
+  .accent {
+    background-color: $accent-bg-dark;
+  }
+
+  .warning {
+    color: $warn-dark;
+  }
+}

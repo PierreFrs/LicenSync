@@ -1,0 +1,23 @@
+﻿// Text color utilities
+.light-primary-text {
+  color: $light-primary-text;
+}
+
+// Hover effect utilities
+.hover-light-accent-bg {
+  &:hover {
+    background-color: $accent-hover !important;
+  }
+}
+
+.hover-light-accent-text {
+  &:hover {
+    color: $accent-hover !important;
+  }
+}
+
+// Element style utilities
+button {
+  cursor: pointer;
+  color: #0057b8;
+}

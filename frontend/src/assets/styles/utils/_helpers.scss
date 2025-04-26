@@ -1,0 +1,11 @@
+﻿.hover-light-accent-bg {
+  &:hover {
+    background-color: $accent-hover !important;
+  }
+}
+
+.hover-light-accent-text {
+  &:hover {
+    color: $accent-hover !important;
+  }
+}
