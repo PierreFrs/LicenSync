@@ -18,7 +18,7 @@
     />
 
     <div formArrayName="artists" class="flex flex-col justify-center mb-4">
-      <div *ngFor="let artist of artistsFormArray.controls; let i = index" [formGroupName]="i" class="flex flex-col">
+      <div *ngFor="let _ of artistsFormArray.controls; let i = index" [formGroupName]="i" class="flex flex-col">
 
         <app-select-field
           label="Contribution"
