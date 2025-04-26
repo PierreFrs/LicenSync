@@ -5,11 +5,15 @@
       <img
         mat-card-xl-image
         src="{{imageURL}}"
-        alt="Visual of {{track?.trackTitle}}"
+        alt="Visuel du titre {{track?.trackTitle}}"
       >
     } @else {
-      <span class="material-symbols-outlined text-7xl mr-2">imagesmode</span>
-    }
+      <img
+        ngSrc="https://picsum.photos/200"
+        alt="Visuel alternatif pour le titre {{track?.trackTitle}}"
+        width="200" height="200"
+        class="rounded-md"
+      />    }
   </mat-card-header>
 
   <mat-card-content>
@@ -89,13 +93,13 @@
               <mat-card-actions>
                 <button (click)="authenticateTrack()"
                         [disabled]="isLoading"
+                        mat-icon-button
                         [attr.aria-label]="'Protection track button'"
-                        class="size-16 p-2 rounded-full hover:bg-gray-200 hover:shadow-md"
                         data-cy="protect-track-button"
                 >
-                  <img src="assets/images/logos/licensync-grey.png"
+                  <img ngSrc="assets/images/logos/licensync-grey-button.png"
                        alt="licensync logo as a button"
-                  >
+                       height="32" width="32">
                 </button>
               </mat-card-actions>
             }

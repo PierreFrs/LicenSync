@@ -2,7 +2,7 @@ import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {Subscription} from 'rxjs';
 import {MatCardModule} from "@angular/material/card";
-import {CommonModule, Location} from "@angular/common";
+import {CommonModule, Location, NgOptimizedImage} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {TrackAuthenticationDialogComponent} from "./track-authentication-dialog/track-authentication-dialog.component";
@@ -20,7 +20,7 @@ import {TrackCard} from "../../../../core/models/entities/track-card.model";
 @Component({
   selector: 'app-track',
   standalone: true,
-  imports: [MatCardModule, CommonModule, MatButtonModule, MatIconModule, ImagesModule, MatProgressSpinnerModule],
+  imports: [MatCardModule, CommonModule, MatButtonModule, MatIconModule, ImagesModule, MatProgressSpinnerModule, NgOptimizedImage],
   templateUrl: './track.component.html',
   styleUrls: ['./track.component.scss']
 })
