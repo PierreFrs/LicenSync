@@ -1,26 +1,52 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { TrackComponent } from './track.component';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
-import { of } from 'rxjs';
+import {Observable, of} from 'rxjs';
 import { TrackService } from '../../../../core/services/entity-services/tracks/track.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import {TrackCard} from "../../../../core/models/entities/track-card.model";
 
 describe('TrackComponent', () => {
   let component: TrackComponent;
   let fixture: ComponentFixture<TrackComponent>;
-  let mockRouter: any;
-  let trackServiceMock: any;
+  let mockRouter: Partial<Router>;
+  let trackServiceMock: Partial<TrackService>;
+
+  const createMockTrackCard = (found: boolean): TrackCard | undefined => {
+    if (!found) return undefined;
+
+    return {
+      id: '123',
+      trackTitle: 'Test Track',
+      length: '3:30',
+      recordLabel: 'Test Label',
+      firstGenre: 'Pop',
+      secondaryGenre: 'Rock',
+      albumTitle: 'Test Album',
+      blockchainHash: 'hash123',
+      artistsLyrics: ['Lyricist 1', 'Lyricist 2'],
+      artistsMusic: ['Musician 1'],
+      artistsMusicAndLyrics: ['Artist 1'],
+      creationDate: new Date().toISOString(),
+      trackAudioFilePath: '/audio/test-track.mp3',
+      trackVisualFilePath: '/images/test-visual.jpg',
+      userId: 'user123'
+    };
+  };
+
+
 
   beforeEach(async () => {
-    // Create mocks
     mockRouter = {
       navigate: jest.fn(() => Promise.resolve(true))
     };
 
     trackServiceMock = {
-      getTrackCardByTrackId: jest.fn(() => of(null)), // Simulate no track found
+      getTrackCardByTrackId: jest.fn((): Observable<TrackCard | undefined> => {
+        return of(createMockTrackCard(false));
+      }),
       getTrackPictureByTrackId: jest.fn(() => of('test-url'))
     };
 
