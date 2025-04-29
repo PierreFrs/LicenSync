@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { TrackComponent } from './track.component';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
-import { of, BehaviorSubject } from 'rxjs';
+import { of } from 'rxjs';
 import { TrackService } from '../../../../core/services/entity-services/tracks/track.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
