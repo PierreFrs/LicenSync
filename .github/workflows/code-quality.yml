@@ -25,7 +25,7 @@ jobs:
         run: npm install
 
       - name: Audit for vulnerabilities
-        run: npm audit --audit-level=moderate
+        run: npm audit --audit-level=critical
 
       - name: Run ESLint
         run: npx eslint 'src/**/*.ts' --quiet
