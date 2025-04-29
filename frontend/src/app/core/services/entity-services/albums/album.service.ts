@@ -1,8 +1,8 @@
 import {Observable} from "rxjs";
 import {inject, Injectable} from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import {Album} from "../../../models/album.model";
-import {AlbumCard} from "../../../models/album-card.model";
+import {Album} from "../../../models/entities/album.model";
+import {AlbumCard} from "../../../models/entities/album-card.model";
 import {Pagination} from "../../../models/pagination.model";
 import {environment} from "../../../../../environments/environment";
 

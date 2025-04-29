@@ -1,10 +1,10 @@
-import {inject, Injectable, signal} from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import { HttpClient, HttpParams } from "@angular/common/http";
-import {User, UserInfo} from "../models/user";
-import {map} from "rxjs/operators";
+import {User, UserInfo} from "../models/entities/user";
 import {LoginValues} from "../models/login.model";
 import {RegisterValues} from "../models/register.model";
 import {environment} from "../../../environments/environment";
+import {BehaviorSubject, switchMap, tap} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +12,9 @@ import {environment} from "../../../environments/environment";
 export class AccountService {
   private readonly _httpClient = inject(HttpClient);
   private readonly baseUrl = environment.BASE_URL;
-
-  currentUser = signal<User | null>(null);
+  isAuth$ = new BehaviorSubject<boolean>(false);
+  user$ = new BehaviorSubject<User | null>(null);
+  userId$ = new BehaviorSubject<string | null>(null);
 
   login(values: LoginValues) {
     let params = new HttpParams();
@@ -23,7 +24,13 @@ export class AccountService {
     return this._httpClient.post(`${this.baseUrl}/Account/login`, values, {
       params,
       headers
-    });
+    })
+      .pipe(
+        tap(() => {
+          this.isAuth$.next(true);
+        }),
+        switchMap(() => this.getUser())
+      );
   }
 
   refreshAccessToken() {
@@ -42,24 +49,29 @@ export class AccountService {
     });
   }
 
-  getUserInfos() {
+  getUser() {
     return this._httpClient.get<User>(`${this.baseUrl}/Account/user-info`).pipe(
-      map(user => {
-        this.currentUser.set(user);
-        return user;
+      tap(user => {
+        if (user) {
+          this.user$.next(user);
+          this.userId$.next(user.id);
+        }
       })
     )
   }
 
   logout() {
-    return this._httpClient.post(`${this.baseUrl}/Account/logout`, {});
+    return this._httpClient.post(`${this.baseUrl}/Account/logout`, {})
+      .pipe(
+        tap(() => {
+          this.isAuth$.next(false);
+          this.user$.next(null);
+          this.userId$.next(null);
+        })
+      );
   }
 
   updateUserInfos(userInfo: UserInfo) {
     return this._httpClient.post(`${this.baseUrl}/Account/user-details`, userInfo);
-  }
-
-  getAuthState() {
-    return this._httpClient.get<{isAuthenticated: boolean}>(`${this.baseUrl}/Account/auth-status`);
   }
 }

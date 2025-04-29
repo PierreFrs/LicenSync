@@ -1,7 +1,7 @@
 import {ContributionService} from "./contribution.service";
 import {TestBed} from "@angular/core/testing";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-import {Contribution} from "../../../models/contribution.model";
+import {Contribution} from "../../../models/entities/contribution.model";
 import {environment} from "../../../../../environments/environment";
 
 describe('ContributionService', () => {

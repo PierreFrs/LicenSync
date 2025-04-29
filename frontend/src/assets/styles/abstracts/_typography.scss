@@ -1,0 +1,39 @@
+﻿@use '@angular/material' as mat;
+
+// Typography level definitions
+$custom-headline-1: mat.define-typography-level(
+  $font-weight: 400,
+  $font-size: 4rem,
+  $line-height: 1,
+  $letter-spacing: normal,
+);
+
+$custom-headline-2: mat.define-typography-level(
+  $font-weight: 400,
+  $font-size: 3rem,
+  $line-height: 1,
+  $letter-spacing: normal,
+);
+
+$custom-body-1: mat.define-typography-level(
+  $font-weight: 400,
+  $font-size: 1.25rem,
+  $line-height: 1.5,
+  $letter-spacing: normal,
+);
+
+$custom-body-2: mat.define-typography-level(
+  $font-weight: 400,
+  $font-size: 1rem,
+  $line-height: 1.5,
+  $letter-spacing: normal,
+);
+
+// Typography config
+$custom-typography: mat.define-typography-config(
+  $font-family: '"Roboto", "Arial", sans-serif',
+  $headline-1: $custom-headline-1,
+  $headline-2: $custom-headline-2,
+  $body-1: $custom-body-1,
+  $body-2: $custom-body-2,
+);

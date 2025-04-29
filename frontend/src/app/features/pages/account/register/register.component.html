@@ -1,35 +1,37 @@
-<div class="content-fit max-w-screen-2xl flex flex-col align-center" [ngClass]="padding$ | async">
-  <mat-card class="max-w-lg mx-auto mt-32 p-8 bg-white">
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <div class="text-center mb-6">
-        <h1 class="text-3xl font-semibold text-primary">Inscription</h1>
-      </div>
-      <app-text-input label="Prénom" formControlName="firstName" type="text"/>
-      <app-text-input label="Nom" formControlName="lastName" type="text"/>
-      <app-text-input label="Email" formControlName="email" type="email"/>
-      <app-text-input label="Mot de passe" formControlName="password" type="password"/>
-
-      @if (validationErrors) {
-        <div class="mb-3 p-4 bg-red-100 text-red-600">
-          <ul class="list-disc px-3">
-            @for (error of validationErrors; track $index) {
-              <li>{{ error }}</li>
-            }
-          </ul>
+<div class="flex items-center justify-center">
+  <div class="content-fit flex flex-col justify-center items-center text-center" [ngClass]="padding$ | async">
+    <mat-card class="max-w-lg mx-auto mt-32 p-8 bg-white">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <div class="text-center mb-6">
+          <h1 class="text-3xl font-semibold text-primary">Inscription</h1>
         </div>
-      }
+        <app-text-input label="Prénom" formControlName="firstName" type="text"/>
+        <app-text-input label="Nom" formControlName="lastName" type="text"/>
+        <app-text-input label="Email" formControlName="email" type="email"/>
+        <app-text-input label="Mot de passe" formControlName="password" type="password"/>
 
-      <button
-        [disabled]="registerForm.invalid"
-        mat-flat-button
-        type="submit"
-        class="w-full py-2 light-primary-text hover-light-accent-bg"
-        color="accent"
-      >S'inscrire</button>
-    </form>
-    <p class="font-medium mt-3 w-full text-center">Déjà inscrit ?
-      <a routerLink="/account/login"
-         class="underline text-blue-600 hover-light-accent-text">S'identifier</a>
-    </p>
-  </mat-card>
+        @if (validationErrors) {
+          <div class="mb-3 p-4 bg-red-100 text-red-600">
+            <ul class="list-disc px-3">
+              @for (error of validationErrors; track $index) {
+                <li>{{ error }}</li>
+              }
+            </ul>
+          </div>
+        }
+
+        <button
+          [disabled]="registerForm.invalid"
+          mat-flat-button
+          type="submit"
+          class="w-full py-2 light-primary-text hover-light-accent-bg"
+          color="accent"
+        >S'inscrire</button>
+      </form>
+      <p class="font-medium mt-3 w-full text-center">Déjà inscrit ?
+        <a routerLink="/account/login"
+           class="underline text-blue-600 hover-light-accent-text">S'identifier</a>
+      </p>
+    </mat-card>
+  </div>
 </div>

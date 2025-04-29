@@ -1,9 +1,7 @@
-import {Component, inject} from '@angular/core';
-import {FormBuilder, ReactiveFormsModule, Validators} from "@angular/forms";
+import {Component, DestroyRef, inject} from '@angular/core';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
-import {MatFormField, MatLabel} from "@angular/material/form-field";
 import {MatCard} from "@angular/material/card";
-import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {AccountService} from "../../../../core/services/account.service";
 import {AsyncPipe, NgClass} from "@angular/common";
@@ -11,17 +9,17 @@ import {ResponsiveService} from "../../../../core/services/responsive.service";
 import {LoginValues} from "../../../../core/models/login.model";
 import {TextInputComponent} from "../../../../shared/form-components/text-input/text-input.component";
 import {SnackbarService} from "../../../../core/services/snackbar.service";
+import {userId} from "../../../../core/functions/user-id";
+import {LoginFormModel} from "../../../../core/models/forms/login-form.type";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   standalone: true,
   imports: [
-    MatLabel,
     MatCard,
     ReactiveFormsModule,
-    MatFormField,
-    MatInput,
     MatButton,
     NgClass,
     AsyncPipe,
@@ -30,18 +28,19 @@ import {SnackbarService} from "../../../../core/services/snackbar.service";
   ]
 })
 export class LoginComponent {
-  private fb = inject(FormBuilder)
-  private accountService = inject(AccountService)
-  private router = inject(Router)
+  private accountService = inject(AccountService);
+  private router = inject(Router);
   private snack = inject(SnackbarService);
-  private responsiveService = inject(ResponsiveService)
+  private responsiveService = inject(ResponsiveService);
+  private destroyRef = inject(DestroyRef);
 
+  userId$ = userId();
   padding$ = this.responsiveService.padding$;
   validationErrors?: string[];
 
-  loginForm = this.fb.group({
-    email: ['', Validators.required],
-    password: ['', Validators.required]
+  loginForm = new FormGroup<LoginFormModel>({
+    email: new FormControl('', {nonNullable: true, validators : [Validators.required, Validators.email]}),
+    password: new FormControl('', {nonNullable: true, validators : [Validators.required]})
   });
 
   onSubmit() {
@@ -51,18 +50,16 @@ export class LoginComponent {
         password: this.loginForm.value.password ?? ''
       };
 
-      this.accountService.login(loginValues).subscribe({
-        next: () => {
-          this.accountService.getUserInfos().subscribe(() => {
-            const user = this.accountService.currentUser();
-            if (user) {
-              const id = user.id;
-              this.router.navigateByUrl(`/user/${id}`);
+      this.accountService.login(loginValues).pipe(
+        takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
+        next: (user) => {
+            if (user && user.id) {
+                this.router.navigateByUrl(`/user/${user.id}`)
             } else {
               this.snack.error('Failed to retrieve user info:');
             }
-          });
-        },
+          },
         error: () => {
           this.snack.error('Login failed:');
         }

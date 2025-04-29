@@ -8,6 +8,6 @@ export class InitService {
   private accountService = inject(AccountService);
 
   init() {
-    return this.accountService.getUserInfos();
+    return this.accountService.getUser();
   }
 }

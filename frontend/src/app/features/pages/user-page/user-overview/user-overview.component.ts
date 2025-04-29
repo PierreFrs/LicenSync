@@ -2,7 +2,6 @@ import {Component, inject} from '@angular/core';
 import {TrackListComponent} from "./track-list/track-list.component";
 import {MatListModule} from "@angular/material/list";
 import {AlbumListComponent} from "./album-list/album-list.component";
-import {RouterOutlet} from "@angular/router";
 import {AsyncPipe, NgClass} from "@angular/common";
 import {ResponsiveService} from "../../../../core/services/responsive.service";
 
@@ -13,7 +12,6 @@ import {ResponsiveService} from "../../../../core/services/responsive.service";
     TrackListComponent,
     MatListModule,
     AlbumListComponent,
-    RouterOutlet,
     NgClass,
     AsyncPipe,
   ],

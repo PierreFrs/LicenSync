@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { TrackCardComponent } from './track-card/track-card.component';
 import { CommonModule } from '@angular/common';
 import {
@@ -6,7 +6,7 @@ import {
   MatPaginatorModule,
   PageEvent,
 } from '@angular/material/paginator';
-import { Subscription } from 'rxjs';
+import {Subscription} from 'rxjs';
 import { MatGridListModule } from '@angular/material/grid-list';
 import {
   BreakpointObserver,
@@ -14,7 +14,6 @@ import {
   BreakpointState,
 } from '@angular/cdk/layout';
 import { TrackService } from '../../../../../core/services/entity-services/tracks/track.service';
-import { AccountService } from '../../../../../core/services/account.service';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import {
   MatListOption,
@@ -25,6 +24,7 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { AppParams } from '../../../../../core/models/app-params';
 import { FormsModule } from '@angular/forms';
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-track-list',
@@ -46,16 +46,14 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './track-list.component.html',
   styleUrls: ['./track-list.component.scss'],
 })
-export class TrackListComponent implements OnInit, OnDestroy {
+export class TrackListComponent implements OnInit {
   private readonly responsive = inject(BreakpointObserver);
   private readonly trackService = inject(TrackService);
-  private readonly accountService = inject(AccountService);
 
   cols = 1;
   rowHeight = '116px';
   gutterSize = '16px';
   isSmallScreen = false;
-  userId: string = '';
   sortOptions = [
     { name: 'Dates de sorties ascendantes', value: 'releaseAsc' },
     { name: 'Dates de sorties descendantes', value: 'releaseDesc' },
@@ -69,9 +67,12 @@ export class TrackListComponent implements OnInit, OnDestroy {
 
   private readonly subscriptions = new Subscription();
 
-  ngOnInit() {
-    this.subscribeToUserInfos();
+  constructor() {
     this.subscribeToResponsiveBreakpoints();
+  }
+
+  ngOnInit() {
+    this.getTrackCardListByUserId();
   }
 
   get tracks() {
@@ -102,22 +103,7 @@ export class TrackListComponent implements OnInit, OnDestroy {
     }
   }
 
-  private subscribeToUserInfos() {
-    this.subscriptions.add(
-      this.accountService.getUserInfos().subscribe({
-        next: (response) => {
-          this.userId = response.id;
-          this.getTrackCardListByUserId();
-        },
-        error: (err) => {
-          console.error('Error fetching user info:', err);
-        },
-      })
-    );
-  }
-
   private subscribeToResponsiveBreakpoints() {
-    this.subscriptions.add(
       this.responsive
         .observe([
           Breakpoints.HandsetPortrait,
@@ -126,11 +112,11 @@ export class TrackListComponent implements OnInit, OnDestroy {
           Breakpoints.TabletLandscape,
           Breakpoints.WebLandscape,
         ])
+        .pipe(takeUntilDestroyed())
         .subscribe((result) => {
           this.updateLayoutForBreakpoints(result);
           this.updatePaginator(this.tracks?.count ?? 0);
-        })
-    );
+        });
   }
 
   private updateLayoutForBreakpoints(result: BreakpointState) {
@@ -183,9 +169,5 @@ export class TrackListComponent implements OnInit, OnDestroy {
 
       this.getTrackCardListByUserId();
     }
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe();
   }
 }

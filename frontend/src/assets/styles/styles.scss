@@ -1,0 +1,34 @@
+// Import du thème personnalisé Material
+@import 'custom-theme';
+
+// Tailwind
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// 1. Abstracts - Variables, fonctions, mixins et placeholders
+@import 'abstracts/variables';
+@import 'abstracts/functions';
+@import 'abstracts/mixins';
+@import 'abstracts/placeholders';
+
+// 2. Base - Styles de base, reset, typographie, animations
+@import 'base/reset';
+@import 'base/typography';
+@import 'base/animations';
+
+// 3. Layout - Containers, grid, header, footer, etc.
+@import 'layout/containers';
+@import 'layout/responsive';
+
+// 4. Components - Composants réutilisables UI
+@import 'components/buttons';
+@import 'components/dialogs';
+@import 'components/snackbars';
+@import 'components/material-overrides';
+
+// 5. Utilities - Classes utilitaires
+@import 'utils/spacing';
+@import 'utils/colors';
+@import 'utils/text';
+@import 'utils/helpers';

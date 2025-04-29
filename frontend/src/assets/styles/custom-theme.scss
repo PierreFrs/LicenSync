@@ -1,0 +1,23 @@
+// Import des abstracts
+@use '@angular/material' as mat;
+@import 'abstracts/variables';
+@import 'abstracts/colors';
+@import 'abstracts/typography';
+
+// Import du thème
+@import 'themes/material-theme';
+@import 'themes/theme-utilities';
+
+// Inclure les imports de polices
+@import url('https://fonts.googleapis.com/css2?family=Arvo&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap');
+
+// Base HTML/Body styles
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

@@ -1,5 +1,4 @@
 import {inject, Injectable} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
 import {Observable, of} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {catchError, map} from "rxjs/operators";
@@ -10,17 +9,7 @@ import {environment} from "../../../../../environments/environment";
 })
 export class UserService {
   private httpClient = inject(HttpClient);
-  private activatedRoute = inject(ActivatedRoute)
   private baseUrl = environment.BASE_URL;
-
-  getUserIdFromRoute(): string | null {
-    let child = this.activatedRoute.root;
-    while (child.firstChild) {
-      child = child.firstChild;
-    }
-
-    return child.snapshot.paramMap.get('id');
-  }
 
   isUserRoute(url: string): boolean {
     return url.includes('/user/');

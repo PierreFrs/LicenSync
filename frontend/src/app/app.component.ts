@@ -12,7 +12,7 @@ import {FooterComponent} from "./layout/footer/footer.component";
     RouterOutlet,
     FooterComponent
   ],
-  styleUrls: ['./app.component.sass']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
   title = 'LicenSync';

@@ -4,7 +4,7 @@ import {Observable, of} from "rxjs";
 import {catchError, map} from "rxjs/operators";
 import {HashesComparisonModel} from "../../../models/hashes-comparison.model";
 import {TransactionReceipt} from "../../../models/transaction-receipt.model";
-import {TrackWithReceiptDto} from "../../../models/track.model";
+import {TrackWithReceiptDto} from "../../../models/entities/track.model";
 import {environment} from "../../../../../environments/environment";
 
 @Injectable({
