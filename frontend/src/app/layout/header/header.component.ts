@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {UploadLinkComponent} from "../../shared/upload-link/upload-link.component";
 import {filter} from "rxjs";
 import {NavigationEnd, Router, RouterLink} from "@angular/router";
@@ -10,6 +10,7 @@ import {MatProgressBar} from "@angular/material/progress-bar";
 import {userId} from "../../core/functions/user-id";
 import {AsyncPipe, NgOptimizedImage} from "@angular/common";
 import {user} from "../../core/functions/user";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-header',
@@ -29,6 +30,7 @@ export class HeaderComponent implements OnInit {
   private userService = inject(UserService);
   accountService = inject(AccountService);
   busyService = inject(BusyService);
+  private destroyRef = inject(DestroyRef);
 
   isUserPage: boolean = false;
   isTrackPage: boolean = false;
@@ -41,6 +43,7 @@ export class HeaderComponent implements OnInit {
 
   private fetchRouteInfo() {
     this.router.events.pipe(
+      takeUntilDestroyed(this.destroyRef),
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.isUserPage = this.userService.isUserRoute(this.router.url);

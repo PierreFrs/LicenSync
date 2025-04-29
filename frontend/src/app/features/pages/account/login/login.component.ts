@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, DestroyRef, inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
 import {MatCard} from "@angular/material/card";
@@ -11,6 +11,7 @@ import {TextInputComponent} from "../../../../shared/form-components/text-input/
 import {SnackbarService} from "../../../../core/services/snackbar.service";
 import {userId} from "../../../../core/functions/user-id";
 import {LoginFormModel} from "../../../../core/models/forms/login-form.type";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-login',
@@ -27,10 +28,11 @@ import {LoginFormModel} from "../../../../core/models/forms/login-form.type";
   ]
 })
 export class LoginComponent {
-  private accountService = inject(AccountService)
-  private router = inject(Router)
+  private accountService = inject(AccountService);
+  private router = inject(Router);
   private snack = inject(SnackbarService);
-  private responsiveService = inject(ResponsiveService)
+  private responsiveService = inject(ResponsiveService);
+  private destroyRef = inject(DestroyRef);
 
   userId$ = userId();
   padding$ = this.responsiveService.padding$;
@@ -48,7 +50,9 @@ export class LoginComponent {
         password: this.loginForm.value.password ?? ''
       };
 
-      this.accountService.login(loginValues).subscribe({
+      this.accountService.login(loginValues).pipe(
+        takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
         next: (user) => {
             if (user && user.id) {
                 this.router.navigateByUrl(`/user/${user.id}`)

@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { TrackCardComponent } from './track-card/track-card.component';
 import { CommonModule } from '@angular/common';
 import {
@@ -6,7 +6,7 @@ import {
   MatPaginatorModule,
   PageEvent,
 } from '@angular/material/paginator';
-import { Subscription } from 'rxjs';
+import {Subscription} from 'rxjs';
 import { MatGridListModule } from '@angular/material/grid-list';
 import {
   BreakpointObserver,
@@ -24,6 +24,7 @@ import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { AppParams } from '../../../../../core/models/app-params';
 import { FormsModule } from '@angular/forms';
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-track-list',
@@ -45,7 +46,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './track-list.component.html',
   styleUrls: ['./track-list.component.scss'],
 })
-export class TrackListComponent implements OnInit, OnDestroy {
+export class TrackListComponent implements OnInit {
   private readonly responsive = inject(BreakpointObserver);
   private readonly trackService = inject(TrackService);
 
@@ -66,8 +67,11 @@ export class TrackListComponent implements OnInit, OnDestroy {
 
   private readonly subscriptions = new Subscription();
 
-  ngOnInit() {
+  constructor() {
     this.subscribeToResponsiveBreakpoints();
+  }
+
+  ngOnInit() {
     this.getTrackCardListByUserId();
   }
 
@@ -100,7 +104,6 @@ export class TrackListComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToResponsiveBreakpoints() {
-    this.subscriptions.add(
       this.responsive
         .observe([
           Breakpoints.HandsetPortrait,
@@ -109,11 +112,11 @@ export class TrackListComponent implements OnInit, OnDestroy {
           Breakpoints.TabletLandscape,
           Breakpoints.WebLandscape,
         ])
+        .pipe(takeUntilDestroyed())
         .subscribe((result) => {
           this.updateLayoutForBreakpoints(result);
           this.updatePaginator(this.tracks?.count ?? 0);
-        })
-    );
+        });
   }
 
   private updateLayoutForBreakpoints(result: BreakpointState) {
@@ -166,9 +169,5 @@ export class TrackListComponent implements OnInit, OnDestroy {
 
       this.getTrackCardListByUserId();
     }
-  }
-
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe();
   }
 }

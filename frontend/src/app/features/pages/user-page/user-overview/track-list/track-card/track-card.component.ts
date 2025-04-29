@@ -1,4 +1,4 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import {Component, DestroyRef, inject, Input, OnInit} from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
@@ -7,6 +7,7 @@ import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { ImagesModule } from '../../../../../../core/modules/images.module';
 import { TrackService } from '../../../../../../core/services/entity-services/tracks/track.service';
 import { TrackCard } from '../../../../../../core/models/entities/track-card.model';
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-track-card',
@@ -25,6 +26,7 @@ import { TrackCard } from '../../../../../../core/models/entities/track-card.mod
 })
 export class TrackCardComponent implements OnInit {
   private readonly trackService = inject(TrackService);
+  private destroyRef = inject(DestroyRef);
 
   imageURL: string | null = null;
   cardWidth = 'w-80';
@@ -35,7 +37,9 @@ export class TrackCardComponent implements OnInit {
   }
 
   private fetchTrackPicture(trackId: string) {
-    this.trackService.getTrackPictureByTrackId(trackId).subscribe((url) => {
+    this.trackService.getTrackPictureByTrackId(trackId).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe((url) => {
       this.imageURL = url;
     });
   }

@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, DestroyRef, inject} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
 import {MatCard} from "@angular/material/card";
@@ -10,6 +10,7 @@ import {ResponsiveService} from "../../../../core/services/responsive.service";
 import {RegisterValues} from "../../../../core/models/register.model";
 import {TextInputComponent} from "../../../../shared/form-components/text-input/text-input.component";
 import {RegisterFormModel} from "../../../../core/models/forms/register-form.type";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-register',
@@ -30,6 +31,7 @@ export class RegisterComponent {
   private router = inject(Router);
   private snack = inject(SnackbarService);
   private responsiveService = inject(ResponsiveService);
+  private destroyRef = inject(DestroyRef);
 
   padding$ = this.responsiveService.padding$;
   validationErrors?: string[];
@@ -51,7 +53,9 @@ export class RegisterComponent {
         password: this.registerForm.value.password ?? ''
       };
 
-      this.accountService.register(registerValues).subscribe({
+      this.accountService.register(registerValues).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
         next: () => {
           this.snack.success('Enregistrement réussi, vous pouvez maintenant vous identifier.');
           this.router.navigateByUrl('/account/login');

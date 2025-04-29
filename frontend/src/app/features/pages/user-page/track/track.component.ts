@@ -1,6 +1,5 @@
-import {Component, inject, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, DestroyRef, inject, Input, OnInit, SimpleChanges} from '@angular/core';
 import {Router} from "@angular/router";
-import {Subscription} from 'rxjs';
 import {MatCardModule} from "@angular/material/card";
 import {CommonModule, Location, NgOptimizedImage} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
@@ -16,6 +15,7 @@ import {TransactionReceipt} from "../../../../core/models/transaction-receipt.mo
 import {HashesComparisonModel} from "../../../../core/models/hashes-comparison.model";
 import {DialogDataModel} from "../../../../core/models/authentication-dialog-data-model.model";
 import {TrackCard} from "../../../../core/models/entities/track-card.model";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-track',
@@ -24,7 +24,7 @@ import {TrackCard} from "../../../../core/models/entities/track-card.model";
   templateUrl: './track.component.html',
   styleUrls: ['./track.component.scss']
 })
-export class TrackComponent implements OnInit, OnDestroy {
+export class TrackComponent implements OnInit {
   @Input() id!: string;
   private router = inject(Router);
   private location = inject(Location);
@@ -32,6 +32,7 @@ export class TrackComponent implements OnInit, OnDestroy {
   private responsive = inject(BreakpointObserver);
   private trackService = inject(TrackService);
   private blockchainService = inject(BlockchainService);
+  private destroyRef = inject(DestroyRef)
 
   track?: TrackCard;
   imageURL: string | null = null;
@@ -41,17 +42,20 @@ export class TrackComponent implements OnInit, OnDestroy {
   cardLargeLayout: boolean = false;
   showConfirm: boolean = false;
 
-  private subscriptions = new Subscription();
-
-  ngOnInit() {
-    if (this.id) {
-      this.fetchSelectedTrack(this.id);
-    }
+  constructor() {
     this.subscribeToResponsiveBreakpoints();
   }
 
+  ngOnInit(): void {
+    if (this.id) {
+      this.fetchSelectedTrack(this.id);
+    }
+  }
+
   private fetchSelectedTrack(trackId: string): void {
-    this.trackService.getTrackCardByTrackId(trackId).subscribe({
+    this.trackService.getTrackCardByTrackId(trackId).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (track) => {
         if (track) {
           this.track = track;
@@ -77,7 +81,9 @@ export class TrackComponent implements OnInit, OnDestroy {
 
   private fetchImageURL(): void {
     if (this.track?.trackVisualFilePath) {
-      this.trackService.getTrackPictureByTrackId(this.track.id).subscribe({
+      this.trackService.getTrackPictureByTrackId(this.track.id).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
         next: (url) => {
           this.imageURL = url;
         },
@@ -89,17 +95,16 @@ export class TrackComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToResponsiveBreakpoints() {
-    this.subscriptions.add(
       this.responsive.observe([
         Breakpoints.HandsetPortrait,
         Breakpoints.HandsetLandscape,
         Breakpoints.TabletPortrait,
         Breakpoints.TabletLandscape,
         Breakpoints.WebLandscape
-      ])
+      ]).pipe(takeUntilDestroyed())
       .subscribe(result => {
         this.updateLayoutForBreakpoints(result);
-      }));
+      });
   }
 
   private updateLayoutForBreakpoints(result: BreakpointState) {
@@ -126,7 +131,9 @@ export class TrackComponent implements OnInit, OnDestroy {
     this.operationSuccess = "neutral";
     this.isLoading = true;
 
-    this.blockchainService.storeHash(this.id).subscribe({
+    this.blockchainService.storeHash(this.id).pipe(
+      takeUntilDestroyed(this.destroyRef),
+  ).subscribe({
       next: (response: TransactionReceipt) => {
         this.isLoading = false;
         this.operationSuccess = response ? 'success' : 'failure';
@@ -153,7 +160,9 @@ export class TrackComponent implements OnInit, OnDestroy {
       return;
     }
     this.isLoading = true;
-    this.blockchainService.compareHashes(this.id).subscribe({
+    this.blockchainService.compareHashes(this.id).pipe(
+      takeUntilDestroyed(this.destroyRef),
+  ).subscribe({
       next: (hashes) => {
         this.isLoading = false;
         this.openDialogWithHashes(hashes);
@@ -195,12 +204,7 @@ export class TrackComponent implements OnInit, OnDestroy {
     }
   }
 
-
   toggleShowConfirm(): void {
     this.showConfirm = true;
   }
-
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-    }
 }

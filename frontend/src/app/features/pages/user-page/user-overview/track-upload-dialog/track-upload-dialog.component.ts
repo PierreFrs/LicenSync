@@ -1,4 +1,4 @@
-import {Component, inject, Inject, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
+import {Component, DestroyRef, inject, Inject, OnInit, ViewEncapsulation} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {
   AbstractControl,
@@ -8,7 +8,7 @@ import {
   ReactiveFormsModule, ValidationErrors, ValidatorFn,
   Validators
 } from "@angular/forms";
-import {Subject, takeUntil} from "rxjs";
+import {Subject} from "rxjs";
 import {CommonModule} from "@angular/common";
 import {MatSelectModule} from "@angular/material/select";
 import {MatInputModule} from "@angular/material/input";
@@ -28,6 +28,7 @@ import {FileInputComponent} from "../../../../../shared/form-components/file-inp
 import {TrackCard} from "../../../../../core/models/entities/track-card.model";
 import {TrackUploadForm} from "../../../../../core/models/forms/track-upload-form.type";
 import {ArtistUploadForm} from "../../../../../core/models/forms/artist-upload-form.type";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-track-upload-dialog',
@@ -46,7 +47,7 @@ import {ArtistUploadForm} from "../../../../../core/models/forms/artist-upload-f
   styleUrls: ['./track-upload-dialog.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class TrackUploadDialogComponent implements OnInit, OnDestroy {
+export class TrackUploadDialogComponent implements OnInit {
   private readonly dialogRef = inject(MatDialogRef<TrackUploadDialogComponent>);
   private readonly trackService = inject(TrackService);
   private readonly albumService = inject(AlbumService);
@@ -56,6 +57,8 @@ export class TrackUploadDialogComponent implements OnInit, OnDestroy {
   private artistsLyrics: string[] = [];
   private artistsMusic: string[] = [];
   private artistsMusicAndLyrics: string[] = [];
+
+  private destroyRef = inject(DestroyRef);
 
 
   genreList: string[] = [];
@@ -101,7 +104,7 @@ export class TrackUploadDialogComponent implements OnInit, OnDestroy {
 
   private fetchGenres() {
     this.genreService.getGenreList()
-      .pipe(takeUntil(this._unsubscribeAll))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((genres: Genre[]) => {
       this.genreList = genres.map((genre: Genre) => genre.label);
     });
@@ -109,7 +112,7 @@ export class TrackUploadDialogComponent implements OnInit, OnDestroy {
 
   private fetchAlbums() {
     this.albumService.getAlbumsByUserId(this.data.userId)
-      .pipe(takeUntil(this._unsubscribeAll))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((albums: Album[]) => {
       this.userAlbumList = albums.map((album: Album) => album.albumTitle);
     });
@@ -117,7 +120,7 @@ export class TrackUploadDialogComponent implements OnInit, OnDestroy {
 
   private fetchContributions() {
     this.contributionService.getContributionList()
-      .pipe(takeUntil(this._unsubscribeAll))
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((contributions: Contribution[]) => {
       this.contributionList = contributions.map((contribution: Contribution) => contribution.label);
     });
@@ -147,11 +150,6 @@ export class TrackUploadDialogComponent implements OnInit, OnDestroy {
       this.trackUploadForm.get('newAlbumTitle')?.setValue('');
       this.trackUploadForm.get('newAlbumVisual')?.setValue(null);
     }
-  }
-
-  ngOnDestroy() {
-    this._unsubscribeAll.next();
-    this._unsubscribeAll.complete();
   }
 
   get artistsFormArray(): FormArray<FormGroup<ArtistUploadForm>> {
@@ -221,7 +219,9 @@ export class TrackUploadDialogComponent implements OnInit, OnDestroy {
       userId: this.data.userId,
     };
 
-    this.albumService.postAlbum(albumDto, albumVisual).subscribe({
+    this.albumService.postAlbum(albumDto, albumVisual)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: (album: Album) => {
         console.log('Album created successfully', album);
         // Set the albumTitle in the form for the new album's title
@@ -280,7 +280,9 @@ export class TrackUploadDialogComponent implements OnInit, OnDestroy {
   }
 
   private uploadTrack(formData: FormData): void {
-    this.trackService.uploadTrack(formData).subscribe({
+    this.trackService.uploadTrack(formData)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
       next: (response: TrackCard) => {
         console.log('Track uploaded successfully', response);
         this.handleTrackUploadSuccess(response);
