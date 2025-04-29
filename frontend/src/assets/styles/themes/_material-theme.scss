@@ -1,0 +1,20 @@
+﻿@use '@angular/material' as mat;
+
+// Include Angular Material core styles
+@include mat.core();
+
+// Define theme object
+$theme: mat.define-light-theme((
+  color: (
+    primary: $primary,
+    accent: $accent,
+    warn: $warn,
+  ),
+  typography: $custom-typography
+));
+
+// Apply theme to custom-theme class
+.custom-theme {
+  @include mat.all-component-themes($theme);
+  @include mat.all-component-typographies($theme);
+}

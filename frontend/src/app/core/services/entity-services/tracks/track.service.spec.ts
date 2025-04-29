@@ -1,12 +1,45 @@
 import {TrackService} from "./track.service";
 import {TestBed} from "@angular/core/testing";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-import {Track} from "../../../models/track.model";
+import {Track} from "../../../models/entities/track.model";
 import {HttpErrorResponse} from "@angular/common/http";
 import {environment} from "../../../../../environments/environment";
-import {TrackCard} from "../../../models/track-card.model";
+import {TrackCard} from "../../../models/entities/track-card.model";
 import {AccountService} from "../../account.service";
-import {of} from "rxjs";
+import {BehaviorSubject} from "rxjs";
+import {User, UserInfo} from "../../../models/entities/user";
+import {map} from "rxjs/operators";
+
+const mockUserInfo: UserInfo = {
+  phoneNumber: '123-456-7890',
+  birthDate: '1990-01-01',
+  profilePicturePath: 'path/to/profile.jpg',
+  address: '123 Test Street',
+  city: 'Test City',
+  country: 'Test Country',
+  postalCode: '12345',
+  userName: 'testuser',
+};
+
+const mockUser: User = {
+  id: 'testUserId',
+  email: 'test@example.com',
+  firstName: 'Test',
+  lastName: 'User',
+  userInfo: mockUserInfo,
+};
+
+const userBehaviorSubject = new BehaviorSubject<User | null>(mockUser);
+
+jest.mock('../../../functions/user', () => ({
+  user: () => ({
+    asObservable: () => userBehaviorSubject.asObservable()
+  })
+}));
+
+jest.mock('../../../functions/user-id', () => ({
+  userId: () => userBehaviorSubject.pipe(map(user => user?.id || ''))
+}));
 
 describe('TrackService', () => {
   let service: TrackService;
@@ -32,10 +65,8 @@ describe('TrackService', () => {
   }
 
   beforeEach(() => {
-    const mockUserInfo = { id: 'testUserId' };
-
     accountServiceMock = {
-      getUserInfos: jest.fn().mockReturnValue(of(mockUserInfo))
+      user$: userBehaviorSubject
     };
 
     TestBed.configureTestingModule({

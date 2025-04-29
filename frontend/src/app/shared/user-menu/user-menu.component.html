@@ -5,19 +5,19 @@
   @if (!isXlScreen && !menuTrigger.menuOpen || isXlScreen && menuTrigger.menuOpen) {
     <mat-icon>arrow_drop_up</mat-icon>
   }
-  <span>{{accountService.currentUser()?.email}}</span>
+  <span>{{(user$ | async)?.email}}</span>
 </button>
 
 
 <mat-menu #menu="matMenu" class="px-5">
   @if (isProfilePage) {
-    <app-user-page-link></app-user-page-link>
+    <app-user-page-link/>
   } @else if (isTrackPage) {
-    <app-user-page-link></app-user-page-link>
-    <app-profile-link></app-profile-link>
+    <app-user-page-link/>
+    <app-profile-link/>
   } @else {
-    <app-profile-link></app-profile-link>
+    <app-profile-link/>
   }
-  <mat-divider></mat-divider>
-  <app-logout-btn></app-logout-btn>
+  <mat-divider/>
+  <app-logout-btn/>
 </mat-menu>

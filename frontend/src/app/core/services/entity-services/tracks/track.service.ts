@@ -1,13 +1,14 @@
-import {Observable, of, switchMap, tap} from "rxjs";
-import {Track} from "../../../models/track.model";
+import {Observable, of, tap} from "rxjs";
+import {Track} from "../../../models/entities/track.model";
 import {inject, Injectable, signal} from "@angular/core";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {catchError, map} from "rxjs/operators";
-import {TrackCard} from "../../../models/track-card.model";
+import {catchError, filter, map} from "rxjs/operators";
+import {TrackCard} from "../../../models/entities/track-card.model";
 import {Pagination} from "../../../models/pagination.model";
 import {AppParams} from "../../../models/app-params";
 import {environment} from "../../../../../environments/environment";
-import {AccountService} from "../../account.service";
+import {user} from "../../../functions/user";
+import { userId } from "../../../functions/user-id";
 
 @Injectable({
   providedIn: 'root',
@@ -15,15 +16,16 @@ import {AccountService} from "../../account.service";
 export class TrackService {
   private httpClient = inject(HttpClient);
   private baseUrl = environment.BASE_URL;
-  private accountService = inject(AccountService);
   trackCardList = signal<Pagination<TrackCard> | null>(null);
+  user$ = user();
+  userId$ = userId()
 
   titles: string[] = [];
   albums: string[] = [];
   genres: string[] = [];
   releaseDates: string[] = [];
 
-  getTracksByUserId(userId:string): Observable<Track[]> {
+  getTracksByUserId(userId: string): Observable<Track[]> {
     return this.httpClient.get<Track[]>(`${this.baseUrl}/Track/user/${userId}`);
   }
 
@@ -47,62 +49,72 @@ export class TrackService {
   }
 
   getTrackCardsByUserId(appParams: AppParams) {
-    // Use the accountService to get the user ID dynamically
-    this.accountService.getUserInfos().subscribe({
-      next: (user) => {
-        let params = new HttpParams();
-        if (appParams.sort) {
-          params = params.append('sort', appParams.sort);
-        }
-        if (appParams.search) {
-          params = params.append('search', appParams.search);
-        }
+    let params = new HttpParams();
+    if (appParams.sort) {
+      params = params.append('sort', appParams.sort);
+    }
+    if (appParams.search) {
+      params = params.append('search', appParams.search);
+    }
 
-        params = params.append('pageSize', appParams.pageSize.toString());
-        params = params.append('pageIndex', appParams.pageIndex.toString());
+    params = params.append('pageSize', appParams.pageSize.toString());
+    params = params.append('pageIndex', appParams.pageIndex.toString());
 
-        // Call the track service with the user ID
-        this.httpClient.get<Pagination<TrackCard>>(`${this.baseUrl}/Track/track-card-list/${user.id}`, { params }).subscribe({
-          next: trackCardList => this.trackCardList.set(trackCardList),
-        });
-      },
-      error: (err) => console.error('Error fetching user info:', err),
+    // Call the track service with the user ID
+    this.userId$.pipe(
+      filter(userId => !!userId), // Only proceed if userId is not null
+    ).subscribe(userId => {
+      this.httpClient.get<Pagination<TrackCard>>(
+        `${this.baseUrl}/Track/track-card-list/${userId}`,
+        { params }
+      ).subscribe({
+        next: trackCardList => this.trackCardList.set(trackCardList),
+        error: err => console.error('Error fetching track cards:', err)
+      });
     });
   }
 
   uploadTrack(formData: FormData): Observable<TrackCard> {
-    return this.accountService.getUserInfos().pipe(
-      switchMap(() => this.httpClient.post<TrackCard>(`${this.baseUrl}/Track/track-card`, formData)),
+    return this.httpClient.post<TrackCard>(`${this.baseUrl}/Track/track-card`, formData)
+    .pipe(
       tap(() => {
-        // Refresh the track list after uploading the track
-        this.accountService.getUserInfos().subscribe(user => {
-          this.httpClient.get<Pagination<TrackCard>>(`${this.baseUrl}/Track/track-card-list/${user.id}`).subscribe({
-            next: trackCardList => this.trackCardList.set(trackCardList),
-            error: err => console.error('Error fetching updated track list:', err)
+        if (this.userId$) {
+          // Refresh the track list after uploading the track
+          this.userId$.pipe(
+            filter(userId => !!userId), // Only proceed if userId is not null
+          ).subscribe(userId => {
+            this.httpClient.get<Pagination<TrackCard>>(
+              `${this.baseUrl}/Track/track-card-list/${userId}`
+            ).subscribe({
+              next: trackCardList => this.trackCardList.set(trackCardList),
+              error: err => console.error('Error fetching track cards:', err)
+            });
           });
-        });
+        }
       })
     );
   }
 
   deleteTrack(trackId: string) {
-    // Use the accountService to get the user ID dynamically
-    this.accountService.getUserInfos().subscribe({
-      next: (user) => {
         // Delete the track
         this.httpClient.delete<boolean>(`${this.baseUrl}/Track/${trackId}`).subscribe({
           next: () => {
             // After deleting the track, refresh the track list for the user
-            this.httpClient.get<Pagination<TrackCard>>(`${this.baseUrl}/Track/track-card-list/${user.id}`).subscribe({
-              next: trackCardList => this.trackCardList.set(trackCardList),
-              error: err => console.error('Error fetching updated track list:', err)
-            });
+            if (this.userId$) {
+              this.userId$.pipe(
+                filter(userId => !!userId), // Only proceed if userId is not null
+              ).subscribe(userId => {
+                this.httpClient.get<Pagination<TrackCard>>(
+                  `${this.baseUrl}/Track/track-card-list/${userId}`
+                ).subscribe({
+                  next: trackCardList => this.trackCardList.set(trackCardList),
+                  error: err => console.error('Error fetching track cards:', err)
+                });
+              });
+            }
           },
           error: err => console.error('Error deleting track:', err)
         });
-      },
-      error: (err) => console.error('Error fetching user info:', err),
-    });
   }
 
   getTrackCardByTrackId(trackId: string): Observable<TrackCard> {

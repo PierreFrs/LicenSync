@@ -1,7 +1,7 @@
-import { FormControl } from "@angular/forms";
+import {AbstractControl, ValidationErrors, ValidatorFn} from "@angular/forms";
 
-export function requiredFileType(types: string | string[]) {
-  return function (control: FormControl) {
+export function requiredFileType(types: string | string[]): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
     const file = control.value;
     if (file) {
       const extension = file.name.split('.').pop()?.toLowerCase();

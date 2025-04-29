@@ -19,10 +19,13 @@ export class UploadLinkComponent {
     if (this.userId) {
       this.dialog.open(TrackUploadDialogComponent, {
         panelClass: "modal-panel",
-        data: { userId: this.userId }
+        data: {userId: this.userId}
       });
-    } else {
-      console.log('User ID is not available');
+    }
+    else {
+      console.error(
+        "UploadLinkComponent: userId is null"
+      );
     }
   }
 }

@@ -39,13 +39,6 @@ describe('UserService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('getUserIdFromRoute', () => {
-    it('should return a user id', () => {
-      paramMapSubject.next(new Map([['id', '1']]));
-      expect(service.getUserIdFromRoute()).toEqual('1');
-    });
-  });
-
   describe('isUserRoute', () => {
     it('should return true for user route', () => {
       expect(service.isUserRoute('/user/1')).toEqual(true);

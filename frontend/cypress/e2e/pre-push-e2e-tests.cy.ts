@@ -1,5 +1,5 @@
 import {environment} from "../../src/environments/environment";
-import {Track} from "../../src/app/core/models/track.model";
+import {Track} from "../../src/app/core/models/entities/track.model";
 
 describe('Backend Connectivity', () => {
   it('should reach the backend API', () => {
@@ -104,6 +104,7 @@ describe('Get tracks by user id', () => {
   it('should go to the new track file and verify the data', () => {
     cy.wait(1000);
     cy.visit(`${baseFrontendUrl}/track/${track.id}`);
+
     cy.contains('New track');
     cy.contains('John Doe');
     cy.contains('The Wall');

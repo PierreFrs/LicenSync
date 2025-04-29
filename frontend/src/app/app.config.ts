@@ -1,5 +1,5 @@
 import {APP_INITIALIZER, ApplicationConfig, provideZoneChangeDetection} from "@angular/core";
-import { provideRouter } from "@angular/router";
+import {provideRouter, withComponentInputBinding} from "@angular/router";
 import { routes } from "./app.routes";
 import {provideHttpClient, withInterceptors} from "@angular/common/http";
 import {provideAnimations} from "@angular/platform-browser/animations";
@@ -21,7 +21,7 @@ function initializeApp(initService: InitService) {
 export const appConfig: ApplicationConfig = {
   providers: [
     provideZoneChangeDetection({eventCoalescing: true}),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     provideAnimations(),
     provideHttpClient(withInterceptors([
       errorInterceptor,

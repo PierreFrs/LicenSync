@@ -1,5 +1,5 @@
-import {Contribution} from "./contribution.model";
-import {Genre} from "./genre.model";
-import {Album} from "./album.model";
+import {Contribution} from "./entities/contribution.model";
+import {Genre} from "./entities/genre.model";
+import {Album} from "./entities/album.model";
 
 export type SelectFieldOptionModel = Contribution | Genre | Album;

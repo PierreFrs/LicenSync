@@ -1,8 +1,7 @@
-import {Component, inject, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import { Subscription } from 'rxjs';
+import {Component, DestroyRef, inject, Input, OnInit} from '@angular/core';
+import {Router} from "@angular/router";
 import {MatCardModule} from "@angular/material/card";
-import {CommonModule, Location} from "@angular/common";
+import {CommonModule, Location, NgOptimizedImage} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {TrackAuthenticationDialogComponent} from "./track-authentication-dialog/track-authentication-dialog.component";
@@ -15,25 +14,26 @@ import {ImagesModule} from "../../../../core/modules/images.module";
 import {TransactionReceipt} from "../../../../core/models/transaction-receipt.model";
 import {HashesComparisonModel} from "../../../../core/models/hashes-comparison.model";
 import {DialogDataModel} from "../../../../core/models/authentication-dialog-data-model.model";
-import {TrackCard} from "../../../../core/models/track-card.model";
+import {TrackCard} from "../../../../core/models/entities/track-card.model";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-track',
   standalone: true,
-  imports: [MatCardModule, CommonModule, MatButtonModule, MatIconModule, ImagesModule, MatProgressSpinnerModule],
+  imports: [MatCardModule, CommonModule, MatButtonModule, MatIconModule, ImagesModule, MatProgressSpinnerModule, NgOptimizedImage],
   templateUrl: './track.component.html',
   styleUrls: ['./track.component.scss']
 })
-export class TrackComponent implements OnInit, OnDestroy {
-  private activatedRoute = inject(ActivatedRoute);
+export class TrackComponent implements OnInit {
+  @Input() id!: string;
   private router = inject(Router);
   private location = inject(Location);
   private dialog = inject(MatDialog);
   private responsive = inject(BreakpointObserver);
   private trackService = inject(TrackService);
   private blockchainService = inject(BlockchainService);
+  private destroyRef = inject(DestroyRef)
 
-  trackId: string | null = null;
   track?: TrackCard;
   imageURL: string | null = null;
   operationSuccess: string | null = "neutral";
@@ -42,30 +42,20 @@ export class TrackComponent implements OnInit, OnDestroy {
   cardLargeLayout: boolean = false;
   showConfirm: boolean = false;
 
-  private subscriptions = new Subscription();
-
-  ngOnInit() {
-    this.fetchTrackIdFromRoute();
-    if (this.trackId) {
-      this.fetchSelectedTrack(this.trackId);
-    }
+  constructor() {
     this.subscribeToResponsiveBreakpoints();
   }
 
-  private fetchTrackIdFromRoute() {
-    const id = this.activatedRoute.snapshot.paramMap.get('id');
-    if (!id) {
-      this.router.navigate(['/not-found']).then((navigated) => {
-        if (!navigated) {
-          console.warn('Navigation to 404 failed');
-        }
-      });
+  ngOnInit(): void {
+    if (this.id) {
+      this.fetchSelectedTrack(this.id);
     }
-    this.trackId = id;
   }
 
   private fetchSelectedTrack(trackId: string): void {
-    this.trackService.getTrackCardByTrackId(trackId).subscribe({
+    this.trackService.getTrackCardByTrackId(trackId).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe({
       next: (track) => {
         if (track) {
           this.track = track;
@@ -91,7 +81,9 @@ export class TrackComponent implements OnInit, OnDestroy {
 
   private fetchImageURL(): void {
     if (this.track?.trackVisualFilePath) {
-      this.trackService.getTrackPictureByTrackId(this.track.id).subscribe({
+      this.trackService.getTrackPictureByTrackId(this.track.id).pipe(
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe({
         next: (url) => {
           this.imageURL = url;
         },
@@ -103,17 +95,16 @@ export class TrackComponent implements OnInit, OnDestroy {
   }
 
   private subscribeToResponsiveBreakpoints() {
-    this.subscriptions.add(
       this.responsive.observe([
         Breakpoints.HandsetPortrait,
         Breakpoints.HandsetLandscape,
         Breakpoints.TabletPortrait,
         Breakpoints.TabletLandscape,
         Breakpoints.WebLandscape
-      ])
+      ]).pipe(takeUntilDestroyed())
       .subscribe(result => {
         this.updateLayoutForBreakpoints(result);
-      }));
+      });
   }
 
   private updateLayoutForBreakpoints(result: BreakpointState) {
@@ -132,7 +123,7 @@ export class TrackComponent implements OnInit, OnDestroy {
   }
 
   authenticateTrack(): void {
-    if (this.trackId === null) {
+    if (this.id === null) {
       console.error('trackId is null');
       return;
     }
@@ -140,14 +131,16 @@ export class TrackComponent implements OnInit, OnDestroy {
     this.operationSuccess = "neutral";
     this.isLoading = true;
 
-    this.blockchainService.storeHash(this.trackId).subscribe({
+    this.blockchainService.storeHash(this.id).pipe(
+      takeUntilDestroyed(this.destroyRef),
+  ).subscribe({
       next: (response: TransactionReceipt) => {
         this.isLoading = false;
         this.operationSuccess = response ? 'success' : 'failure';
 
         if (this.operationSuccess === 'success') {
           this.message = "Authentication réussie !!";
-          this.fetchSelectedTrack(this.trackId!);
+          this.fetchSelectedTrack(this.id!);
           } else {
           this.message = "Echec de l'authentification...";
         }
@@ -162,12 +155,14 @@ export class TrackComponent implements OnInit, OnDestroy {
   }
 
   fetchHashesAndOpenDialog(): void {
-    if (!this.trackId) {
+    if (!this.id) {
       console.error('Track ID is null or undefined');
       return;
     }
     this.isLoading = true;
-    this.blockchainService.compareHashes(this.trackId).subscribe({
+    this.blockchainService.compareHashes(this.id).pipe(
+      takeUntilDestroyed(this.destroyRef),
+  ).subscribe({
       next: (hashes) => {
         this.isLoading = false;
         this.openDialogWithHashes(hashes);
@@ -192,12 +187,12 @@ export class TrackComponent implements OnInit, OnDestroy {
   }
 
   deleteTrack(): void {
-    if (!this.trackId) {
+    if (!this.id) {
       console.error('trackId is null');
       return;
     }
 
-    this.trackService.deleteTrack(this.trackId);
+    this.trackService.deleteTrack(this.id);
 
     if (this.trackService.trackCardList()) {
       this.operationSuccess = "success";
@@ -209,12 +204,7 @@ export class TrackComponent implements OnInit, OnDestroy {
     }
   }
 
-
   toggleShowConfirm(): void {
     this.showConfirm = true;
   }
-
-  ngOnDestroy() {
-    this.subscriptions.unsubscribe();
-    }
 }

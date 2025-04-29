@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, DestroyRef, inject, OnInit} from '@angular/core';
 import {ProfileLinkComponent} from "../profile-link/profile-link.component";
 import {LogoutBtnComponent} from "../logout-btn/logout-btn.component";
 import {MatButton} from "@angular/material/button";
@@ -10,6 +10,9 @@ import {filter} from "rxjs";
 import {NavigationEnd, Router} from "@angular/router";
 import {AccountService} from "../../core/services/account.service";
 import {UserService} from "../../core/services/entity-services/users/user.service";
+import {user} from "../../core/functions/user";
+import {AsyncPipe} from "@angular/common";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
   selector: 'app-user-menu',
@@ -22,7 +25,8 @@ import {UserService} from "../../core/services/entity-services/users/user.servic
     MatMenu,
     MatIcon,
     MatDivider,
-    UserPageLinkComponent
+    UserPageLinkComponent,
+    AsyncPipe
   ],
   templateUrl: './user-menu.component.html',
 })
@@ -34,6 +38,8 @@ export class UserMenuComponent implements OnInit {
   isTrackPage: boolean = false;
   router = inject(Router);
   userService = inject(UserService);
+  user$ = user();
+  private destroyRef = inject(DestroyRef);
 
   constructor() {
     this.checkScreenSize();
@@ -47,10 +53,9 @@ export class UserMenuComponent implements OnInit {
     this.isXlScreen = window.matchMedia('(min-width: 1280px)').matches;
   }
 
-  protected readonly matMenuTrigger = MatMenuTrigger;
-
   private fetchRouteInfo() {
     this.router.events.pipe(
+      takeUntilDestroyed(this.destroyRef),
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.isUserPage = this.userService.isUserRoute(this.router.url);
