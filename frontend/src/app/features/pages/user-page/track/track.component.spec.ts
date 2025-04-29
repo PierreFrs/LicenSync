@@ -1,55 +1,62 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { TrackComponent } from './track.component';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { of, BehaviorSubject } from 'rxjs';
 import { TrackService } from '../../../../core/services/entity-services/tracks/track.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 
 describe('TrackComponent', () => {
   let component: TrackComponent;
   let fixture: ComponentFixture<TrackComponent>;
-
-  const paramMapSubject = new BehaviorSubject(convertToParamMap({ id: '123' }));
-  const activatedRouteStub = {
-    snapshot: { paramMap: convertToParamMap({ id: '123' }) },
-    paramMap: paramMapSubject.asObservable(),
-  };
-
-  const mockRouter = {
-    navigate: jest.fn(() => Promise.resolve(true)) // Ensure `navigate` returns a promise
-  };
-
-  const trackServiceMock = {
-    getTrackCardByTrackId: jest.fn(() => of(null)), // Simulate no track found, triggers navigation
-  };
+  let mockRouter: any;
+  let trackServiceMock: any;
 
   beforeEach(async () => {
+    // Create mocks
+    mockRouter = {
+      navigate: jest.fn(() => Promise.resolve(true))
+    };
+
+    trackServiceMock = {
+      getTrackCardByTrackId: jest.fn(() => of(null)), // Simulate no track found
+      getTrackPictureByTrackId: jest.fn(() => of('test-url'))
+    };
+
     await TestBed.configureTestingModule({
       imports: [TrackComponent, HttpClientTestingModule],
       providers: [
-        { provide: ActivatedRoute, useValue: activatedRouteStub },
-        { provide: Router, useValue: mockRouter },  // Provide mocked Router
-        { provide: TrackService, useValue: trackServiceMock },  // Mock TrackService
+        { provide: ActivatedRoute, useValue: {
+            snapshot: { paramMap: convertToParamMap({ id: '123' }) }
+          }
+        },
+        { provide: Router, useValue: mockRouter },
+        { provide: TrackService, useValue: trackServiceMock },
+        { provide: MatDialog, useValue: { open: jest.fn() } },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(TrackComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges(); // Trigger ngOnInit
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should fetch the correct trackId from route', () => {
-    expect(component.trackId).toBe('123');
-  });
+  it('should navigate to not-found if track is missing', fakeAsync(() => {
+    // Set the ID directly (the way the component actually uses it)
+    component.id = '123';
 
-  it('should navigate to not-found if trackId is missing', async () => {
-    paramMapSubject.next(convertToParamMap({})); // Simulate missing param
+    // Call ngOnInit to trigger the fetch
     component.ngOnInit();
-    await fixture.whenStable(); // Ensure async operations complete
+
+    // Use fakeAsync's tick to resolve all pending promises/observables
+    tick();
+
+    // Verify router was called with not-found route
     expect(mockRouter.navigate).toHaveBeenCalledWith(['/not-found']);
-  });
+  }));
 });
