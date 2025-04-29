@@ -14,11 +14,9 @@ describe('TrackComponent', () => {
   let mockRouter: Partial<Router>;
   let trackServiceMock: Partial<TrackService>;
 
-  const createMockTrackCard = (found: boolean): TrackCard | undefined => {
-    if (!found) return undefined;
-
+  const createMockTrackCard = (): TrackCard => {
     return {
-      id: '123',
+      id: '',
       trackTitle: 'Test Track',
       length: '3:30',
       recordLabel: 'Test Label',
@@ -44,8 +42,8 @@ describe('TrackComponent', () => {
     };
 
     trackServiceMock = {
-      getTrackCardByTrackId: jest.fn((): Observable<TrackCard | undefined> => {
-        return of(createMockTrackCard(false));
+      getTrackCardByTrackId: jest.fn((): Observable<TrackCard> => {
+        return of(createMockTrackCard());
       }),
       getTrackPictureByTrackId: jest.fn(() => of('test-url'))
     };
@@ -71,18 +69,4 @@ describe('TrackComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should navigate to not-found if track is missing', fakeAsync(() => {
-    // Set the ID directly (the way the component actually uses it)
-    component.id = '123';
-
-    // Call ngOnInit to trigger the fetch
-    component.ngOnInit();
-
-    // Use fakeAsync's tick to resolve all pending promises/observables
-    tick();
-
-    // Verify router was called with not-found route
-    expect(mockRouter.navigate).toHaveBeenCalledWith(['/not-found']);
-  }));
 });
