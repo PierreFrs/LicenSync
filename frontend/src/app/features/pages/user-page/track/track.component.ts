@@ -1,4 +1,4 @@
-import {Component, DestroyRef, inject, Input, OnInit, SimpleChanges} from '@angular/core';
+import {Component, DestroyRef, inject, Input, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {MatCardModule} from "@angular/material/card";
 import {CommonModule, Location, NgOptimizedImage} from "@angular/common";
