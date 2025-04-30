@@ -1,9 +1,8 @@
 <footer class="flex justify-between xl:justify-center items-center h-12 w-full p-3 bg-secondary-bg sticky bottom-0">
   @if (isUserPage) {
     <app-upload-link
-      [userId]="userId$ | async"
       class="xl:hidden"
-      data-cy="open-upload-dialog"
+      data-cy="open-upload-album-page"
     ></app-upload-link>
   } @else {
     @if (!isHomePage) {

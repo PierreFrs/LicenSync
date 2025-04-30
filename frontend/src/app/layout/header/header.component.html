@@ -10,7 +10,6 @@
   <div class="h-full flex gap-8 mr-4 items-center">
     @if (isUserPage) {
       <app-upload-link
-        [userId]="userId$ | async"
         class="hidden xl:block"
       />
     }
