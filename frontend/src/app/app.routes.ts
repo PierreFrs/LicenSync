@@ -8,6 +8,7 @@ import {NotFoundComponent} from "./features/error/not-found/not-found.component"
 import {UserProfileComponent} from "./features/pages/user-profile/user-profile.component";
 import {ServerErrorComponent} from "./features/error/server-error/server-error.component";
 import {authGuard} from "./core/guards/auth.guard";
+import {AlbumUploadComponent} from "./features/pages/user-page/album-upload/album-upload.component";
 
 export const routes: Routes = [
     {path: "", component: HomepageComponent,},
@@ -16,6 +17,7 @@ export const routes: Routes = [
     {path: "account/login", component: LoginComponent},
     {path: "account/register", component: RegisterComponent},
     {path: "user/profile/:id", component: UserProfileComponent, canActivate: [authGuard]},
+    {path: "upload", component: AlbumUploadComponent, canActivate: [authGuard]},
     {path: 'not-found', component: NotFoundComponent},
     {path: 'server-error', component: ServerErrorComponent},
     {path: '**', redirectTo: 'not-found', pathMatch: 'full'},
