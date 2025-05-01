@@ -17,35 +17,61 @@
       "applicationUrl": "http://localhost:8080",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "Licensync.Api.preprod": {
-        "commandName": "Project",
-        "dotnetRunMessages": true,
-        "launchBrowser": true,
-        "launchUrl": "swagger",
-        "applicationUrl": "http://localhost:8080",
-        "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "Production"
-        }
-      },
-      "Licensync.Api.test": {
-        "commandName": "Project",
-        "dotnetRunMessages": true,
-        "launchBrowser": true,
-        "launchUrl": "swagger",
-        "applicationUrl": "http://localhost:8080",
-        "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "test"
-        }
       }
-    }
-  },
-  "IIS Express": {
-    "commandName": "IISExpress",
-    "launchBrowser": true,
-    "launchUrl": "swagger",
-    "environmentVariables": {
-      "ASPNETCORE_ENVIRONMENT": "Development"
+    },
+    "Licensync.Api.preprod": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:8080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
+    },
+    "Licensync.Api.test": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "applicationUrl": "http://localhost:8080",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "test"
+      }
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker",
+      "launchBrowser": true,
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "publishAllPorts": true,
+      "useSSL": false,
+      "DockerfileRunArguments": "--network licensync_licensync_network --name licensync-backend-1",
+      "environmentVariables": {
+        "ASPNETCORE_URLS": "http://+:8080",
+        "ASPNETCORE_HTTPS_PORTS": "8081",
+        "ASPNETCORE_HTTP_PORTS": "8080",
+        "CONNECTION_STRING": "Server=mssql;Database=database-1;User Id=sa;Password=Pi3rre***8235!;TrustServerCertificate=true;",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "TOKEN_KEY": "cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e",
+        "TOKEN_ISSUER": "http://localhost:8080",
+        "LICENSYNC_ABI": "[{  \\\"anonymous\\\": false,  \\\"inputs\\\": [    {      \\\"indexed\\\": true,      \\\"internalType\\\": \\\"bytes16\\\",      \\\"name\\\": \\\"guid\\\",      \\\"type\\\": \\\"bytes16\\\"    },    {      \\\"indexed\\\": false,      \\\"internalType\\\": \\\"string\\\",      \\\"name\\\": \\\"hash\\\",      \\\"type\\\": \\\"string\\\"    }  ],  \\\"name\\\": \\\"TrackHashStored\\\",  \\\"type\\\": \\\"event\\\"},{  \\\"inputs\\\": [    {      \\\"internalType\\\": \\\"bytes16\\\",      \\\"name\\\": \\\"guid\\\",      \\\"type\\\": \\\"bytes16\\\"    }  ],  \\\"name\\\": \\\"getTrackHash\\\",  \\\"outputs\\\": [    {      \\\"internalType\\\": \\\"string\\\",      \\\"name\\\": \\\"\\\",      \\\"type\\\": \\\"string\\\"    }  ],  \\\"stateMutability\\\": \\\"view\\\",  \\\"type\\\": \\\"function\\\"},{  \\\"inputs\\\": [    {      \\\"internalType\\\": \\\"bytes16\\\",      \\\"name\\\": \\\"guid\\\",      \\\"type\\\": \\\"bytes16\\\"    },    {      \\\"internalType\\\": \\\"string\\\",      \\\"name\\\": \\\"hash\\\",      \\\"type\\\": \\\"string\\\"    }  ],  \\\"name\\\": \\\"storeTrackHash\\\",  \\\"outputs\\\": [],  \\\"stateMutability\\\": \\\"nonpayable\\\",  \\\"type\\\": \\\"function\\\"}]\"",
+        "LICENSYNC_BYTECODE": "0x608060405234801561001057600080fd5b506107e0806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c80635104fdd61461003b578063aafbd78c14610057575b600080fd5b61005560048036038101906100509190610398565b610087565b005b610071600480360381019061006c91906103f4565b61011c565b60405161007e91906104a0565b60405180910390f35b80600080846fffffffffffffffffffffffffffffffff19166fffffffffffffffffffffffffffffffff1916815260200190815260200160002090816100cc91906106d8565b50816fffffffffffffffffffffffffffffffff19167f237b94b007e628856ce39fe5574c3242134e9683fe4ab76f66081f641dc3e87f8260405161011091906104a0565b60405180910390a25050565b6060600080836fffffffffffffffffffffffffffffffff19166fffffffffffffffffffffffffffffffff191681526020019081526020016000208054610161906104f1565b80601f016020809104026020016040519081016040528092919081815260200182805461018d906104f1565b80156101da5780601f106101af576101008083540402835291602001916101da565b820191906000526020600020905b8154815290600101906020018083116101bd57829003601f168201915b50505050509050919050565b6000604051905090565b600080fd5b600080fd5b60007fffffffffffffffffffffffffffffffff0000000000000000000000000000000082169050919050565b61022f816101fa565b811461023a57600080fd5b50565b60008135905061024c81610226565b92915050565b600080fd5b600080fd5b6000601f19601f8301169050919050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b6102a58261025c565b810181811067ffffffffffffffff821117156102c4576102c361026d565b5b80604052505050565b60006102d76101e6565b90506102e3828261029c565b919050565b600067ffffffffffffffff8211156103035761030261026d565b5b61030c8261025c565b9050602081019050919050565b82818337600083830152505050565b600061033b610336846102e8565b6102cd565b90508281526020810184848401111561035757610356610257565b5b610362848285610319565b509392505050565b600082601f83011261037f5761037e610252565b5b813561038f848260208601610328565b91505092915050565b600080604083850312156103af576103ae6101f0565b5b60006103bd8582860161023d565b925050602083013567ffffffffffffffff8111156103de576103dd6101f5565b5b6103ea8582860161036a565b9150509250929050565b60006020828403121561040a576104096101f0565b5b60006104188482850161023d565b91505092915050565b600081519050919050565b600082825260208201905092915050565b60005b8381101561045b578082015181840152602081019050610440565b60008484015250505050565b600061047282610421565b61047c818561042c565b935061048c81856020860161043d565b6104958161025c565b840191505092915050565b600060208201905081810360008301526104ba8184610467565b905092915050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b6000600282049050600182168061050957607f821691505b60208210810361051c5761051b6104c2565b5b50919050565b60008190508160005260206000209050919050565b60006020601f8301049050919050565b600082821b905092915050565b6000600883026105847fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff82610547565b61058e8683610547565b95508019841693508086168417925050509392505050565b6000819050919050565b6000819050919050565b60006105d56105d06105cb846105a6565b6105b0565b6105a6565b9050919050565b6000819050919050565b6105ef836105ba565b6106036105fb826105dc565b848454610554565b825550505050565b600090565b61061861060b565b6106238184846105e6565b505050565b5b818110156106475761063c600082610610565b600181019050610629565b5050565b601f82111561068c5761065d81610522565b61066684610537565b81016020851015610675578190505b61068961068185610537565b830182610628565b50505b505050565b600082821c905092915050565b60006106af60001984600802610691565b1980831691505092915050565b60006106c8838361069e565b9150826002028217905092915050565b6106e182610421565b67ffffffffffffffff8111156106fa576106f961026d565b5b61070482546104f1565b61070f82828561064b565b600060209050601f8311600181146107425760008415610730578287015190505b61073a85826106bc565b8655506107a2565b601f19841661075086610522565b60005b8281101561077857848901518255600182019150602085019450602081019050610753565b868310156107955784890151610791601f89168261069e565b8355505b6001600288020188555050505b50505050505056fea26469706673582212201705f1c7cc3dcc5a7078ac817f5580070ab4ba260df851d3f6a781dbb818e78864736f6c63430008130033",
+        "DEPLOYER_ADDRESS": "0x47593F4529ED237728675f1B94a292C272468EAd",
+        "BC_PRIVATE_KEY": "4c8c794a38bd25c9b27b274615444c6515603caf458cbc48401df5f5c0eabb58",
+        "BC_INFURA_KEY": "d3e21b98605745b396966f7f58934784",
+        "LICENSYNC_CONTRACT_ADDRESS": "0x5fff25356b666688042d5a39256fbd04e00620b9",
+        "PASSWORD": "Pi3rre***8235!",
+        "EVENT_LOGGER_SERVICE_PORT": "3035",
+        "MONGODB_URI": "mongodb://event-logger-db:27017/eventlogger"
+      }
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
     }
   }
 }

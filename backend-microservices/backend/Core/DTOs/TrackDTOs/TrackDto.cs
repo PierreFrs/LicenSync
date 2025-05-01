@@ -27,4 +27,6 @@ public class TrackDto : TrackerDto
     public Guid? AlbumId { get; set; }
 
     public Guid? BlockchainHashId { get; set; }
+
+    public DateTime ReleaseDate { get; set; }
 }

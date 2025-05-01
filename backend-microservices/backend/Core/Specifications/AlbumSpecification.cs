@@ -13,27 +13,28 @@ namespace Core.Specifications;
 public class AlbumSpecification : BaseSpecification<Album, AlbumCardDto>
 {
     public AlbumSpecification(string? userId)
-        : base(track => track.UserId == userId) { }
+        : base(album => album.UserId == userId && album.ReleaseDate <= DateTime.Now) { }
 
     public AlbumSpecification(Guid albumId)
-        : base(track => track.Id == albumId)
+        : base(album => album.Id == albumId && album.ReleaseDate <= DateTime.Now)
     {
-        AddInclude(track => track.Tracks ?? new List<Track>());
+        AddInclude(album => album.Tracks ?? new List<Track>());
         ApplySelect();
     }
 
     public AlbumSpecification(string userId, AlbumSpecParams specParams)
-        : base(track =>
-            track.UserId == userId
+        : base(album =>
+            album.UserId == userId
             && (
                 string.IsNullOrEmpty((specParams.Search))
-                || track.AlbumTitle.ToLower().Contains(specParams.Search)
+                || album.AlbumTitle.ToLower().Contains(specParams.Search)
             )
-            && (specParams.Titles.Count == 0 || specParams.Titles.Contains(track.AlbumTitle))
+            && (specParams.Titles.Count == 0 || specParams.Titles.Contains(album.AlbumTitle))
             && (
                 specParams.ReleaseDates.Count == 0
-                || specParams.ReleaseDates.Contains(track.CreationDate.ToString("yyyy-MM-dd"))
+                || specParams.ReleaseDates.Contains(album.ReleaseDate.ToString("yyyy-MM-dd"))
             )
+            && album.ReleaseDate <= DateTime.Now
         )
     {
         ApplyPaging(specParams.PageSize * (specParams.PageIndex - 1), specParams.PageSize);
@@ -50,6 +51,12 @@ public class AlbumSpecification : BaseSpecification<Album, AlbumCardDto>
     {
         switch (specParams.Sort)
         {
+            case "releaseAsc":
+                AddOrderBy(track => track.ReleaseDate);
+                break;
+            case "releaseDesc":
+                AddOrderByDescending(track => track.ReleaseDate);
+                break;
             case "titleAsc":
                 AddOrderBy(track => track.AlbumTitle);
                 break;
@@ -57,7 +64,7 @@ public class AlbumSpecification : BaseSpecification<Album, AlbumCardDto>
                 AddOrderByDescending(track => track.AlbumTitle);
                 break;
             default:
-                AddOrderBy(track => track.AlbumTitle);
+                AddOrderBy(track => track.ReleaseDate);
                 break;
         }
     }
@@ -68,6 +75,7 @@ public class AlbumSpecification : BaseSpecification<Album, AlbumCardDto>
         {
             AlbumTitle = album.AlbumTitle,
             AlbumVisualPath = album.AlbumVisualPath,
+            ReleaseDate = album.ReleaseDate,
             TrackCards = album
                 .Tracks.Select(track => new TrackCardDto
                 {
@@ -94,6 +102,7 @@ public class AlbumSpecification : BaseSpecification<Album, AlbumCardDto>
                         .ToList(),
                     TrackAudioFilePath = track.AudioFilePath,
                     TrackVisualFilePath = track.TrackVisualPath,
+                    ReleaseDate = track.ReleaseDate,
                 })
                 .ToList(), // Convert tracks to TrackCardDto
         });

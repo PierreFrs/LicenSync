@@ -21,7 +21,7 @@ public class AlbumRepository : GenericRepository<Album>, IAlbumRepository
     {
         return await _context
             .Albums.AsNoTracking()
-            .Where(x => x.AlbumTitle == title && x.UserId == UserId)
+            .Where(x => x.AlbumTitle == title && x.UserId == UserId && x.ReleaseDate >= DateTime.Now)
             .Select(x => x.Id)
             .FirstOrDefaultAsync();
     }

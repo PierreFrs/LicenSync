@@ -13,10 +13,10 @@ namespace Core.Specifications;
 public class TrackSpecification : BaseSpecification<Track, TrackCardDto>
 {
     public TrackSpecification(string userId)
-        : base(track => track.UserId == userId) { }
+        : base(track => track.UserId == userId && track.ReleaseDate <= DateTime.Now) { }
 
     public TrackSpecification(Guid trackId)
-        : base(track => track.Id == trackId)
+        : base(track => track.Id == trackId && track.ReleaseDate <= DateTime.Now)
     {
         AddInclude(track => track.Album ?? new Album());
         AddInclude(track => track.FirstGenre ?? new Genre());
@@ -42,8 +42,9 @@ public class TrackSpecification : BaseSpecification<Track, TrackCardDto>
             )
             && (
                 specParams.ReleaseDates.Count == 0
-                || specParams.ReleaseDates.Contains(track.CreationDate.ToString("yyyy-MM-dd"))
+                || specParams.ReleaseDates.Contains(track.ReleaseDate.ToString("yyyy-MM-dd"))
             )
+            && track.ReleaseDate <= DateTime.Now
         )
     {
         ApplyPaging(specParams.PageSize * (specParams.PageIndex - 1), specParams.PageSize);
@@ -63,10 +64,10 @@ public class TrackSpecification : BaseSpecification<Track, TrackCardDto>
         switch (specParams.Sort)
         {
             case "releaseAsc":
-                AddOrderBy(track => track.CreationDate);
+                AddOrderBy(track => track.ReleaseDate);
                 break;
             case "releaseDesc":
-                AddOrderByDescending(track => track.CreationDate);
+                AddOrderByDescending(track => track.ReleaseDate);
                 break;
             case "titleAsc":
                 AddOrderBy(track => track.TrackTitle);
@@ -75,7 +76,7 @@ public class TrackSpecification : BaseSpecification<Track, TrackCardDto>
                 AddOrderByDescending(track => track.TrackTitle);
                 break;
             default:
-                AddOrderBy(track => track.CreationDate);
+                AddOrderBy(track => track.ReleaseDate);
                 break;
         }
     }
@@ -106,6 +107,7 @@ public class TrackSpecification : BaseSpecification<Track, TrackCardDto>
                 .ToList(),
             TrackAudioFilePath = track.AudioFilePath,
             TrackVisualFilePath = track.TrackVisualPath,
+            ReleaseDate = track.ReleaseDate,
         });
     }
 }

@@ -87,6 +87,7 @@ public static class AppContextSeed
                 UserId = _userId,
                 AlbumVisualPath =
                     "/src/backend/Uploads/Pictures/AlbumVisuals/07373bbe-1a4a-4e43-a177-5260e80b497athe_dark_side_of_the_moon.jpg",
+                ReleaseDate = DateTime.Now,
             },
             new Album
             {
@@ -95,6 +96,7 @@ public static class AppContextSeed
                 UserId = _userId,
                 AlbumVisualPath =
                     "/src/backend/Uploads/Pictures/AlbumVisuals/42ddc682-eaa6-4ae4-bca6-c9672e1dfa14disraeli_gears.jpg",
+                ReleaseDate = DateTime.Now,
             },
             new Album
             {
@@ -103,6 +105,7 @@ public static class AppContextSeed
                 UserId = _userId,
                 AlbumVisualPath =
                     "/src/backend/Uploads/Pictures/AlbumVisuals/a0b0b6e2-0b7e-4b4e-8f3d-3e9b8e1b1c4athe_wall.jpg",
+                ReleaseDate = DateTime.Now,
             }
         );
 
@@ -126,6 +129,7 @@ public static class AppContextSeed
                 FirstGenreId = _rockGenreId,
                 SecondaryGenreId = _popGenreId,
                 BlockchainHashId = null,
+                ReleaseDate = DateTime.Now,
             },
             new Track
             {
@@ -141,6 +145,7 @@ public static class AppContextSeed
                 FirstGenreId = _rockGenreId,
                 SecondaryGenreId = null,
                 BlockchainHashId = null,
+                ReleaseDate = DateTime.Now,
             },
             new Track
             {
@@ -156,6 +161,7 @@ public static class AppContextSeed
                 FirstGenreId = _rockGenreId, // Rock
                 SecondaryGenreId = _popGenreId, // Pop
                 BlockchainHashId = null,
+                ReleaseDate = DateTime.Now,
             },
             new Track
             {
@@ -171,6 +177,7 @@ public static class AppContextSeed
                 FirstGenreId = _rockGenreId, // Rock
                 SecondaryGenreId = null,
                 BlockchainHashId = null,
+                ReleaseDate = DateTime.Now,
             },
             new Track
             {
@@ -186,6 +193,7 @@ public static class AppContextSeed
                 FirstGenreId = _rockGenreId, // Rock
                 SecondaryGenreId = _popGenreId, // Pop
                 BlockchainHashId = null,
+                ReleaseDate = DateTime.Now,
             },
             new Track
             {
@@ -201,6 +209,7 @@ public static class AppContextSeed
                 FirstGenreId = _rockGenreId, // Rock
                 SecondaryGenreId = null,
                 BlockchainHashId = null,
+                ReleaseDate = DateTime.Now,
             },
             new Track
             {
@@ -216,6 +225,7 @@ public static class AppContextSeed
                 FirstGenreId = _rockGenreId, // Rock
                 SecondaryGenreId = null,
                 BlockchainHashId = null,
+                ReleaseDate = DateTime.Now,
             },
             new Track
             {
@@ -231,6 +241,7 @@ public static class AppContextSeed
                 FirstGenreId = _rockGenreId, // Rock
                 SecondaryGenreId = null,
                 BlockchainHashId = null,
+                ReleaseDate = DateTime.Now,
             },
             new Track
             {
@@ -246,6 +257,7 @@ public static class AppContextSeed
                 FirstGenreId = _rockGenreId, // Rock
                 SecondaryGenreId = new Guid("b1538091-1957-401b-932b-cef92e05654f"), // Psychedelic Rock
                 BlockchainHashId = null,
+                ReleaseDate = DateTime.Now,
             },
             new Track
             {
@@ -261,6 +273,7 @@ public static class AppContextSeed
                 FirstGenreId = _rockGenreId, // Rock
                 SecondaryGenreId = null,
                 BlockchainHashId = null,
+                ReleaseDate = DateTime.Now,
             },
             new Track
             {
@@ -276,12 +289,13 @@ public static class AppContextSeed
                 FirstGenreId = _rockGenreId, // Rock
                 SecondaryGenreId = new Guid("b1538091-1957-401b-932b-cef92e05654f"),
                 BlockchainHashId = null,
+                ReleaseDate = DateTime.Now,
             }
         );
 
         await dbContext.SaveChangesAsync();
     }
-
+  
     private static async Task SeedArtists(ApplicationDbContext dbContext)
     {
         await dbContext.Artists.AddRangeAsync(

@@ -15,5 +15,7 @@ public class Album : Tracker
 
     public string? AlbumVisualPath { get; set; }
 
+    public DateTime ReleaseDate { get; set; }
+
     public ICollection<Track> Tracks { get; init; } = new List<Track>();
 }

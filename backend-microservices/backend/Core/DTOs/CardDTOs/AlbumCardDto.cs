@@ -13,5 +13,7 @@ public class AlbumCardDto : BaseDto
 
     public string? AlbumVisualPath { get; set; }
 
+    public DateTime ReleaseDate { get; set; }
+
     public IList<TrackCardDto> TrackCards { get; set; } = new List<TrackCardDto>();
 }

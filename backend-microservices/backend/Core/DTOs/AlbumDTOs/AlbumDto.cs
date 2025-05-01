@@ -13,4 +13,6 @@ public class AlbumDto : TrackerDto
     public string UserId { get; set; } = string.Empty;
 
     public string? AlbumVisualPath { get; set; }
+
+    public DateTime ReleaseDate { get; set; }
 }

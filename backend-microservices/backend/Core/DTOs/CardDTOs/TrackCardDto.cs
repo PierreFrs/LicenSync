@@ -31,6 +31,8 @@ public class TrackCardDto : BaseDto
 
     public DateTime CreationDate { get; set; } = DateTime.Now;
 
+    public DateTime ReleaseDate { get; set; } = DateTime.Now;
+
     public string TrackAudioFilePath { get; set; } = String.Empty;
 
     public string? TrackVisualFilePath { get; set; }
