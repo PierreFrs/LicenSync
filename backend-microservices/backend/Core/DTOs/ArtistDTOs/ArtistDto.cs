@@ -4,6 +4,7 @@
 
 
 using Core.DTOs.TrackerDTOs;
+using Core.Entities;
 
 namespace Core.DTOs.ArtistDTOs;
 
@@ -13,7 +14,8 @@ public class ArtistDto : TrackerDto
 
     public string Lastname { get; set; } = string.Empty;
 
-    public Guid TrackId { get; set; }
+    public virtual ICollection<Album> Albums { get; set; } = [];
 
-    public Guid ContributionId { get; set; }
+    public virtual ICollection<TrackArtistContribution> TrackContributions { get; set; } = [];
+
 }

@@ -18,20 +18,9 @@ public class ArtistConfiguration : IEntityTypeConfiguration<Artist>
 
         builder.Property(a => a.Lastname).HasColumnName("lastname").IsRequired().HasMaxLength(50);
 
-        builder.Property(a => a.TrackId).HasColumnName("track_id").IsRequired();
-
         builder
-            .HasOne(a => a.Track)
-            .WithMany(t => t.Artists)
-            .HasForeignKey(a => a.TrackId)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Property(a => a.ContributionId).HasColumnName("contribution_id").IsRequired();
-
-        builder
-            .HasOne(a => a.Contribution)
-            .WithMany(c => c.Artists)
-            .HasForeignKey(a => a.ContributionId)
-            .OnDelete(DeleteBehavior.NoAction);
+            .HasMany(a => a.Albums)
+            .WithMany(a => a.Artists)
+            .UsingEntity(j => j.ToTable("album_artist"));
     }
 }

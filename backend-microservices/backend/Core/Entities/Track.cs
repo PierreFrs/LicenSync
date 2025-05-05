@@ -37,5 +37,5 @@ public class Track : Tracker
 
     public DateTime ReleaseDate { get; set; }
 
-    public ICollection<Artist> Artists { get; set; } = new List<Artist>();
+    public virtual ICollection<TrackArtistContribution> ArtistContributions { get; set; } = new List<TrackArtistContribution>();
 }

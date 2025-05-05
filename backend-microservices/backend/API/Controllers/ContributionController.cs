@@ -75,33 +75,6 @@ public class ContributionController(IContributionService contributionService) : 
         return Ok(contribution);
     }
 
-    /// GET Contribution by Artist ID
-    /// <summary>
-    /// Gets the Contribution associated with an artist
-    /// </summary>
-    /// <returns>Contribution</returns>
-    [SwaggerResponse(
-        200,
-        "Gets the Contribution associated with an artist",
-        typeof(ContributionDto)
-    )]
-    [SwaggerResponse(401, "Unauthorized")]
-    [SwaggerResponse(404, "Not Found")]
-    [HttpGet]
-    [Route("artist/{artistId:Guid}")]
-    [Authorize]
-    public async Task<IActionResult> GetByArtistId([FromRoute] Guid artistId)
-    {
-        var contribution = await contributionService.GetByArtistIdAsync(artistId);
-
-        if (contribution == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(contribution);
-    }
-
     /// PUT
     /// <summary>
     /// Updates an object of type Contribution from its Id

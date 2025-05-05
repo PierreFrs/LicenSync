@@ -14,6 +14,9 @@ public class ContributionConfig : IEntityTypeConfiguration<Contribution>
     {
         new TrackerConfiguration<Contribution>().Configure(builder);
 
-        builder.Property(c => c.Label).HasColumnName("label").IsRequired().HasMaxLength(50);
+        builder.Property(c => c.Label)
+            .HasColumnName("label")
+            .IsRequired()
+            .HasMaxLength(50);
     }
 }

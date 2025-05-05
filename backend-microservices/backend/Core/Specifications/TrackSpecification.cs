@@ -5,7 +5,7 @@
 // Fichier Modifié le : 19/09/2024
 // Code développé pour le projet : Core
 
-using Core.DTOs.CardDTOs;
+using Core.DTOs.TrackDTOs;
 using Core.Entities;
 
 namespace Core.Specifications;
@@ -21,6 +21,7 @@ public class TrackSpecification : BaseSpecification<Track, TrackCardDto>
         AddInclude(track => track.Album ?? new Album());
         AddInclude(track => track.FirstGenre ?? new Genre());
         AddInclude(track => track.SecondaryGenre ?? new Genre());
+        AddInclude(track => track.ArtistContributions);
         ApplySelect();
     }
 
@@ -29,7 +30,7 @@ public class TrackSpecification : BaseSpecification<Track, TrackCardDto>
             track.UserId == userId
             && (
                 string.IsNullOrEmpty((specParams.Search))
-                || track.TrackTitle.ToLower().Contains(specParams.Search)
+                || track.TrackTitle.Contains(specParams.Search, StringComparison.CurrentCultureIgnoreCase)
             )
             && (specParams.Titles.Count == 0 || specParams.Titles.Contains(track.TrackTitle))
             && track.Album != null
@@ -54,6 +55,9 @@ public class TrackSpecification : BaseSpecification<Track, TrackCardDto>
         AddInclude(track => track.Album ?? new Album());
         AddInclude(track => track.FirstGenre ?? new Genre());
         AddInclude(track => track.SecondaryGenre ?? new Genre());
+        AddInclude(track => track.ArtistContributions);
+        AddInclude(track => track.ArtistContributions.Select(ac => ac.Artist));
+        AddInclude(track => track.ArtistContributions.Select(ac => ac.Contribution));
 
         // Apply projection to TrackCardDto
         ApplySelect();
@@ -93,17 +97,17 @@ public class TrackSpecification : BaseSpecification<Track, TrackCardDto>
             SecondaryGenre = track.SecondaryGenre != null ? track.SecondaryGenre.Label : null,
             AlbumTitle = track.Album != null ? track.Album.AlbumTitle : null,
             BlockchainHash = track.BlockchainHashId,
-            ArtistsLyrics = track
-                .Artists.Where(a => a.Contribution.Label == "Paroles")
-                .Select(a => $"{a.Firstname} {a.Lastname}")
+            ArtistsLyrics = track.ArtistContributions
+                .Where(ac => ac.Contribution.Label == "Paroles")
+                .Select(ac => $"{ac.Artist.Firstname} {ac.Artist.Lastname}")
                 .ToList(),
-            ArtistsMusic = track
-                .Artists.Where(a => a.Contribution.Label == "Musique")
-                .Select(a => $"{a.Firstname} {a.Lastname}")
+            ArtistsMusic = track.ArtistContributions
+                .Where(ac => ac.Contribution.Label == "Musique")
+                .Select(ac => $"{ac.Artist.Firstname} {ac.Artist.Lastname}")
                 .ToList(),
-            ArtistsMusicAndLyrics = track
-                .Artists.Where(a => a.Contribution.Label == "Musique et paroles")
-                .Select(a => $"{a.Firstname} {a.Lastname}")
+            ArtistsMusicAndLyrics = track.ArtistContributions
+                .Where(ac => ac.Contribution.Label == "Musique et paroles")
+                .Select(ac => $"{ac.Artist.Firstname} {ac.Artist.Lastname}")
                 .ToList(),
             TrackAudioFilePath = track.AudioFilePath,
             TrackVisualFilePath = track.TrackVisualPath,

@@ -2,17 +2,14 @@
 // Copyright (c) PlaceholderCompany. All rights reserved.
 // </copyright>
 
-using Core.DTOs.TrackDTOs;
-using Core.Entities;
 using Core.Interfaces.IHelpers;
 using Core.Interfaces.IRepositories;
 using Core.Interfaces.IServices;
-using Infrastructure.Data;
+using Core.Interfaces.IUnitOfWork;
 using Infrastructure.Data.Repositories;
+using Infrastructure.Data.UnitOfWorks;
 using Infrastructure.Helpers;
 using Infrastructure.Services;
-using Microsoft.AspNetCore.Identity;
-using Nethereum.Web3;
 
 namespace API.Startup;
 
@@ -35,5 +32,8 @@ public static class ServiceRegistration
         services.AddScoped<IArtistRepository, ArtistRepository>();
         services.AddScoped<ITrackService, TrackService>();
         services.AddScoped<ITrackRepository, TrackRepository>();
+        services.AddScoped<ITrackArtistContributionService, ITrackArtistContributionService>();
+        services.AddScoped<ITrackArtistContributionRepository, TrackArtistContributionRepository>();
+        services.AddScoped<IAlbumUploadUnitOfWork, AlbumUploadUnitOfWork>();
     }
 }

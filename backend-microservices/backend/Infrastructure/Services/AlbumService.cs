@@ -4,7 +4,6 @@
 
 using AutoMapper;
 using Core.DTOs.AlbumDTOs;
-using Core.DTOs.CardDTOs;
 using Core.Entities;
 using Core.Interfaces.IHelpers;
 using Core.Interfaces.IRepositories;
@@ -12,7 +11,6 @@ using Core.Interfaces.IServices;
 using Core.Specifications;
 using Infrastructure.Settings;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Services;
@@ -26,9 +24,6 @@ public class AlbumService(
     : GenericFileService<Album, AlbumDto>(albumRepository, mapper, fileHelpers),
         IAlbumService
 {
-    private readonly IMapper mapper = mapper;
-    private readonly IFileHelpers fileHelpers = fileHelpers;
-
     public async Task<IReadOnlyList<AlbumDto?>?> GetAlbumListByUserIdAsync(string userId)
     {
         try
@@ -36,7 +31,7 @@ public class AlbumService(
             var specs = new AlbumSpecification(userId);
 
             var albums = await albumRepository.GetEntityListBySpecificationAsync(specs);
-            return mapper.Map<List<AlbumDto>>(albums) ?? new List<AlbumDto>();
+            return mapper.Map<List<AlbumDto>>(albums) ?? [];
         }
         catch (Exception e)
         {

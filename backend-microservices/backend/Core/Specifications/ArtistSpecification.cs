@@ -1,13 +1,11 @@
-// ArtistSpecification.cs -
-// ======================================================================0
-// Crée par : pfraisse
-// Fichier Crée le : 19/09/2024
-// Fichier Modifié le : 19/09/2024
-// Code développé pour le projet : Core
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 using Core.Entities;
 
 namespace Core.Specifications;
 
-public class ArtistSpecification(Guid? trackId)
-    : BaseSpecification<Artist>(x => x.TrackId == trackId);
+public class ArtistSpecification(Guid trackId) : BaseSpecification<Artist>(a => a.TrackContributions.Any(tac => tac.TrackId == trackId));

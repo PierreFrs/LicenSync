@@ -5,13 +5,13 @@
 // Fichier Modifié le : 19/09/2024
 // Code développé pour le projet : Core
 
-namespace Core.DTOs.CardDTOs;
+namespace Core.DTOs.TrackDTOs;
 
 public class TrackCardDto : BaseDto
 {
-    public string TrackTitle { get; set; } = String.Empty;
+    public string TrackTitle { get; set; } = string.Empty;
 
-    public string Length { get; set; } = String.Empty;
+    public string Length { get; set; } = string.Empty;
 
     public string? RecordLabel { get; set; }
 
@@ -33,9 +33,9 @@ public class TrackCardDto : BaseDto
 
     public DateTime ReleaseDate { get; set; } = DateTime.Now;
 
-    public string TrackAudioFilePath { get; set; } = String.Empty;
+    public string TrackAudioFilePath { get; set; } = string.Empty;
 
     public string? TrackVisualFilePath { get; set; }
 
-    public string? UserId { get; set; } = String.Empty;
+    public string? UserId { get; set; } = string.Empty;
 }

@@ -69,5 +69,10 @@ public class TrackConfiguration : IEntityTypeConfiguration<Track>
             .Property(t => t.BlockchainHashId)
             .HasColumnName("blockchain_hash_id")
             .IsRequired(false);
+
+        builder
+            .Property(t => t.ReleaseDate)
+            .HasColumnName("release_date")
+            .IsRequired();
     }
 }

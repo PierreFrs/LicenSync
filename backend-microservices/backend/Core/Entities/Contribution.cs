@@ -11,5 +11,6 @@ public class Contribution : Tracker
 {
     public string Label { get; set; } = string.Empty;
 
-    public virtual ICollection<Artist>? Artists { get; init; }
+    public virtual ICollection<TrackArtistContribution> TrackArtistContributions { get; set; }
+        = new List<TrackArtistContribution>();
 }

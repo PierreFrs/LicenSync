@@ -108,8 +108,6 @@ public class TestApplicationDbContext : ITestApplicationDbContext
             Id = new Guid("c1b0f619-f02d-4d31-823b-465cfb01cae4"),
             Firstname = "David",
             Lastname = "Bowie",
-            TrackId = new Guid("ad7c9d85-1ef1-459f-8d34-91076009b327"),
-            ContributionId = new Guid("c1b0f619-f02d-4d31-823b-465cfb01cae4"),
         };
         _context.Artists.Add(artist);
 
@@ -118,8 +116,6 @@ public class TestApplicationDbContext : ITestApplicationDbContext
             Id = new Guid("1f863d4c-849e-490c-865d-e0d2510c93ca"),
             Firstname = "Eric",
             Lastname = "Clapton",
-            TrackId = new Guid("20fd521b-f136-4036-83c7-c384769d8e69"),
-            ContributionId = new Guid("1bca3ff8-6cf8-4d9f-973b-ebcebe713a33"),
         };
         _context.Artists.Add(artist);
 
@@ -128,8 +124,6 @@ public class TestApplicationDbContext : ITestApplicationDbContext
             Id = new Guid("1ecf2c42-9497-4977-b846-9c1d427f83a0"),
             Firstname = "Liam",
             Lastname = "Howlett",
-            TrackId = new Guid("40a7078d-b96d-41be-9e0c-e53890b32e92"),
-            ContributionId = new Guid("1ecf2c42-9497-4977-b846-9c1d427f83a0"),
         };
         _context.Artists.Add(artist);
 

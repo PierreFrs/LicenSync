@@ -3,6 +3,7 @@
 // Created : 2024/05/1414 - 13:05
 
 using Core.DTOs.TrackerDTOs;
+using Core.Entities;
 
 namespace Core.DTOs.AlbumDTOs;
 
@@ -11,6 +12,12 @@ public class AlbumDto : TrackerDto
     public string AlbumTitle { get; set; } = string.Empty;
 
     public string UserId { get; set; } = string.Empty;
+
+    public string RecordLabel { get; set; } = string.Empty;
+
+    public Genre? FirstGenre { get; set; }
+
+    public Genre? SecondaryGenre { get; set; }
 
     public string? AlbumVisualPath { get; set; }
 

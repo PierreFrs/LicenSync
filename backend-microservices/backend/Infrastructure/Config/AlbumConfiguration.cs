@@ -25,5 +25,10 @@ public class AlbumConfiguration : IEntityTypeConfiguration<Album>
             .HasColumnName("album_visual_path")
             .IsRequired(false)
             .HasMaxLength(255);
+
+        builder
+            .HasMany(a => a.Artists)
+            .WithMany(a => a.Albums)
+            .UsingEntity(j => j.ToTable("album_artist"));
     }
 }

@@ -43,6 +43,9 @@ public static class AppContextSeed
         if (!await dbContext.Artists.AnyAsync())
             await SeedArtists(dbContext);
 
+        if (!await dbContext.TrackArtistContributions.AnyAsync())
+            await SeedTrackArtistContributions(dbContext);
+
         await SeedRoles(dbContext);
 
         if (!await dbContext.Users.AnyAsync())
@@ -85,6 +88,9 @@ public static class AppContextSeed
                 Id = _darkSideOfTheMoonAlbumId,
                 AlbumTitle = "The Dark Side of the Moon",
                 UserId = _userId,
+                RecordLabel = "Harvest Records",
+                FirstGenreId = _rockGenreId,
+                SecondaryGenreId = _popGenreId,
                 AlbumVisualPath =
                     "/src/backend/Uploads/Pictures/AlbumVisuals/07373bbe-1a4a-4e43-a177-5260e80b497athe_dark_side_of_the_moon.jpg",
                 ReleaseDate = DateTime.Now,
@@ -94,6 +100,9 @@ public static class AppContextSeed
                 Id = _disraeliGearsAlbumId,
                 AlbumTitle = "disraeli_gears",
                 UserId = _userId,
+                RecordLabel = "Reaction",
+                FirstGenreId = _rockGenreId,
+                SecondaryGenreId = _popGenreId,
                 AlbumVisualPath =
                     "/src/backend/Uploads/Pictures/AlbumVisuals/42ddc682-eaa6-4ae4-bca6-c9672e1dfa14disraeli_gears.jpg",
                 ReleaseDate = DateTime.Now,
@@ -102,6 +111,9 @@ public static class AppContextSeed
             {
                 Id = _theWallAlbumId,
                 AlbumTitle = "The Wall",
+                RecordLabel = "Harvest Records",
+                FirstGenreId = _rockGenreId,
+                SecondaryGenreId = _popGenreId,
                 UserId = _userId,
                 AlbumVisualPath =
                     "/src/backend/Uploads/Pictures/AlbumVisuals/a0b0b6e2-0b7e-4b4e-8f3d-3e9b8e1b1c4athe_wall.jpg",
@@ -304,109 +316,199 @@ public static class AppContextSeed
                 Id = new Guid("332b8af0-e2af-41ac-a2ad-4bafdf26492e"),
                 Firstname = "Nick",
                 Lastname = "Mason",
-                TrackId = new Guid("8b74701f-2636-42a0-af8e-ff353169a6c2"), // Speak To Me
-                ContributionId = _musiqueContributionId,
             },
             new Artist
             {
                 Id = new Guid("a0da1f96-4cdf-4490-8f70-be07741229a3"),
                 Firstname = "David",
                 Lastname = "Gilmour",
-                TrackId = new Guid("8b74701f-2636-42a0-af8e-ff353169a6c2"), // Speak To Me
-                ContributionId = _musiqueContributionId,
             },
             new Artist
             {
                 Id = new Guid("9cefa4a8-ac72-4551-bb2c-14b4c2aaa4ed"),
                 Firstname = "Roger",
                 Lastname = "Waters",
-                TrackId = new Guid("11232dcf-2f55-41d2-86f5-07026989e827"), // On the Run
-                ContributionId = _musiqueContributionId, // Musique
             },
             new Artist
             {
                 Id = new Guid("3e235143-6286-4c61-9190-dcdb4f3aab23"),
                 Firstname = "Richard",
                 Lastname = "Wright",
-                TrackId = new Guid("d23d9b8e-50ff-4322-b454-00539e009aa9"), // Time
-                ContributionId = _musiqueContributionId,
             },
             new Artist
             {
                 Id = new Guid("0a4eebf1-9578-4c8b-95d4-98a3857543c4"),
                 Firstname = "Syd",
                 Lastname = "Barrett",
-                TrackId = new Guid("12fba9b9-43de-41fa-9086-5ce2a34cb971"), // Wish You Were Here
-                ContributionId = _musiqueContributionId, // Musique
-            },
-            new Artist
-            {
-                Id = new Guid("f7c9d153-a0e2-4647-841d-bf525fbe0ab5"),
-                Firstname = "Roger",
-                Lastname = "Waters",
-                TrackId = new Guid("a4037469-38b4-4fb5-81ab-79049e16de19"), // Comfortably Numb
-                ContributionId = _musiqueContributionId,
-            },
-            new Artist
-            {
-                Id = new Guid("ac862365-242f-4932-b9a3-71a354386f20"),
-                Firstname = "David",
-                Lastname = "Gilmour",
-                TrackId = new Guid("385dcdba-b43b-4f46-8d04-51da0b863b1d"), // Hey You
-                ContributionId = _musiqueContributionId,
             },
             new Artist
             {
                 Id = new Guid("acc6c5a9-cdd9-4841-8c02-dc56e4e6d6b6"),
                 Firstname = "Eric",
                 Lastname = "Clapton",
-                TrackId = new Guid("feb3ccab-ddfe-4e32-92ae-9f34d107c82f"), // Sunshine of Your Love
-                ContributionId = _parolesContributionId, // Paroles
             },
             new Artist
             {
                 Id = new Guid("30800195-feb4-472d-8b9d-842c8e8330ee"),
                 Firstname = "Jack",
                 Lastname = "Bruce",
-                TrackId = new Guid("1c4611b8-0483-48af-8a47-eb57215cc6f1"), // White Room
-                ContributionId = _parolesContributionId,
-            },
-            new Artist
-            {
-                Id = new Guid("db56ed2a-ff62-4083-a57c-70b0b050aeb8"),
-                Firstname = "Eric",
-                Lastname = "Clapton",
-                TrackId = new Guid("1c4611b8-0483-48af-8a47-eb57215cc6f1"), // White Room
-                ContributionId = _parolesContributionId,
-            },
-            new Artist
-            {
-                Id = new Guid("3be31500-5217-47f5-91fc-3a2a1a166220"),
-                Firstname = "Roger",
-                Lastname = "Waters",
-                TrackId = new Guid("ff3f70d3-3dbf-4e72-b44f-94147378bbe6"), // Another Brick in the Wall, Pt. 2
-                ContributionId = _musiqueContributionId,
-            },
-            new Artist
-            {
-                Id = new Guid("37446071-3306-4a28-90be-beb947241c12\n"),
-                Firstname = "Roger",
-                Lastname = "Waters",
-                TrackId = new Guid("d564f3a2-4e56-47aa-82a7-d3e2c4b5d6f7"), // Breathe
-                ContributionId = _parolesContributionId,
-            },
-            new Artist
-            {
-                Id = new Guid("b35ff007-544c-4361-accf-aea0328441a8"),
-                Firstname = "Eric",
-                Lastname = "Clapton",
-                TrackId = new Guid("e4c4d81a-cbd5-4087-acc5-f23a4cb6315a"),
-                ContributionId = _musiqueContributionId,
             }
         );
 
         await dbContext.SaveChangesAsync();
     }
+
+    private static async Task SeedTrackArtistContributions(ApplicationDbContext dbContext)
+    {
+        // Récupérer les IDs des tracks
+        var speakToMeId = new Guid("8b74701f-2636-42a0-af8e-ff353169a6c2");
+        var breatheId = new Guid("d564f3a2-4e56-47aa-82a7-d3e2c4b5d6f7");
+        var onTheRunId = new Guid("11232dcf-2f55-41d2-86f5-07026989e827");
+        var timeId = new Guid("d23d9b8e-50ff-4322-b454-00539e009aa9");
+        var wishYouWereHereId = new Guid("12fba9b9-43de-41fa-9086-5ce2a34cb971");
+        var comfortablyNumbId = new Guid("a4037469-38b4-4fb5-81ab-79049e16de19");
+        var heyYouId = new Guid("385dcdba-b43b-4f46-8d04-51da0b863b1d");
+        var sunshineOfYourLoveId = new Guid("feb3ccab-ddfe-4e32-92ae-9f34d107c82f");
+        var whiteRoomId = new Guid("1c4611b8-0483-48af-8a47-eb57215cc6f1");
+        var talesOfBraveUlyssesId = new Guid("e4c4d81a-cbd5-4087-acc5-f23a4cb6315a");
+        var anotherBrickInTheWallId = new Guid("ff3f70d3-3dbf-4e72-b44f-94147378bbe6");
+
+        // IDs des artistes tels que définis dans SeedArtists
+        var nickMasonId = new Guid("332b8af0-e2af-41ac-a2ad-4bafdf26492e");
+        var davidGilmourId = new Guid("a0da1f96-4cdf-4490-8f70-be07741229a3");
+        var rogerWatersId = new Guid("9cefa4a8-ac72-4551-bb2c-14b4c2aaa4ed");
+        var richardWrightId = new Guid("3e235143-6286-4c61-9190-dcdb4f3aab23");
+        var sydBarrettId = new Guid("0a4eebf1-9578-4c8b-95d4-98a3857543c4");
+        var ericClaptonId = new Guid("acc6c5a9-cdd9-4841-8c02-dc56e4e6d6b6");
+        var jackBruceId = new Guid("30800195-feb4-472d-8b9d-842c8e8330ee");
+
+        // Créer les associations track-artist-contribution
+        await dbContext.TrackArtistContributions.AddRangeAsync(
+            // Nick Mason - Speak To Me - Musique
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = speakToMeId,
+                ArtistId = nickMasonId,
+                ContributionId = _musiqueContributionId
+            },
+            // David Gilmour - Speak To Me - Musique
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = speakToMeId,
+                ArtistId = davidGilmourId,
+                ContributionId = _musiqueContributionId
+            },
+            // Roger Waters - On the Run - Musique
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = onTheRunId,
+                ArtistId = rogerWatersId,
+                ContributionId = _musiqueContributionId
+            },
+            // Richard Wright - Time - Musique
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = timeId,
+                ArtistId = richardWrightId,
+                ContributionId = _musiqueContributionId
+            },
+            // Syd Barrett - Wish You Were Here - Musique
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = wishYouWereHereId,
+                ArtistId = sydBarrettId,
+                ContributionId = _musiqueContributionId
+            },
+            // Roger Waters - Comfortably Numb - Musique
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = comfortablyNumbId,
+                ArtistId = rogerWatersId,
+                ContributionId = _musiqueContributionId
+            },
+            // David Gilmour - Hey You - Musique
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = heyYouId,
+                ArtistId = davidGilmourId,
+                ContributionId = _musiqueContributionId
+            },
+            // Eric Clapton - Sunshine of Your Love - Paroles
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = sunshineOfYourLoveId,
+                ArtistId = ericClaptonId,
+                ContributionId = _parolesContributionId
+            },
+            // Jack Bruce - White Room - Paroles
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = whiteRoomId,
+                ArtistId = jackBruceId,
+                ContributionId = _parolesContributionId
+            },
+            // Eric Clapton - White Room - Paroles
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = whiteRoomId,
+                ArtistId = ericClaptonId,
+                ContributionId = _parolesContributionId
+            },
+            // Roger Waters - Another Brick in the Wall, Pt. 2 - Musique
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = anotherBrickInTheWallId,
+                ArtistId = rogerWatersId,
+                ContributionId = _musiqueContributionId
+            },
+            // Roger Waters - Breathe - Paroles
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = breatheId,
+                ArtistId = rogerWatersId,
+                ContributionId = _parolesContributionId
+            },
+            // Eric Clapton - Tales of Brave Ulysses - Musique
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = talesOfBraveUlyssesId,
+                ArtistId = ericClaptonId,
+                ContributionId = _musiqueContributionId
+            },
+            // Roger Waters - Another Brick in the Wall, Pt. 2 - Paroles
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = anotherBrickInTheWallId,
+                ArtistId = rogerWatersId,
+                ContributionId = _parolesContributionId
+            },
+            // David Gilmour - Comfortably Numb - Musique et paroles
+            new TrackArtistContribution
+            {
+                Id = Guid.NewGuid(),
+                TrackId = comfortablyNumbId,
+                ArtistId = davidGilmourId,
+                ContributionId = _musiqueEtParolesContributionId
+            }
+        );
+
+        await dbContext.SaveChangesAsync();
+    }
+
 
     private static async Task SeedUserInfos(ApplicationDbContext dbContext)
     {

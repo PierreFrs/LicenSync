@@ -42,21 +42,17 @@ public class ArtistServiceTests
         // Arrange
         var artistList = new List<Artist>
         {
-            new Artist
+            new ()
             {
                 Id = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
                 Firstname = "David",
                 Lastname = "Bowie",
-                TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-                ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
             },
-            new Artist
+            new ()
             {
                 Id = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
                 Firstname = "David",
                 Lastname = "Bowie",
-                TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-                ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
             },
         };
         _mockArtistRepository.Setup(repo => repo.GetListAsync()).ReturnsAsync(artistList);
@@ -77,8 +73,6 @@ public class ArtistServiceTests
             Id = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
             Firstname = "David",
             Lastname = "Bowie",
-            TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-            ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
         };
         _mockArtistRepository.Setup(repo => repo.GetByIdAsync(artist.Id)).ReturnsAsync(artist);
 
@@ -106,35 +100,56 @@ public class ArtistServiceTests
     public async Task GetByTrackIdAsync_ShouldReturnListOfArtists_IfIdIsValid()
     {
         // Arrange
+        var trackId = Guid.NewGuid();
+
         var artistList = new List<Artist>
         {
-            new Artist
+            new ()
             {
-                Id = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-                Firstname = "David",
-                Lastname = "Bowie",
-                TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-                ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
+                Id = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"), 
+                Firstname = "David", 
+                Lastname = "Bowie"
             },
-            new Artist
-            {
+            new() {
                 Id = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
                 Firstname = "David",
                 Lastname = "Bowie",
-                TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-                ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
             },
         };
+
+        foreach (var artist in artistList)
+        {
+            artist.TrackContributions =
+            [
+                new ()
+                {
+                    ArtistId = artist.Id,
+                    TrackId = trackId,
+                    ContributionId = Guid.NewGuid()
+                }
+            ];
+        }
+
+        var track = new Track { Id = trackId };
+
+        _mockTrackRepository.Setup(repo => repo.GetByIdAsync(trackId)).ReturnsAsync(track);
+
         _mockArtistRepository
             .Setup(repo => repo.GetEntityListBySpecificationAsync(It.IsAny<ArtistSpecification>()))
             .ReturnsAsync(artistList);
 
         // Act
-        var expectedList = await _artistService.GetArtistsByTrackIdAsync(artistList[0].TrackId);
+        var result = await _artistService.GetArtistsByTrackIdAsync(trackId);
 
         // Assert
-        if (expectedList != null)
-            Assert.Equal(artistList.Count, expectedList.Count);
+        Assert.NotNull(result);
+        Assert.Equal(artistList.Count, result.Count);
+
+
+        var firstArtist = result[0];
+        Assert.NotNull(firstArtist);
+        Assert.Equal("David", firstArtist.Firstname);
+        Assert.Equal("Bowie", firstArtist.Lastname);
     }
 
     [Fact]
@@ -144,13 +159,13 @@ public class ArtistServiceTests
         var trackId = Guid.NewGuid();
         var artists = new List<Artist>
         {
-            new Artist
+            new ()
             {
                 Id = Guid.NewGuid(),
                 Firstname = "John",
                 Lastname = "Doe",
             },
-            new Artist
+            new ()
             {
                 Id = Guid.NewGuid(),
                 Firstname = "Jane",
@@ -159,13 +174,13 @@ public class ArtistServiceTests
         };
         var artistDtos = new List<ArtistDto>
         {
-            new ArtistDto
+            new ()
             {
                 Id = artists[0].Id,
                 Firstname = "John",
                 Lastname = "Doe",
             },
-            new ArtistDto
+            new ()
             {
                 Id = artists[1].Id,
                 Firstname = "Jane",
@@ -220,8 +235,6 @@ public class ArtistServiceTests
         {
             Firstname = "David",
             Lastname = "Bowie",
-            TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-            ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
         };
 
         var artist = new Artist
@@ -229,8 +242,6 @@ public class ArtistServiceTests
             Id = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
             Firstname = "David",
             Lastname = "Bowie",
-            TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-            ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
         };
 
         _mockArtistRepository
@@ -246,8 +257,6 @@ public class ArtistServiceTests
             Assert.Equal(artist.Id, expectedArtist.Id);
             Assert.Equal(artist.Firstname, expectedArtist.Firstname);
             Assert.Equal(artist.Lastname, expectedArtist.Lastname);
-            Assert.Equal(artist.TrackId, expectedArtist.TrackId);
-            Assert.Equal(artist.ContributionId, expectedArtist.ContributionId);
         }
     }
 
@@ -279,8 +288,6 @@ public class ArtistServiceTests
             Id = id,
             Firstname = "David",
             Lastname = "Bowie",
-            TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-            ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
         };
 
         var newArtist = new Artist
@@ -288,17 +295,13 @@ public class ArtistServiceTests
             Id = id,
             Firstname = "David",
             Lastname = "Bowie",
-            TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-            ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
         };
 
-        ArtistDto artistDtoUpdate = new ArtistDto
+        ArtistDto artistDtoUpdate = new ()
         {
             Id = id,
             Firstname = newArtist.Firstname,
             Lastname = newArtist.Lastname,
-            TrackId = newArtist.TrackId,
-            ContributionId = newArtist.ContributionId,
         };
 
         _mockArtistRepository.Setup(repo => repo.GetByIdAsync(id)).ReturnsAsync(artist);
@@ -316,8 +319,6 @@ public class ArtistServiceTests
             Assert.Equal(artist.Id, expectedArtist.Id);
             Assert.Equal(artist.Firstname, expectedArtist.Firstname);
             Assert.Equal(artist.Lastname, expectedArtist.Lastname);
-            Assert.Equal(artist.TrackId, expectedArtist.TrackId);
-            Assert.Equal(artist.ContributionId, expectedArtist.ContributionId);
         }
     }
 
@@ -326,12 +327,10 @@ public class ArtistServiceTests
     {
         // Arrange
         Guid id = Guid.NewGuid();
-        ArtistDto artistDtoUpdate = new ArtistDto
+        ArtistDto artistDtoUpdate = new ()
         {
             Firstname = "David",
             Lastname = "Bowie",
-            TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-            ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
         };
 
         _mockArtistRepository.Setup(repo => repo.GetByIdAsync(id)).ReturnsAsync((Artist?)null);
@@ -352,8 +351,6 @@ public class ArtistServiceTests
             Id = id,
             Firstname = "David",
             Lastname = "Bowie",
-            TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-            ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
         };
 
         var newArtist = new Artist
@@ -361,16 +358,12 @@ public class ArtistServiceTests
             Id = id,
             Firstname = "David",
             Lastname = "Bowie",
-            TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-            ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
         };
 
-        ArtistDto artistDtoUpdate = new ArtistDto
+        ArtistDto artistDtoUpdate = new ()
         {
             Firstname = newArtist.Firstname,
             Lastname = newArtist.Lastname,
-            TrackId = newArtist.TrackId,
-            ContributionId = newArtist.ContributionId,
         };
 
         _mockArtistRepository.Setup(repo => repo.GetByIdAsync(id)).ReturnsAsync(artist);
@@ -396,8 +389,6 @@ public class ArtistServiceTests
             Id = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
             Firstname = "David",
             Lastname = "Bowie",
-            TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-            ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
         };
 
         _mockArtistRepository.Setup(repo => repo.GetByIdAsync(artist.Id)).ReturnsAsync(artist);
@@ -419,8 +410,6 @@ public class ArtistServiceTests
             Id = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
             Firstname = "David",
             Lastname = "Bowie",
-            TrackId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-            ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
         };
 
         _mockArtistRepository.Setup(x => x.GetByIdAsync(artist.Id)).ReturnsAsync((Artist?)null);

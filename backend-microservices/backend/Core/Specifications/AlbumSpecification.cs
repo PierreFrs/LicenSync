@@ -5,6 +5,7 @@
 // Fichier Modifié le : 19/09/2024
 // Code développé pour le projet : Core
 
+using Core.DTOs.AlbumDTOs;
 using Core.DTOs.CardDTOs;
 using Core.Entities;
 
@@ -19,6 +20,12 @@ public class AlbumSpecification : BaseSpecification<Album, AlbumCardDto>
         : base(album => album.Id == albumId && album.ReleaseDate <= DateTime.Now)
     {
         AddInclude(album => album.Tracks ?? new List<Track>());
+        AddInclude(album => album.Tracks.SelectMany(t => t.ArtistContributions));
+        AddInclude(album => album.Tracks.SelectMany(t => t.ArtistContributions).Select(ac => ac.Artist));
+        AddInclude(album => album.Tracks.SelectMany(t => t.ArtistContributions).Select(ac => ac.Contribution));
+        AddInclude(album => album.Tracks.Select(t => t.FirstGenre));
+        AddInclude(album => album.Tracks.Select(t => t.SecondaryGenre));
+
         ApplySelect();
     }
 
@@ -27,7 +34,7 @@ public class AlbumSpecification : BaseSpecification<Album, AlbumCardDto>
             album.UserId == userId
             && (
                 string.IsNullOrEmpty((specParams.Search))
-                || album.AlbumTitle.ToLower().Contains(specParams.Search)
+                || album.AlbumTitle.Contains(specParams.Search, StringComparison.CurrentCultureIgnoreCase)
             )
             && (specParams.Titles.Count == 0 || specParams.Titles.Contains(album.AlbumTitle))
             && (
@@ -42,6 +49,11 @@ public class AlbumSpecification : BaseSpecification<Album, AlbumCardDto>
 
         // Add includes for related entities
         AddInclude(track => track.Tracks ?? new List<Track>());
+        AddInclude(album => album.Tracks.SelectMany(t => t.ArtistContributions));
+        AddInclude(album => album.Tracks.SelectMany(t => t.ArtistContributions).Select(ac => ac.Artist));
+        AddInclude(album => album.Tracks.SelectMany(t => t.ArtistContributions).Select(ac => ac.Contribution));
+        AddInclude(album => album.Tracks.Select(t => t.FirstGenre));
+        AddInclude(album => album.Tracks.Select(t => t.SecondaryGenre));
 
         // Apply projection to AlbumCardDto
         ApplySelect();
@@ -88,23 +100,23 @@ public class AlbumSpecification : BaseSpecification<Album, AlbumCardDto>
                         track.SecondaryGenre != null ? track.SecondaryGenre.Label : null,
                     AlbumTitle = album.AlbumTitle, // You already have the album info
                     BlockchainHash = track.BlockchainHashId,
-                    ArtistsLyrics = track
-                        .Artists.Where(a => a.Contribution.Label == "Paroles")
-                        .Select(a => $"{a.Firstname} {a.Lastname}")
+                    ArtistsLyrics = track.ArtistContributions
+                        .Where(ac => ac.Contribution.Label == "Paroles")
+                        .Select(ac => $"{ac.Artist.Firstname} {ac.Artist.Lastname}")
                         .ToList(),
-                    ArtistsMusic = track
-                        .Artists.Where(a => a.Contribution.Label == "Musique")
-                        .Select(a => $"{a.Firstname} {a.Lastname}")
+                    ArtistsMusic = track.ArtistContributions
+                        .Where(a => a.Contribution.Label == "Musique")
+                        .Select(ac => $"{ac.Artist.Firstname} {ac.Artist.Lastname}")
                         .ToList(),
-                    ArtistsMusicAndLyrics = track
-                        .Artists.Where(a => a.Contribution.Label == "Musique et paroles")
-                        .Select(a => $"{a.Firstname} {a.Lastname}")
+                    ArtistsMusicAndLyrics = track.ArtistContributions
+                        .Where(a => a.Contribution.Label == "Musique et paroles")
+                        .Select(ac => $"{ac.Artist.Firstname} {ac.Artist.Lastname}")
                         .ToList(),
                     TrackAudioFilePath = track.AudioFilePath,
                     TrackVisualFilePath = track.TrackVisualPath,
                     ReleaseDate = track.ReleaseDate,
                 })
-                .ToList(), // Convert tracks to TrackCardDto
+                .ToList(),
         });
     }
 }

@@ -13,11 +13,7 @@ public class Artist : Tracker
 
     public string Lastname { get; set; } = string.Empty;
 
-    public Guid TrackId { get; set; } = Guid.Empty;
+    public virtual ICollection<Album> Albums { get; set; } = [];
 
-    public Track Track { get; init; } = null!;
-
-    public Guid ContributionId { get; set; } = Guid.Empty;
-
-    public Contribution Contribution { get; init; } = null!;
+    public virtual ICollection<TrackArtistContribution> TrackContributions { get; set; } = [];
 }

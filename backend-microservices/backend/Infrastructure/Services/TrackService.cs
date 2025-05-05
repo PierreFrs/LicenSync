@@ -4,7 +4,7 @@
 
 using AutoMapper;
 using Core.DTOs.ArtistDTOs;
-using Core.DTOs.CardDTOs;
+using Core.DTOs.TrackArtistContributionDto;
 using Core.DTOs.TrackDTOs;
 using Core.Entities;
 using Core.Interfaces.IHelpers;
@@ -19,7 +19,6 @@ namespace Infrastructure.Services;
 
 public class TrackService(
     ITrackRepository trackRepository,
-    IContributionService contributionService,
     IArtistService artistService,
     IAlbumService albumService,
     IGenreService genreService,
@@ -84,12 +83,7 @@ public class TrackService(
             trackDto.AlbumId = await albumService.GetAlbumIdByTitleAsync(albumTitle, userId);
         }
 
-        var track = await CreateWithFilesAsync(trackDto, audioFile, visualFile);
-
-        if (track == null)
-        {
-            throw new ArgumentException("Error creating track.");
-        }
+        var track = await CreateWithFilesAsync(trackDto, audioFile, visualFile) ?? throw new ArgumentException("Error creating track.");
 
         await CreateArtistsForTrack(
             track.Id,
@@ -110,12 +104,10 @@ public class TrackService(
 
         foreach (var artist in artists)
         {
-            var artistDto = new ArtistDto
+            ArtistDto artistDto = new ()
             {
                 Firstname = artist.Split(" ")[0],
                 Lastname = artist.Split(" ")[1],
-                TrackId = trackId,
-                ContributionId = await contributionService.GetContributionIdByLabelAsync(label),
             };
 
             await artistService.CreateAsync(artistDto);

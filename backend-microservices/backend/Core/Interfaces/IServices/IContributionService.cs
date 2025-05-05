@@ -10,7 +10,5 @@ namespace Core.Interfaces.IServices;
 public interface IContributionService
     : IGenericService<Contribution, ContributionDto>
 {
-    Task<ContributionDto?> GetByArtistIdAsync(Guid id);
-
     Task<Guid> GetContributionIdByLabelAsync(string label);
 }

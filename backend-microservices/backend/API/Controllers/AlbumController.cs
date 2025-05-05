@@ -3,7 +3,6 @@
 // </copyright>
 
 using Core.DTOs.AlbumDTOs;
-using Core.DTOs.CardDTOs;
 using Core.Entities;
 using Core.Interfaces.IHelpers;
 using Core.Interfaces.IServices;
@@ -24,7 +23,7 @@ public class AlbumController(
     /// <summary>
     /// Creates an object of type Album.
     /// </summary>
-    /// <returns>Album.</returns>
+    /// <returns>Album</returns>
     [SwaggerResponse(200, "Album created", typeof(AlbumDto))]
     [SwaggerResponse(401, "Unauthorized")]
     [HttpPost]
