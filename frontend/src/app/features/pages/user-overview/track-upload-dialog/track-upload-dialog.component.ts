@@ -8,26 +8,25 @@ import {
   ReactiveFormsModule, ValidationErrors, ValidatorFn,
   Validators
 } from "@angular/forms";
-import {Subject} from "rxjs";
 import {CommonModule} from "@angular/common";
 import {MatSelectModule} from "@angular/material/select";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
-import {Album} from "../../../../../core/models/entities/album.model";
-import {Genre} from "../../../../../core/models/entities/genre.model";
-import {Contribution} from "../../../../../core/models/entities/contribution.model";
-import {TrackService} from "../../../../../core/services/entity-services/tracks/track.service";
-import {AlbumService} from "../../../../../core/services/entity-services/albums/album.service";
-import {GenreService} from "../../../../../core/services/entity-services/genres/genre.service";
-import {ContributionService} from "../../../../../core/services/entity-services/contributions/contribution.service";
-import {requiredFileType} from "../../../../../core/validation/required-file-type/required-file-type";
-import {maxFileSize} from "../../../../../core/validation/max-file-size/max-file-size";
-import {InputFieldComponent} from "../../../../../shared/form-components/input-field/input-field.component";
-import {SelectFieldComponent} from "../../../../../shared/form-components/select-field/select-field.component";
-import {FileInputComponent} from "../../../../../shared/form-components/file-input/file-input.component";
-import {TrackCard} from "../../../../../core/models/entities/track-card.model";
-import {TrackUploadForm} from "../../../../../core/models/forms/track-upload-form.type";
-import {ArtistUploadForm} from "../../../../../core/models/forms/artist-upload-form.type";
+import {Album} from "../../../../core/models/entities/album.model";
+import {Genre} from "../../../../core/models/entities/genre.model";
+import {Contribution} from "../../../../core/models/entities/contribution.model";
+import {TrackService} from "../../../../core/services/entity-services/tracks/track.service";
+import {AlbumService} from "../../../../core/services/entity-services/albums/album.service";
+import {GenreService} from "../../../../core/services/entity-services/genres/genre.service";
+import {ContributionService} from "../../../../core/services/entity-services/contributions/contribution.service";
+import {requiredFileType} from "../../../../core/validation/required-file-type/required-file-type";
+import {maxFileSize} from "../../../../core/validation/max-file-size/max-file-size";
+import {InputFieldComponent} from "../../../../shared/form-components/input-field/input-field.component";
+import {SelectFieldComponent} from "../../../../shared/form-components/select-field/select-field.component";
+import {FileInputComponent} from "../../../../shared/form-components/file-input/file-input.component";
+import {TrackCard} from "../../../../core/models/entities/track-card.model";
+import {TrackUploadForm} from "../../../../core/models/forms/track-upload-form.type";
+import {ArtistUploadForm} from "../../../../core/models/forms/artist-upload-form.type";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
@@ -70,8 +69,6 @@ export class TrackUploadDialogComponent implements OnInit {
   isCreatingNewAlbum: boolean = false;
   newAlbumTitleControl: AbstractControl | null = null;
 
-  private readonly _unsubscribeAll: Subject<void> = new Subject<void>();
-
   constructor(@Inject(MAT_DIALOG_DATA) public data: { userId: string },) {}
 
   ngOnInit() {
@@ -88,6 +85,7 @@ export class TrackUploadDialogComponent implements OnInit {
       firstGenre: new FormControl(''),
       secondaryGenre: new FormControl(''),
       albumTitle: new FormControl(''),
+      releaseDate: new FormControl('', {nonNullable: true, validators: [Validators.required]}),
       audioFile: new FormControl<File | null>(null as unknown as File, {validators: [Validators.required, requiredFileType('mp3'), maxFileSize(20971520)]}),
       visualFile: new FormControl(null, {validators: [requiredFileType(['jpg', 'png']), maxFileSize(5242880)]}),
       newAlbumTitle: new FormControl(''),

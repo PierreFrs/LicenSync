@@ -13,7 +13,7 @@ import {
   Breakpoints,
   BreakpointState,
 } from '@angular/cdk/layout';
-import { TrackService } from '../../../../../core/services/entity-services/tracks/track.service';
+import { TrackService } from '../../../../core/services/entity-services/tracks/track.service';
 import { MatMenu, MatMenuTrigger } from '@angular/material/menu';
 import {
   MatListOption,
@@ -22,7 +22,7 @@ import {
 } from '@angular/material/list';
 import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
-import { AppParams } from '../../../../../core/models/app-params';
+import { AppParams } from '../../../../core/models/app-params';
 import { FormsModule } from '@angular/forms';
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 

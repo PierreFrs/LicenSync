@@ -2,7 +2,7 @@ import {Component, inject, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {CommonModule} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
-import {DialogDataModel} from "../../../../../core/models/authentication-dialog-data-model.model";
+import {DialogDataModel} from "../../../../core/models/authentication-dialog-data-model.model";
 
 @Component({
   selector: 'app-track-authentication-dialog',

@@ -3,7 +3,7 @@ import {TrackListComponent} from "./track-list/track-list.component";
 import {MatListModule} from "@angular/material/list";
 import {AlbumListComponent} from "./album-list/album-list.component";
 import {AsyncPipe, NgClass} from "@angular/common";
-import {ResponsiveService} from "../../../../core/services/responsive.service";
+import {ResponsiveService} from "../../../core/services/responsive.service";
 
 @Component({
   selector: 'app-user-overview',

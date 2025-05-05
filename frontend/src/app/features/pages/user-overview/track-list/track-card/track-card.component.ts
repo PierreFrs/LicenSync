@@ -4,9 +4,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
-import { ImagesModule } from '../../../../../../core/modules/images.module';
-import { TrackService } from '../../../../../../core/services/entity-services/tracks/track.service';
-import { TrackCard } from '../../../../../../core/models/entities/track-card.model';
+import { ImagesModule } from '../../../../../core/modules/images.module';
+import { TrackService } from '../../../../../core/services/entity-services/tracks/track.service';
+import { TrackCard } from '../../../../../core/models/entities/track-card.model';
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({

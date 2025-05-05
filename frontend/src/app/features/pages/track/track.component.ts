@@ -8,13 +8,13 @@ import {TrackAuthenticationDialogComponent} from "./track-authentication-dialog/
 import {MatDialog} from "@angular/material/dialog";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {BreakpointObserver, Breakpoints, BreakpointState} from "@angular/cdk/layout";
-import {TrackService} from "../../../../core/services/entity-services/tracks/track.service";
-import {BlockchainService} from "../../../../core/services/entity-services/blockchain/blockchain.service";
-import {ImagesModule} from "../../../../core/modules/images.module";
-import {TransactionReceipt} from "../../../../core/models/transaction-receipt.model";
-import {HashesComparisonModel} from "../../../../core/models/hashes-comparison.model";
-import {DialogDataModel} from "../../../../core/models/authentication-dialog-data-model.model";
-import {TrackCard} from "../../../../core/models/entities/track-card.model";
+import {TrackService} from "../../../core/services/entity-services/tracks/track.service";
+import {BlockchainService} from "../../../core/services/entity-services/blockchain/blockchain.service";
+import {ImagesModule} from "../../../core/modules/images.module";
+import {TransactionReceipt} from "../../../core/models/transaction-receipt.model";
+import {HashesComparisonModel} from "../../../core/models/hashes-comparison.model";
+import {DialogDataModel} from "../../../core/models/authentication-dialog-data-model.model";
+import {TrackCard} from "../../../core/models/entities/track-card.model";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({

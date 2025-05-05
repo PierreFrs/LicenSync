@@ -21,15 +21,7 @@ export class AlbumService {
     return this.httpClient.get<Album[]>(`${this.baseUrl}/Album/user/${userId}`);
   }
 
-  postAlbum(albumDto: Album, albumVisual?: File): Observable<Album> {
-    const formData: FormData = new FormData();
-
-    if (albumVisual) {
-      formData.append('albumVisual', albumVisual);
-    }
-    formData.append('albumTitle', albumDto.albumTitle);
-    formData.append('userId', albumDto.userId);
-
+  postAlbum(formData: FormData): Observable<Album> {
     return this.httpClient.post<Album>(`${this.baseUrl}/Album/`, formData);
   }
 

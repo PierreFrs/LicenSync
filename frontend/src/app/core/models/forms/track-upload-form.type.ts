@@ -9,6 +9,7 @@ export type TrackUploadForm = {
   firstGenre: FormControl<string | null>
   secondaryGenre: FormControl<string | null>
   albumTitle: FormControl<string | null>
+  releaseDate: FormControl<string>
   audioFile: FormControl<File | null>
   visualFile: FormControl<File | null>
   newAlbumTitle: FormControl<string | null>
