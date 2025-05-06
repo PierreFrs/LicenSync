@@ -13,7 +13,7 @@ namespace Core.Interfaces.IHelpers;
 
 public interface IFileValidationService
 {
-    void ValidatePictureFile(IFormFile file);
+    (bool IsValid, string? ErrorMessage) ValidatePictureFile(IFormFile file);
 
-    void ValidateAudioFile(IFormFile file);
+    (bool IsValid, string? ErrorMessage) ValidateAudioFile(IFormFile file);
 }

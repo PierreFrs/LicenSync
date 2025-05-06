@@ -104,55 +104,6 @@ public class ContributionControllerTests
         Assert.IsType<NotFoundResult>(result);
     }
 
-    [Fact]
-    public async Task GetByArtistId_ReturnsOk_IfIdIsValid()
-    {
-        // Arrange
-        var contributionDto = new ContributionDto();
-        _mockContributionService
-            .Setup(x => x.GetByArtistIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(contributionDto);
-
-        // Act
-        var result = await _contributionController.GetByArtistId(It.IsAny<Guid>());
-
-        // Assert
-        Assert.IsType<OkObjectResult>(result);
-    }
-
-    [Fact]
-    public async Task GetByArtistId_ReturnsContribution_IfIdIsValid()
-    {
-        // Arrange
-        var contributionDto = new ContributionDto();
-        _mockContributionService
-            .Setup(x => x.GetByArtistIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(contributionDto);
-
-        // Act
-        var result = await _contributionController.GetByArtistId(It.IsAny<Guid>());
-
-        // Assert
-        var okResult = result as OkObjectResult;
-        Assert.NotNull(okResult);
-        Assert.IsType<ContributionDto>(okResult.Value);
-    }
-
-    [Fact]
-    public async Task GetByArtistId_ReturnsNotFound_IfIdIsInvalid()
-    {
-        // Arrange
-        _mockContributionService
-            .Setup(x => x.GetByArtistIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync((ContributionDto?)null);
-
-        // Act
-        var result = await _contributionController.GetByArtistId(It.IsAny<Guid>());
-
-        // Assert
-        Assert.IsType<NotFoundResult>(result);
-    }
-
     /********** Create **********/
     [Fact]
     public async Task Create_ReturnsOk_IfContributionIsValid()

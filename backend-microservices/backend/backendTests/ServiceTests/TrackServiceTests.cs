@@ -58,7 +58,6 @@ public class TrackServiceTests
 
         _trackService = new TrackService(
             _mockTrackRepository.Object,
-            _mockContributionService.Object,
             _mockArtistService.Object,
             _mockAlbumService.Object,
             _mockGenreService.Object,
@@ -85,7 +84,6 @@ public class TrackServiceTests
                 RecordLabel = "Polydor",
                 Length = "03:04:00",
                 AudioFilePath = "/test/file/path/white_room.mp3",
-                TrackVisualPath = "/test/file/path/white_room_visual.jpg",
                 FirstGenreId = new Guid("c1970414-805f-4f7a-9fdf-7b2de60a38f7"),
                 SecondaryGenreId = new Guid("e4689f70-397c-4339-97c6-2fb4e129a155"),
                 AlbumId = new Guid("42ddc682-eaa6-4ae4-bca6-c9672e1dfa14"),
@@ -98,7 +96,6 @@ public class TrackServiceTests
                 RecordLabel = "Loud",
                 Length = "04:12:00",
                 AudioFilePath = "/test/file/path/cream.mp3",
-                TrackVisualPath = "/test/file/path/cream_visual.jpg",
                 FirstGenreId = new Guid("028450d1-783e-45c6-a59f-0241ced8731c"),
                 SecondaryGenreId = new Guid("e79ff304-68df-46f1-861d-7a969c479fa1"),
                 AlbumId = new Guid("d2a246c9-6af5-4710-898d-4dfd0a772153"),
@@ -130,7 +127,6 @@ public class TrackServiceTests
             RecordLabel = "Polydor",
             Length = "03:04:00",
             AudioFilePath = "/test/file/path/white_room.mp3",
-            TrackVisualPath = "/test/file/path/white_room_visual.jpg",
             FirstGenreId = new Guid("c1970414-805f-4f7a-9fdf-7b2de60a38f7"),
             SecondaryGenreId = new Guid("e4689f70-397c-4339-97c6-2fb4e129a155"),
             AlbumId = new Guid("42ddc682-eaa6-4ae4-bca6-c9672e1dfa14"),
@@ -154,7 +150,6 @@ public class TrackServiceTests
         Assert.Equal("Polydor", expectedTrackDto.RecordLabel);
         Assert.Equal("03:04:00", expectedTrackDto.Length);
         Assert.Equal("/test/file/path/white_room.mp3", expectedTrackDto.AudioFilePath);
-        Assert.Equal("/test/file/path/white_room_visual.jpg", expectedTrackDto.TrackVisualPath);
         Assert.Equal(
             new Guid("c1970414-805f-4f7a-9fdf-7b2de60a38f7"),
             expectedTrackDto.FirstGenreId
@@ -197,7 +192,6 @@ public class TrackServiceTests
                 RecordLabel = "Polydor",
                 Length = "03:04:00",
                 AudioFilePath = "/test/file/path/white_room.mp3",
-                TrackVisualPath = "/test/file/path/white_room_visual.jpg",
                 FirstGenreId = new Guid("c1970414-805f-4f7a-9fdf-7b2de60a38f7"),
                 SecondaryGenreId = new Guid("e4689f70-397c-4339-97c6-2fb4e129a155"),
                 AlbumId = new Guid("42ddc682-eaa6-4ae4-bca6-c9672e1dfa14"),
@@ -210,7 +204,6 @@ public class TrackServiceTests
                 RecordLabel = "Loud",
                 Length = "04:12:00",
                 AudioFilePath = "/test/file/path/cream.mp3",
-                TrackVisualPath = "/test/file/path/cream_visual.jpg",
                 FirstGenreId = new Guid("028450d1-783e-45c6-a59f-0241ced8731c"),
                 SecondaryGenreId = new Guid("e79ff304-68df-46f1-861d-7a969c479fa1"),
                 AlbumId = new Guid("d2a246c9-6af5-4710-898d-4dfd0a772153"),
@@ -248,7 +241,6 @@ public class TrackServiceTests
             RecordLabel = "Polydor",
             Length = "03:04:00",
             AudioFilePath = "/test/file/path/white_room.mp3",
-            TrackVisualPath = $"/test/file/path/{expectedFileName}",
             FirstGenreId = Guid.NewGuid(),
             SecondaryGenreId = Guid.NewGuid(),
             AlbumId = Guid.NewGuid(),
@@ -256,8 +248,6 @@ public class TrackServiceTests
         };
 
         string tempFilePath = Path.Combine(Path.GetTempPath(), expectedFileName);
-
-        testTrack.TrackVisualPath = tempFilePath;
 
         _mockTrackRepository.Setup(repo => repo.GetByIdAsync(id)).ReturnsAsync(testTrack);
 
@@ -315,14 +305,11 @@ public class TrackServiceTests
     {
         // Arrange
         var mockAudioFile = new Mock<IFormFile>();
-        var trackDto = new TrackDto
+        var trackDto = new TrackCreateDto
         {
-            Id = new Guid("ad7c9d85-1ef1-459f-8d34-91076009b327"),
             TrackTitle = "white_room.mp3",
             RecordLabel = "Polydor",
             Length = "03:04:00",
-            AudioFilePath = "/test/file/path/white_room.mp3",
-            TrackVisualPath = "/test/file/path/white_room_visual.jpg",
             FirstGenreId = new Guid("c1970414-805f-4f7a-9fdf-7b2de60a38f7"),
             SecondaryGenreId = new Guid("e4689f70-397c-4339-97c6-2fb4e129a155"),
             AlbumId = new Guid("42ddc682-eaa6-4ae4-bca6-c9672e1dfa14"),
@@ -334,7 +321,7 @@ public class TrackServiceTests
             .ReturnsAsync("03:04:00");
 
         // Act
-        await _trackService.CreateWithFilesAsync(trackDto, mockAudioFile.Object, null);
+        await _trackService.CreateWithAudioFileAsync(trackDto, mockAudioFile.Object);
 
         // Assert
         _mockFileHelpers.Verify(f => f.GetAudioFileLengthAsync(It.IsAny<IFormFile>()), Times.Once);
@@ -345,13 +332,13 @@ public class TrackServiceTests
     {
         // Arrange
         var mockAudioFile = new Mock<IFormFile>();
-        var trackDto = new TrackDto();
+        var trackDto = new TrackCreateDto();
         _mockFileHelpers
             .Setup(f => f.SaveFileAsync(It.IsAny<IFormFile>(), It.IsAny<string>()))
             .ReturnsAsync("path/to/audio");
 
         // Act
-        await _trackService.CreateWithFilesAsync(trackDto, mockAudioFile.Object, null);
+        await _trackService.CreateWithAudioFileAsync(trackDto, mockAudioFile.Object);
 
         // Assert
         _mockFileHelpers.Verify(
@@ -361,39 +348,15 @@ public class TrackServiceTests
     }
 
     [Fact]
-    public async Task CreateAsync_ShouldCallSaveFileAsync_ifVisualFileIsNotNull()
-    {
-        // Arrange
-        var audioFile = new Mock<IFormFile>();
-        var visualFile = new Mock<IFormFile>();
-        var trackDto = new TrackDto();
-        _mockFileHelpers
-            .Setup(f => f.SaveFileAsync(audioFile.Object, It.IsAny<string>()))
-            .ReturnsAsync("path/to/visual");
-
-        // Act
-        await _trackService.CreateWithFilesAsync(trackDto, audioFile.Object, visualFile.Object);
-
-        // Assert
-        _mockFileHelpers.Verify(
-            f => f.SaveFileAsync(visualFile.Object, It.IsAny<string>()),
-            Times.Once
-        );
-    }
-
-    [Fact]
     public async Task CreateAsync_ShouldReturnTrackDto_IfDetailsAreValid()
     {
         // Arrange
         var mockAudioFile = new Mock<IFormFile>();
-        var trackDto = new TrackDto
+        var trackDto = new TrackCreateDto
         {
-            Id = new Guid("ad7c9d85-1ef1-459f-8d34-91076009b327"),
             TrackTitle = "white_room.mp3",
             RecordLabel = "Polydor",
             Length = "03:04:00",
-            AudioFilePath = "/test/file/path/white_room.mp3",
-            TrackVisualPath = "/test/file/path/white_room_visual.jpg",
             FirstGenreId = new Guid("c1970414-805f-4f7a-9fdf-7b2de60a38f7"),
             SecondaryGenreId = new Guid("e4689f70-397c-4339-97c6-2fb4e129a155"),
             AlbumId = new Guid("42ddc682-eaa6-4ae4-bca6-c9672e1dfa14"),
@@ -407,7 +370,6 @@ public class TrackServiceTests
             RecordLabel = "Polydor",
             Length = "03:04:00",
             AudioFilePath = "/test/file/path/white_room.mp3",
-            TrackVisualPath = "/test/file/path/white_room_visual.jpg",
             FirstGenreId = new Guid("c1970414-805f-4f7a-9fdf-7b2de60a38f7"),
             SecondaryGenreId = new Guid("e4689f70-397c-4339-97c6-2fb4e129a155"),
             AlbumId = new Guid("42ddc682-eaa6-4ae4-bca6-c9672e1dfa14"),
@@ -417,148 +379,17 @@ public class TrackServiceTests
         _mockTrackRepository.Setup(repo => repo.CreateAsync(It.IsAny<Track>())).ReturnsAsync(track);
 
         // Act
-        var expectedTrackDto = await _trackService.CreateWithFilesAsync(
+        var expectedTrackDto = await _trackService.CreateWithAudioFileAsync(
             trackDto,
-            mockAudioFile.Object,
-            null
-        );
+            mockAudioFile.Object
+            );
 
         // Assert
         Assert.NotNull(expectedTrackDto);
         Assert.IsType<TrackDto>(expectedTrackDto);
     }
 
-    [Fact]
-    public async Task CreateWithFilesAsync_ShouldSetVisualFilePath_IfVisualFileIsNotNull()
-    {
-        // Arrange
-        var mockAudioFile = new Mock<IFormFile>();
-        var mockVisualFile = new Mock<IFormFile>();
-        var trackDto = new TrackDto
-        {
-            Id = Guid.NewGuid(),
-            TrackTitle = "new_track.mp3",
-            RecordLabel = "TestLabel",
-            FirstGenreId = Guid.NewGuid(),
-            SecondaryGenreId = Guid.NewGuid(),
-            AlbumId = Guid.NewGuid(),
-            UserId = _userId,
-        };
-
-        var track = new Track
-        {
-            Id = trackDto.Id,
-            TrackTitle = trackDto.TrackTitle,
-            RecordLabel = trackDto.RecordLabel,
-            FirstGenreId = trackDto.FirstGenreId,
-            SecondaryGenreId = trackDto.SecondaryGenreId,
-            AlbumId = trackDto.AlbumId,
-            UserId = trackDto.UserId,
-            AudioFilePath = "path/to/audio",
-            TrackVisualPath = "path/to/visual",
-            Length = "03:04:00",
-        };
-
-        _mockFileHelpers
-            .Setup(f => f.GetAudioFileLengthAsync(It.IsAny<IFormFile>()))
-            .ReturnsAsync("03:04:00");
-        _mockFileHelpers
-            .Setup(f => f.SaveFileAsync(mockAudioFile.Object, It.IsAny<string>()))
-            .ReturnsAsync("path/to/audio");
-        _mockFileHelpers
-            .Setup(f => f.SaveFileAsync(mockVisualFile.Object, It.IsAny<string>()))
-            .ReturnsAsync("path/to/visual");
-
-        _mockTrackRepository.Setup(repo => repo.CreateAsync(It.IsAny<Track>())).ReturnsAsync(track);
-
-        // Act
-        var result = await _trackService.CreateWithFilesAsync(
-            trackDto,
-            mockAudioFile.Object,
-            mockVisualFile.Object
-        );
-
-        // Assert
-        _mockFileHelpers.Verify(
-            f => f.SaveFileAsync(mockVisualFile.Object, It.IsAny<string>()),
-            Times.Once
-        );
-        Assert.NotNull(result);
-        Assert.Equal("path/to/visual", result.TrackVisualPath);
-    }
-
     /********** Update **********/
-
-    [Fact]
-    public async Task UpdateWithFilesAsync_ShouldSetVisualFilePath_IfVisualFileIsNotNull()
-    {
-        // Arrange
-        var mockVisualFile = new Mock<IFormFile>();
-        var trackDtoUpdate = new TrackDto
-        {
-            TrackTitle = "updated_track.mp3",
-            RecordLabel = "UpdatedLabel",
-            FirstGenreId = Guid.NewGuid(),
-            SecondaryGenreId = Guid.NewGuid(),
-            AlbumId = Guid.NewGuid(),
-        };
-
-        var existingTrack = new Track
-        {
-            Id = Guid.NewGuid(),
-            TrackTitle = "old_track.mp3",
-            RecordLabel = "OldLabel",
-            FirstGenreId = Guid.NewGuid(),
-            SecondaryGenreId = Guid.NewGuid(),
-            AlbumId = Guid.NewGuid(),
-            UserId = _userId,
-            AudioFilePath = "path/to/audio",
-            TrackVisualPath = "path/to/old_visual",
-            Length = "03:04:00",
-        };
-
-        var updatedTrack = new Track
-        {
-            Id = existingTrack.Id,
-            TrackTitle = trackDtoUpdate.TrackTitle,
-            RecordLabel = trackDtoUpdate.RecordLabel,
-            FirstGenreId = trackDtoUpdate.FirstGenreId,
-            SecondaryGenreId = trackDtoUpdate.SecondaryGenreId,
-            AlbumId = trackDtoUpdate.AlbumId,
-            UserId = existingTrack.UserId,
-            AudioFilePath = existingTrack.AudioFilePath,
-            TrackVisualPath = "path/to/new_visual",
-            Length = existingTrack.Length,
-            UpdateDate = DateTime.Now,
-        };
-
-        _mockTrackRepository
-            .Setup(repo => repo.GetByIdAsync(existingTrack.Id))
-            .ReturnsAsync(existingTrack);
-        _mockTrackRepository
-            .Setup(repo => repo.UpdateAsync(It.IsAny<Track>()))
-            .ReturnsAsync(updatedTrack);
-        _mockFileHelpers
-            .Setup(f => f.SaveFileAsync(mockVisualFile.Object, It.IsAny<string>()))
-            .ReturnsAsync("path/to/new_visual");
-        _mockFileHelpers.Setup(f => f.DeleteFile(It.IsAny<string>())).Verifiable();
-
-        // Act
-        var result = await _trackService.UpdateWithFilesAsync(
-            existingTrack.Id,
-            trackDtoUpdate,
-            mockVisualFile.Object
-        );
-
-        // Assert
-        _mockFileHelpers.Verify(f => f.DeleteFile("path/to/old_visual"), Times.Once);
-        _mockFileHelpers.Verify(
-            f => f.SaveFileAsync(mockVisualFile.Object, It.IsAny<string>()),
-            Times.Once
-        );
-        Assert.NotNull(result);
-        Assert.Equal("path/to/new_visual", result.TrackVisualPath);
-    }
 
     [Fact]
     public async Task UpdateWithFilesAsync_ShouldThrowAnException_IfTrackIsNull()
@@ -570,7 +401,7 @@ public class TrackServiceTests
 
         // Act & Assert
         await Assert.ThrowsAsync<ArgumentException>(
-            () => _trackService.UpdateWithFilesAsync(Guid.NewGuid(), new TrackDto(), null)
+            () => _trackService.UpdateAsync(Guid.NewGuid(), new TrackDto())
         );
     }
 
@@ -597,7 +428,6 @@ public class TrackServiceTests
             AlbumId = Guid.NewGuid(),
             UserId = _userId,
             AudioFilePath = "path/to/audio",
-            TrackVisualPath = "path/to/old_visual",
             Length = "03:04:00",
         };
 
@@ -609,10 +439,9 @@ public class TrackServiceTests
             .ReturnsAsync((Track?)null);
 
         // Act
-        var result = await _trackService.UpdateWithFilesAsync(
+        var result = await _trackService.UpdateAsync(
             existingTrack.Id,
-            trackDtoUpdate,
-            null
+            trackDtoUpdate
         );
 
         // Assert
@@ -635,27 +464,6 @@ public class TrackServiceTests
     }
 
     [Fact]
-    public async Task DeleteAsync_ShouldCallDeleteFile_IfTrackVisualPathIsNotNull()
-    {
-        // Arrange
-        var track = new Track
-        {
-            Id = Guid.NewGuid(),
-            AudioFilePath = "path/to/audio/file",
-            TrackVisualPath = "path/to/visual/file",
-        };
-
-        _mockTrackRepository.Setup(repo => repo.GetByIdAsync(track.Id)).ReturnsAsync(track);
-        _mockTrackRepository.Setup(repo => repo.DeleteAsync(track.Id)).ReturnsAsync(true);
-
-        // Act
-        await _trackService.DeleteWithFilesAsync(track.Id);
-
-        // Assert
-        _mockFileHelpers.Verify(f => f.DeleteFile(track.TrackVisualPath), Times.Once);
-    }
-
-    [Fact]
     public async Task DeleteAsync_ShouldCallDeleteFile_IfAudioFilePathIsNotNull()
     {
         // Arrange
@@ -663,7 +471,6 @@ public class TrackServiceTests
         {
             Id = Guid.NewGuid(),
             AudioFilePath = "path/to/audio/file",
-            TrackVisualPath = "path/to/visual/file",
         };
 
         _mockTrackRepository.Setup(repo => repo.GetByIdAsync(track.Id)).ReturnsAsync(track);

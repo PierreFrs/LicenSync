@@ -15,13 +15,11 @@ namespace backendTests.ServiceTests;
 public class ContributionServiceTests
 {
     private readonly Mock<IContributionRepository> _mockContributionRepository;
-    private readonly Mock<IArtistRepository> _mockArtistRepository;
     private readonly ContributionService _contributionService;
 
     public ContributionServiceTests()
     {
         _mockContributionRepository = new Mock<IContributionRepository>();
-        _mockArtistRepository = new Mock<IArtistRepository>();
         var mapperConfig = new MapperConfiguration(cfg =>
         {
             cfg.CreateMap<Contribution, ContributionDto>().ReverseMap();
@@ -31,7 +29,6 @@ public class ContributionServiceTests
         var mapper = mapperConfig.CreateMapper();
         _contributionService = new ContributionService(
             _mockContributionRepository.Object,
-            _mockArtistRepository.Object,
             mapper
         );
     }
@@ -96,71 +93,6 @@ public class ContributionServiceTests
 
         // Assert
         Assert.Null(expectedContribution);
-    }
-
-    [Fact]
-    public async Task GetByArtistIdAsync_ShouldReturnContribution_IfArtistIdIsValid()
-    {
-        // Arrange
-        var artist = new Artist
-        {
-            Id = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-            ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-        };
-
-        var contribution = new Contribution
-        {
-            Id = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-            Label = "Test",
-        };
-
-        _mockArtistRepository.Setup(repo => repo.GetByIdAsync(artist.Id)).ReturnsAsync(artist);
-        _mockContributionRepository
-            .Setup(repo => repo.GetByIdAsync(artist.ContributionId))
-            .ReturnsAsync(contribution);
-
-        // Act
-        var expectedContribution = await _contributionService.GetByArtistIdAsync(artist.Id);
-
-        // Assert
-        if (expectedContribution != null)
-            Assert.Equal(contribution.Id, expectedContribution.Id);
-    }
-
-    [Fact]
-    public async Task GetByArtistIdAsync_ShouldReturnNull_IfArtistIdIsInvalid()
-    {
-        // Arrange
-        Guid id = Guid.NewGuid();
-        var artist = new Artist
-        {
-            Id = id,
-            ContributionId = new Guid("db06174b-2f0b-4fef-b41f-8550039b6a79"),
-        };
-
-        _mockArtistRepository.Setup(repo => repo.GetByIdAsync(id)).ReturnsAsync(artist);
-        _mockContributionRepository
-            .Setup(repo => repo.GetByIdAsync(artist.ContributionId))
-            .ReturnsAsync((Contribution?)null);
-
-        // Act
-        var contribution = await _contributionService.GetByArtistIdAsync(id);
-
-        // Assert
-        Assert.Null(contribution);
-    }
-
-    [Fact]
-    public async Task GetByArtistIdAsync_ShouldThrowException_IfArtistIsNotFound()
-    {
-        // Arrange
-        Guid id = Guid.NewGuid();
-        _mockArtistRepository.Setup(repo => repo.GetByIdAsync(id)).ReturnsAsync((Artist?)null);
-
-        // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(
-            () => _contributionService.GetByArtistIdAsync(id)
-        );
     }
 
     /********* Create *********/

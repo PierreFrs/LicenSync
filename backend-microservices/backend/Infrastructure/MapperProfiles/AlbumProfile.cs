@@ -13,5 +13,6 @@ public class AlbumProfile : Profile
     public AlbumProfile()
     {
         CreateMap<Album, AlbumDto>().ReverseMap();
+        CreateMap<Album, AlbumCreateDto>().ReverseMap();
     }
 }

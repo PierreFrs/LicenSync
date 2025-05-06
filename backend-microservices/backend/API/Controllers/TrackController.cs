@@ -30,9 +30,8 @@ public class TrackController(
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> Create(
-        [FromForm] TrackDto trackDto,
-        IFormFile audioFile,
-        IFormFile? visualFile
+        [FromForm] TrackCreateDto trackCreateDto,
+        IFormFile audioFile
     )
     {
         if (audioFile == null)
@@ -42,12 +41,7 @@ public class TrackController(
 
         fileValidationService.ValidateAudioFile(audioFile);
 
-        if (visualFile != null)
-        {
-            fileValidationService.ValidatePictureFile(visualFile);
-        }
-
-        var track = await trackService.CreateWithFilesAsync(trackDto, audioFile, visualFile);
+        var track = await trackService.CreateWithAudioFileAsync(trackCreateDto, audioFile);
 
         if (track == null)
         {
@@ -271,8 +265,7 @@ public class TrackController(
     [Authorize]
     public async Task<IActionResult> Update(
         [FromRoute] Guid id,
-        [FromForm] TrackDto trackDto,
-        IFormFile? audioFile
+        [FromForm] TrackDto trackDto
     )
     {
         var track = await trackService.GetByIdAsync(id);
@@ -281,12 +274,7 @@ public class TrackController(
             return NotFound();
         }
 
-        if (audioFile != null)
-        {
-            fileValidationService.ValidateAudioFile(audioFile);
-        }
-
-        var isUpdated = await trackService.UpdateWithFilesAsync(id, trackDto, audioFile);
+        var isUpdated = await trackService.UpdateAsync(id, trackDto);
         if (isUpdated == null)
         {
             throw new ArgumentException("Something went wrong with the update of the track");

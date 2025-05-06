@@ -228,21 +228,20 @@ public class TrackControllerTests
     public async Task Create_ReturnsOk()
     {
         // Arrange
+        var trackCreateDto = new TrackCreateDto();
         var trackDto = new TrackDto();
         var audioFile = new Mock<IFormFile>();
-        var visualFile = new Mock<IFormFile>();
         _mockTrackService
             .Setup(x =>
-                x.CreateWithFilesAsync(
-                    It.IsAny<TrackDto>(),
-                    It.IsAny<IFormFile>(),
+                x.CreateWithAudioFileAsync(
+                    It.IsAny<TrackCreateDto>(),
                     It.IsAny<IFormFile>()
                 )
             )
             .ReturnsAsync(trackDto);
 
         // Act
-        var result = await _trackController.Create(trackDto, audioFile.Object, visualFile.Object);
+        var result = await _trackController.Create(trackCreateDto, audioFile.Object);
 
         // Assert
         Assert.IsType<OkObjectResult>(result);
@@ -252,14 +251,12 @@ public class TrackControllerTests
     public async Task Create_ReturnsException_IfTrackIsNull()
     {
         // Arrange
-        TrackDto trackDto = new TrackDto();
+        TrackCreateDto trackDto = new TrackCreateDto();
         var audioFile = new Mock<IFormFile>();
-        var visualFile = new Mock<IFormFile>();
         _mockTrackService
             .Setup(x =>
-                x.CreateWithFilesAsync(
-                    It.IsAny<TrackDto>(),
-                    It.IsAny<IFormFile>(),
+                x.CreateWithAudioFileAsync(
+                    It.IsAny<TrackCreateDto>(),
                     It.IsAny<IFormFile>()
                 )
             )
@@ -267,7 +264,7 @@ public class TrackControllerTests
 
         // Act & Assert
         var exception = await Assert.ThrowsAsync<ArgumentException>(
-            async () => await _trackController.Create(trackDto, audioFile.Object, visualFile.Object)
+            async () => await _trackController.Create(trackDto, audioFile.Object)
         );
         Assert.Equal("Something went wrong with the Track creation", exception.Message);
     }
@@ -276,12 +273,12 @@ public class TrackControllerTests
     public async Task Create_ThrowsArgumentException_IfAudioFileIsNull()
     {
         // Arrange
-        var trackDto = new TrackDto();
+        var trackDto = new TrackCreateDto();
         var visualFile = new Mock<IFormFile>();
 
         // Act
         var exception = await Assert.ThrowsAsync<ArgumentException>(
-            () => _trackController.Create(trackDto, null!, visualFile.Object)
+            () => _trackController.Create(trackDto, null!)
         );
 
         // Assert
@@ -292,7 +289,7 @@ public class TrackControllerTests
     public async Task Create_ThrowsArgumentException_IfAudioFileIsNotValid()
     {
         // Arrange
-        var trackDto = new TrackDto();
+        var trackDto = new TrackCreateDto();
         var audioFile = new Mock<IFormFile>();
         _mockFileValidationService
             .Setup(x => x.ValidateAudioFile(It.IsAny<IFormFile>()))
@@ -300,7 +297,7 @@ public class TrackControllerTests
 
         // Act
         var exception = await Assert.ThrowsAsync<ArgumentException>(
-            () => _trackController.Create(trackDto, audioFile.Object, null)
+            () => _trackController.Create(trackDto, audioFile.Object)
         );
 
         // Assert
@@ -311,16 +308,15 @@ public class TrackControllerTests
     public async Task Create_ThrowsArgumentException_IfVisualFileIsNotValid()
     {
         // Arrange
-        var trackDto = new TrackDto();
+        var trackDto = new TrackCreateDto();
         var audioFile = new Mock<IFormFile>();
-        var visualFile = new Mock<IFormFile>();
         _mockFileValidationService
             .Setup(x => x.ValidatePictureFile(It.IsAny<IFormFile>()))
             .Throws(new ArgumentException("Visual file is not valid."));
 
         // Act
         var exception = await Assert.ThrowsAsync<ArgumentException>(
-            () => _trackController.Create(trackDto, audioFile.Object, visualFile.Object)
+            () => _trackController.Create(trackDto, audioFile.Object)
         );
 
         // Assert

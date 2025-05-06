@@ -8,18 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data.Repositories;
 
-public class AlbumRepository : GenericRepository<Album>, IAlbumRepository
+public class AlbumRepository(ApplicationDbContext context) : GenericRepository<Album>(context), IAlbumRepository
 {
-    private readonly ApplicationDbContext _context;
-    
-    public AlbumRepository(ApplicationDbContext context) : base(context)
-    {
-        _context = context;
-    }
-
     public async Task<Guid> GetAlbumIdByTitleAsync(string title, string UserId)
     {
-        return await _context
+        return await context
             .Albums.AsNoTracking()
             .Where(x => x.AlbumTitle == title && x.UserId == UserId && x.ReleaseDate >= DateTime.Now)
             .Select(x => x.Id)

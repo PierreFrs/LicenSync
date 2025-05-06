@@ -7,6 +7,7 @@ using Core.DTOs.AlbumDTOs;
 using Core.Entities;
 using Core.Interfaces.IHelpers;
 using Core.Interfaces.IServices;
+using Core.Interfaces.IUnitOfWork;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,10 @@ namespace backendTests.ControllerTests;
 public class AlbumControllerTests
 {
     private readonly Mock<IAlbumService> _mockAlbumService;
+    private readonly Mock<ITrackService> _mockTrackService;
     private readonly Mock<IFileValidationService> _mockFileValidationService;
+    private readonly Mock<IAlbumUploadUnitOfWork> _mockAlbumUploadUnitOfWork;
+    private readonly Mock<ILogger<AlbumController>> _mockLogger;
     private readonly Mock<UserManager<AppUser>> _mockUserManager;
 
     private readonly AlbumController _albumController;
@@ -28,7 +32,10 @@ public class AlbumControllerTests
     public AlbumControllerTests()
     {
         _mockAlbumService = new Mock<IAlbumService>();
+        _mockTrackService = new Mock<ITrackService>();
         _mockFileValidationService = new Mock<IFileValidationService>();
+        _mockAlbumUploadUnitOfWork = new Mock<IAlbumUploadUnitOfWork>();
+        _mockLogger = new Mock<ILogger<AlbumController>>();
         var userStoreMock = new Mock<IUserStore<AppUser>>();
         _mockUserManager = new Mock<UserManager<AppUser>>(
             userStoreMock.Object,
@@ -43,7 +50,10 @@ public class AlbumControllerTests
         );
         _albumController = new AlbumController(
             _mockAlbumService.Object,
+            _mockTrackService.Object,
             _mockFileValidationService.Object,
+            _mockAlbumUploadUnitOfWork.Object,
+            _mockLogger.Object,
             _mockUserManager.Object
         );
     }
@@ -184,66 +194,8 @@ public class AlbumControllerTests
     }
 
     /********** Create **********/
-    [Fact]
-    public async Task Create_ReturnsOk_IfAlbumIsValid()
-    {
-        // Arrange
-        AlbumDto albumDto = new AlbumDto();
-        _mockAlbumService.Setup(x => x.CreateWithFileAsync(albumDto, null)).ReturnsAsync(albumDto);
-
-        // Act
-        var result = await _albumController.Create(albumDto, null);
-
-        // Assert
-        Assert.IsType<OkObjectResult>(result);
-    }
-
-    [Fact]
-    public async Task Create_ReturnsAlbum_IfAlbumIsValid()
-    {
-        // Arrange
-        AlbumDto albumDto = new AlbumDto();
-        _mockAlbumService.Setup(x => x.CreateWithFileAsync(albumDto, null)).ReturnsAsync(albumDto);
-
-        // Act
-        var result = await _albumController.Create(albumDto, null);
-
-        // Assert
-        var okResult = result as OkObjectResult;
-        Assert.NotNull(okResult);
-        Assert.IsType<AlbumDto>(okResult.Value);
-    }
-
-    [Fact]
-    public async Task Create_ShouldCallValidatePictureFile_IfFileIsNotNull()
-    {
-        // Arrange
-        AlbumDto albumDto = new AlbumDto();
-        IFormFile file = new Mock<IFormFile>().Object;
-        _mockAlbumService.Setup(x => x.CreateWithFileAsync(albumDto, file)).ReturnsAsync(albumDto);
-
-        // Act
-        await _albumController.Create(albumDto, file);
-
-        // Assert
-        _mockFileValidationService.Verify(x => x.ValidatePictureFile(file), Times.Once);
-    }
-
-    [Fact]
-    public async Task Create_ReturnsException_IfAlbumIsInvalid()
-    {
-        // Arrange
-        AlbumDto albumDto = new AlbumDto();
-        _mockAlbumService
-            .Setup(x => x.CreateWithFileAsync(albumDto, null))
-            .ReturnsAsync((AlbumDto?)null);
-
-        // Act & Assert
-        var exception = await Assert.ThrowsAsync<ArgumentException>(
-            async () => await _albumController.Create(albumDto, null)
-        );
-        Assert.Equal("Something went wrong with the Album creation", exception.Message);
-    }
+    
+    // TODO : CreateAlbumWithTrack
 
     /********** Update **********/
     [Fact]

@@ -14,16 +14,18 @@ namespace Core.DTOs.TrackDTOs
 
         public string Length { get; set; } = string.Empty;
 
+        public string UserId { get; set; } = string.Empty;
+
         public string? RecordLabel { get; set; }
 
-        public Genre? FirstGenre { get; set; }
+        public Guid? FirstGenreId { get; set; }
 
-        public Genre? SecondaryGenre { get; set; }
+        public Guid? SecondaryGenreId { get; set; }
+
+        public Guid? AlbumId { get; set; }
 
         public DateTime ReleaseDate { get; set; }
 
-        public string UserId { get; set; }
-
-        public IList<TrackArtistContributionCreateDto> ArtistContributions { get; set; } = new List<TrackArtistContributionCreateDto>();
+        public IList<TrackArtistContributionCreateDto> ArtistContributions { get; set; } = [];
     }
 }

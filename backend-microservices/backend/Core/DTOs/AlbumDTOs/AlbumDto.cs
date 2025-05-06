@@ -22,4 +22,6 @@ public class AlbumDto : TrackerDto
     public string? AlbumVisualPath { get; set; }
 
     public DateTime ReleaseDate { get; set; }
+
+    public ICollection<Artist> Artists { get; set; } = [];
 }

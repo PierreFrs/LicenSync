@@ -8,6 +8,7 @@ using Core.Entities;
 using Core.Interfaces.IRepositories;
 using Core.Interfaces.IServices;
 using Core.Specifications;
+using Infrastructure.Data.Repositories;
 
 namespace Infrastructure.Services;
 
@@ -28,6 +29,6 @@ public class ArtistService(
         }
         var specs = new ArtistSpecification(id);
         var artists = await artistRepository.GetEntityListBySpecificationAsync(specs);
-        return _mapper.Map<List<ArtistDto>>(artists) ?? new List<ArtistDto>();
+        return _mapper.Map<List<ArtistDto>>(artists) ?? [];
     }
 }

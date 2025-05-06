@@ -6,4 +6,7 @@ using Core.Entities;
 
 namespace Core.Interfaces.IRepositories;
 
-public interface IArtistRepository : IGenericRepository<Artist>;
+public interface IArtistRepository : IGenericRepository<Artist>
+{
+    Task<IReadOnlyList<Artist>?> GetListByNamesAsync(IReadOnlyList<Artist> artists);
+}

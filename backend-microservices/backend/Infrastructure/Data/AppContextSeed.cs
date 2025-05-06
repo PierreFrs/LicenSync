@@ -134,8 +134,6 @@ public static class AppContextSeed
                 Length = "01:30",
                 AudioFilePath =
                     "/src/backend/Uploads/AudioFiles/8b74701f-2636-42a0-af8e-ff353169a6c2_speak_to_me.mp3",
-                TrackVisualPath =
-                    "/src/backend/Uploads/Pictures/TrackVisuals/8b74701f-2636-42a0-af8e-ff353169a6c2_speak_to_me.jpg",
                 UserId = _userId,
                 AlbumId = _darkSideOfTheMoonAlbumId, // The Dark Side of the Moon
                 FirstGenreId = _rockGenreId,
@@ -150,8 +148,6 @@ public static class AppContextSeed
                 Length = "02:49",
                 AudioFilePath =
                     "/src/backend/Uploads/AudioFiles/d564f3a2-4e56-47aa-82a7-d3e2c4b5d6f7_breathe.mp3",
-                TrackVisualPath =
-                    "/src/backend/Uploads/Pictures/TrackVisuals/d564f3a2-4e56-47aa-82a7-d3e2c4b5d6f7_breathe.jpg",
                 UserId = _userId,
                 AlbumId = _darkSideOfTheMoonAlbumId, // The Dark Side of the Moon
                 FirstGenreId = _rockGenreId,
@@ -166,8 +162,6 @@ public static class AppContextSeed
                 Length = "03:45",
                 AudioFilePath =
                     "/src/backend/Uploads/AudioFiles/11232dcf-2f55-41d2-86f5-07026989e827_on_the_run.mp3",
-                TrackVisualPath =
-                    "/src/backend/Uploads/Pictures/TrackVisuals/11232dcf-2f55-41d2-86f5-07026989e827_on_the_run.jpg",
                 UserId = _userId,
                 AlbumId = _darkSideOfTheMoonAlbumId, // The Dark Side of the Moon
                 FirstGenreId = _rockGenreId, // Rock
@@ -182,8 +176,6 @@ public static class AppContextSeed
                 Length = "07:05",
                 AudioFilePath =
                     "/src/backend/Uploads/AudioFiles/d23d9b8e-50ff-4322-b454-00539e009aa9_time.mp3",
-                TrackVisualPath =
-                    "/src/backend/Uploads/Pictures/TrackVisuals/d23d9b8e-50ff-4322-b454-00539e009aa9_time.jpg",
                 UserId = _userId,
                 AlbumId = _darkSideOfTheMoonAlbumId, // The Dark Side of the Moon
                 FirstGenreId = _rockGenreId, // Rock
@@ -198,8 +190,6 @@ public static class AppContextSeed
                 Length = "05:40",
                 AudioFilePath =
                     "/src/backend/Uploads/AudioFiles/12fba9b9-43de-41fa-9086-5ce2a34cb971_wish_you_were_here.mp3",
-                TrackVisualPath =
-                    "/src/backend/Uploads/Pictures/TrackVisuals/12fba9b9-43de-41fa-9086-5ce2a34cb971_wish_you_were_here.jpg",
                 UserId = _userId,
                 AlbumId = _theWallAlbumId, // The Wall
                 FirstGenreId = _rockGenreId, // Rock
@@ -214,8 +204,6 @@ public static class AppContextSeed
                 Length = "06:21",
                 AudioFilePath =
                     "/src/backend/Uploads/AudioFiles/a4037469-38b4-4fb5-81ab-79049e16de19_comfortably_numb.mp3",
-                TrackVisualPath =
-                    "/src/backend/Uploads/Pictures/TrackVisuals/a4037469-38b4-4fb5-81ab-79049e16de19_comfortably_numb.jpg",
                 UserId = _userId,
                 AlbumId = _theWallAlbumId, // The Wall
                 FirstGenreId = _rockGenreId, // Rock
@@ -230,8 +218,6 @@ public static class AppContextSeed
                 Length = "03:59",
                 AudioFilePath =
                     "/src/backend/Uploads/AudioFiles/ff3f70d3-3dbf-4e72-b44f-94147378bbe6_another_brick_in_the_wall_pt_2.mp3",
-                TrackVisualPath =
-                    "/src/backend/Uploads/Pictures/TrackVisuals/ff3f70d3-3dbf-4e72-b44f-94147378bbe6_another_brick_in_the_wall_pt_2.jpg",
                 UserId = _userId,
                 AlbumId = _theWallAlbumId, // The Wall
                 FirstGenreId = _rockGenreId, // Rock
@@ -246,8 +232,6 @@ public static class AppContextSeed
                 Length = "04:40",
                 AudioFilePath =
                     "/src/backend/Uploads/AudioFiles/385dcdba-b43b-4f46-8d04-51da0b863b1d_hey_you.mp3",
-                TrackVisualPath =
-                    "/src/backend/Uploads/Pictures/TrackVisuals/385dcdba-b43b-4f46-8d04-51da0b863b1d_hey_you.jpg",
                 UserId = _userId,
                 AlbumId = _theWallAlbumId, // The Wall
                 FirstGenreId = _rockGenreId, // Rock
@@ -262,8 +246,6 @@ public static class AppContextSeed
                 Length = "04:10",
                 AudioFilePath =
                     "/src/backend/Uploads/AudioFiles/feb3ccab-ddfe-4e32-92ae-9f34d107c82f_sunshine_of_your_love.mp3",
-                TrackVisualPath =
-                    "/src/backend/Uploads/Pictures/TrackVisuals/feb3ccab-ddfe-4e32-92ae-9f34d107c82f_sunshine_of_your_love.jpg",
                 UserId = _userId,
                 AlbumId = _disraeliGearsAlbumId, // Disraeli Gears
                 FirstGenreId = _rockGenreId, // Rock
@@ -278,8 +260,6 @@ public static class AppContextSeed
                 Length = "04:58",
                 AudioFilePath =
                     "/src/backend/Uploads/AudioFiles/1c4611b8-0483-48af-8a47-eb57215cc6f1_white_room.mp3",
-                TrackVisualPath =
-                    "/src/backend/Uploads/Pictures/TrackVisuals/1c4611b8-0483-48af-8a47-eb57215cc6f1_white_room.jpg",
                 UserId = _userId,
                 AlbumId = _disraeliGearsAlbumId, // Disraeli Gears
                 FirstGenreId = _rockGenreId, // Rock
@@ -294,8 +274,6 @@ public static class AppContextSeed
                 Length = "02:46",
                 AudioFilePath =
                     "/src/backend/Uploads/AudioFiles/e4c4d81a-cbd5-4087-acc5-f23a4cb6315a_tales_of_brave_ulysses.mp3",
-                TrackVisualPath =
-                    "/src/backend/Uploads/Pictures/TrackVisuals/e4c4d81a-cbd5-4087-acc5-f23a4cb6315a_tales_of_brave_ulysses.jpg",
                 UserId = _userId,
                 AlbumId = _disraeliGearsAlbumId, // Disraeli Gears
                 FirstGenreId = _rockGenreId, // Rock

@@ -14,6 +14,7 @@ public class TrackProfile : Profile
     public TrackProfile()
     {
         CreateMap<Track, TrackDto>().ReverseMap();
+        CreateMap<Track, TrackCreateDto>().ReverseMap();
         CreateMap<TrackDto, TrackCardDto>()
             .ForMember(dest => dest.TrackTitle, opt => opt.MapFrom(src => src.TrackTitle))
             .ForMember(dest => dest.Length, opt => opt.MapFrom(src => src.Length))
@@ -23,10 +24,6 @@ public class TrackProfile : Profile
             .ForMember(
                 dest => dest.TrackAudioFilePath,
                 opt => opt.MapFrom(src => src.AudioFilePath)
-            )
-            .ForMember(
-                dest => dest.TrackVisualFilePath,
-                opt => opt.MapFrom(src => src.TrackVisualPath)
             )
             // Ignore the properties that will be set manually
             .ForMember(dest => dest.FirstGenre, opt => opt.Ignore())

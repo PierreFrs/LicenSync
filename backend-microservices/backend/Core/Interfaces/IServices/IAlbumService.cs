@@ -4,11 +4,14 @@
 
 using Core.DTOs.AlbumDTOs;
 using Core.Entities;
+using Microsoft.AspNetCore.Http;
 
 namespace Core.Interfaces.IServices;
 
 public interface IAlbumService : IGenericFileService<Album, AlbumDto>
 {
+    Task<AlbumDto?> CreateAlbumWithVisualFileAsync(AlbumCreateDto albumCreateDto, IFormFile? file);
+
     Task<IReadOnlyList<AlbumDto?>?> GetAlbumListByUserIdAsync(string userId);
 
     Task<IReadOnlyList<AlbumCardDto>?> GetAlbumCardListByUserIdAsync(string userId);

@@ -4,6 +4,7 @@
 
 using AutoMapper;
 using Core.DTOs.AlbumDTOs;
+using Core.DTOs.ArtistDTOs;
 using Core.Entities;
 using Core.Interfaces.IHelpers;
 using Core.Interfaces.IRepositories;
@@ -17,6 +18,7 @@ namespace Infrastructure.Services;
 
 public class AlbumService(
     IAlbumRepository albumRepository,
+    IArtistRepository artistRepository,
     IMapper mapper,
     IFileHelpers fileHelpers,
     IOptions<FileStorageSettings> fileStorageSettings
@@ -24,6 +26,68 @@ public class AlbumService(
     : GenericFileService<Album, AlbumDto>(albumRepository, mapper, fileHelpers),
         IAlbumService
 {
+    public async Task<AlbumDto> CreateAlbumWithVisualFileAsync(AlbumCreateDto albumCreateDto, IFormFile? file)
+    {
+        string? fullVisualFilePath = null;
+        if (file != null)
+        {
+            string visulaFolder = GetFolder();
+            fullVisualFilePath = await fileHelpers.SaveFileAsync(file, visulaFolder);
+        }
+
+        var album = mapper.Map<Album>(albumCreateDto);
+
+        if (fullVisualFilePath != null) 
+        {
+            SetFilePath(album, fullVisualFilePath);
+        }
+
+        if (albumCreateDto.Artists != null && albumCreateDto.Artists.Any())
+        {
+            var artistsToFind = albumCreateDto.Artists
+               .Select(a => new Artist 
+               { 
+                   Firstname = a.Firstname, 
+                   Lastname = a.Lastname
+               })
+               .ToList();
+
+            var existingArtists = await artistRepository.GetListByNamesAsync(artistsToFind);
+
+            foreach (var artistDto in albumCreateDto.Artists)
+            {
+                var existingArtist = existingArtists.FirstOrDefault(a =>
+                string.Equals(a.Firstname, artistDto.Firstname, StringComparison.CurrentCultureIgnoreCase) &&
+                string.Equals(a.Lastname, artistDto.Lastname, StringComparison.CurrentCultureIgnoreCase));
+
+                if (existingArtist != null)
+                {
+                    album.Artists.Add(existingArtist);
+                }
+                else
+                {
+                    var newArtist = new Artist
+                    {
+                        Firstname = artistDto.Firstname,
+                        Lastname = artistDto.Lastname,
+                        CreationDate = DateTime.UtcNow
+                    };
+
+                    album.Artists.Add(newArtist);
+                }
+            }
+        }
+
+        var createdAlbum = await albumRepository.CreateAsync(album);
+
+        if (createdAlbum == null)
+        {
+            throw new ApplicationException("Failed to create album"); ;
+        }
+
+        return mapper.Map<AlbumDto>(createdAlbum);
+    }
+
     public async Task<IReadOnlyList<AlbumDto?>?> GetAlbumListByUserIdAsync(string userId)
     {
         try

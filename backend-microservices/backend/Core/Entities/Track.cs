@@ -19,8 +19,6 @@ public class Track : Tracker
 
     public string? RecordLabel { get; set; }
 
-    public string? TrackVisualPath { get; set; }
-
     public Guid? FirstGenreId { get; set; }
 
     public virtual Genre? FirstGenre { get; set; }

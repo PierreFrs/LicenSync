@@ -27,7 +27,7 @@ public class Album : Tracker
 
     public DateTime ReleaseDate { get; set; }
 
-    public ICollection<Artist> Artists { get; set; } = new List<Artist>();
+    public ICollection<Artist> Artists { get; set; } = [];
 
-    public ICollection<Track> Tracks { get; init; } = new List<Track>();
+    public ICollection<Track> Tracks { get; init; } = [];
 }

@@ -32,12 +32,6 @@ public class TrackConfiguration : IEntityTypeConfiguration<Track>
 
         builder.Property(t => t.RecordLabel).HasColumnName("record_label").HasMaxLength(50);
 
-        builder
-            .Property(t => t.TrackVisualPath)
-            .HasColumnName("track_visual_path")
-            .IsRequired(false)
-            .HasMaxLength(255);
-
         builder.Property(t => t.FirstGenreId).HasColumnName("first_genre_id").IsRequired(false);
 
         builder

@@ -59,7 +59,6 @@ public class TrackRepositoryTests(ITestApplicationDbContext testApplicationDbCon
         Assert.Equal("Polydor", expectedTrack.RecordLabel);
         Assert.Equal("03:04:00", expectedTrack.Length);
         Assert.Equal("/test/file/path/white_room.mp3", expectedTrack.AudioFilePath);
-        Assert.Equal("/test/file/path/white_room_visual.jpg", expectedTrack.TrackVisualPath);
         Assert.Equal(new Guid("c1970414-805f-4f7a-9fdf-7b2de60a38f7"), expectedTrack.FirstGenreId);
         Assert.Equal(
             new Guid("e4689f70-397c-4339-97c6-2fb4e129a155"),
@@ -106,7 +105,6 @@ public class TrackRepositoryTests(ITestApplicationDbContext testApplicationDbCon
         Assert.Equal("Polydor", expectedTrackList[0].RecordLabel);
         Assert.Equal("03:04:00", expectedTrackList[0].Length);
         Assert.Equal("/test/file/path/white_room.mp3", expectedTrackList[0].AudioFilePath);
-        Assert.Equal("/test/file/path/white_room_visual.jpg", expectedTrackList[0].TrackVisualPath);
         Assert.Equal(
             new Guid("c1970414-805f-4f7a-9fdf-7b2de60a38f7"),
             expectedTrackList[0].FirstGenreId
@@ -135,7 +133,6 @@ public class TrackRepositoryTests(ITestApplicationDbContext testApplicationDbCon
             RecordLabel = "Swanyard_Records",
             Length = "03:39:00",
             AudioFilePath = "/test/file/path/pump_up_the_jam.mp3",
-            TrackVisualPath = "/test/file/path/pump_up_the_jam_visual.jpg",
             FirstGenreId = new Guid("7efab38d-e3f1-4299-891e-21593e91a461"),
             SecondaryGenreId = new Guid("ab624391-b0df-429e-918d-21848926bdba"),
             AlbumId = new Guid("d9f45f31-eb53-467c-a643-9c013c253a40"),
@@ -161,7 +158,6 @@ public class TrackRepositoryTests(ITestApplicationDbContext testApplicationDbCon
         Assert.Equal("Swanyard_Records", expectedTrack.RecordLabel);
         Assert.Equal("03:39:00", expectedTrack.Length);
         Assert.Equal("/test/file/path/pump_up_the_jam.mp3", expectedTrack.AudioFilePath);
-        Assert.Equal("/test/file/path/pump_up_the_jam_visual.jpg", expectedTrack.TrackVisualPath);
         Assert.Equal(new Guid("7efab38d-e3f1-4299-891e-21593e91a461"), expectedTrack.FirstGenreId);
         Assert.Equal(
             new Guid("ab624391-b0df-429e-918d-21848926bdba"),
@@ -225,7 +221,6 @@ public class TrackRepositoryTests(ITestApplicationDbContext testApplicationDbCon
             RecordLabel = "Swanyard_Records",
             Length = "03:39:00",
             AudioFilePath = "/test/file/path/pump_up_the_jam.mp3",
-            TrackVisualPath = "/test/file/path/pump_up_the_jam_visual.jpg",
             FirstGenreId = new Guid("7efab38d-e3f1-4299-891e-21593e91a461"),
             SecondaryGenreId = new Guid("ab624391-b0df-429e-918d-21848926bdba"),
             AlbumId = new Guid("d9f45f31-eb53-467c-a643-9c013c253a40"),
@@ -273,7 +268,6 @@ public class TrackRepositoryTests(ITestApplicationDbContext testApplicationDbCon
             RecordLabel = "Swanyard_Records",
             Length = "03:39:00",
             AudioFilePath = "/test/file/path/pump_up_the_jam.mp3",
-            TrackVisualPath = "/test/file/path/pump_up_the_jam_visual.jpg",
             FirstGenreId = new Guid("7efab38d-e3f1-4299-891e-21593e91a461"),
             SecondaryGenreId = new Guid("ab624391-b0df-429e-918d-21848926bdba"),
             AlbumId = new Guid("d9f45f31-eb53-467c-a643-9c013c253a40"),

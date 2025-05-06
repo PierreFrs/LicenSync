@@ -11,6 +11,8 @@ namespace Core.Interfaces.IServices;
 
 public interface ITrackService : IGenericMultiFileService<Track, TrackDto>
 {
+    Task<TrackDto?> CreateWithAudioFileAsync(TrackCreateDto trackCreateDto, IFormFile file);
+
     Task<List<TrackDto>> GetByUserIdAsync(string userId);
 
     Task<IReadOnlyList<TrackCardDto>> GetTrackCardListByUserIdAsync(TrackSpecification specs);

@@ -1,4 +1,5 @@
 ﻿using Core.Interfaces.IRepositories;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,8 +11,11 @@ namespace Core.Interfaces.IUnitOfWork
     public interface IAlbumUploadUnitOfWork : IDisposable
     {
         Task<int> SaveChangesAsync();
-        Task BeginTransactionAsync();
+
+        Task<IDbContextTransaction> BeginTransactionAsync();
+        
         Task CommitTransactionAsync();
+        
         Task RollbackTransactionAsync();
     }
 }

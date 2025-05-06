@@ -3,9 +3,12 @@
 // </copyright>
 
 using Core.DTOs.AlbumDTOs;
+using Core.DTOs.TrackDTOs;
 using Core.Entities;
 using Core.Interfaces.IHelpers;
 using Core.Interfaces.IServices;
+using Core.Interfaces.IUnitOfWork;
+using Infrastructure.Helpers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,35 +18,107 @@ namespace API.Controllers;
 
 public class AlbumController(
     IAlbumService albumService,
+    ITrackService trackService,
     IFileValidationService fileValidationService,
+    IAlbumUploadUnitOfWork albumUploadUnitOfWork,
+    ILogger logger,
     UserManager<AppUser> userManager
 ) : BaseApiController
 {
-    /// POST
+    /// POST Album With Tracks
     /// <summary>
-    /// Creates an object of type Album.
+    /// Creates an object of type Album.and the affiliated Tracks
     /// </summary>
-    /// <returns>Album</returns>
-    [SwaggerResponse(200, "Album created", typeof(AlbumDto))]
+    /// <returns>Success</returns>
+    [SwaggerResponse(200, "Album and Tracks created", typeof(AlbumDto))]
     [SwaggerResponse(401, "Unauthorized")]
     [HttpPost]
     [Route("")]
     [Authorize]
-    public async Task<IActionResult> Create([FromForm] AlbumDto albumDto, IFormFile? file)
+    public async Task<IActionResult> CreateAlbumWithTracks(
+        [FromForm] AlbumCreateDto albumCreateDto,
+        [FromForm] IFormFile? albumVisualFile,
+        [FromForm] IList<IFormFile> trackAudioFilesList)
     {
-        if (file != null)
+        // Content validation 
+        if (albumCreateDto == null)
         {
-            fileValidationService.ValidatePictureFile(file);
+            return BadRequest("Album information is required");
         }
 
-        var album = await albumService.CreateWithFileAsync(albumDto, file);
-
-        if (album == null)
+        if (trackAudioFilesList == null || !trackAudioFilesList.Any())
         {
-            throw new ArgumentException("Something went wrong with the Album creation");
+            return BadRequest("At least one track is required");
         }
 
-        return Ok(album);
+        if (albumCreateDto.Tracks == null || albumCreateDto.Tracks.Count != trackAudioFilesList.Count)
+        {
+            return BadRequest("Number of track metadata must match number of audio files");
+        }
+
+        // Files validation
+        if (albumVisualFile != null)
+        {
+            var (IsValid, ErrorMessage) = fileValidationService.ValidatePictureFile(albumVisualFile);
+            if (!IsValid)
+            {
+                return BadRequest(ErrorMessage);
+            }
+        }
+
+        foreach (var audioFile in trackAudioFilesList)
+        {
+            var (IsValid, ErrorMessage) = fileValidationService.ValidateAudioFile(audioFile);
+            if (!IsValid)
+            {
+                return BadRequest($"Error in file {audioFile.FileName}: {ErrorMessage}");
+            }
+        }
+
+        // Begin Unit of work
+        using var transaction = await albumUploadUnitOfWork.BeginTransactionAsync();
+        try
+        {
+            // Upload album
+            var album = await albumService.CreateAlbumWithVisualFileAsync(albumCreateDto, albumVisualFile) 
+                    ?? throw new ArgumentException("Something went wrong with the Album creation");
+
+            // Upload Tracks
+            var trackFileDictionary = new Dictionary<TrackCreateDto, IFormFile>();
+
+            for (int i = 0; i < albumCreateDto.Tracks.Count; i++)
+            {
+                // Set the AlbumId on each track
+                albumCreateDto.Tracks[i].AlbumId = album.Id;
+                trackFileDictionary.Add(albumCreateDto.Tracks[i], trackAudioFilesList[i]);
+            }
+
+            var createdTracks = new List<TrackDto>();
+
+            foreach (var trackFileEntry in trackFileDictionary)
+            {
+                var trackDto = trackFileEntry.Key;
+                var audioFile = trackFileEntry.Value;
+
+                var track = await trackService.CreateWithAudioFileAsync(trackDto, audioFile)
+                    ?? throw new ArgumentException($"Failed to create track: {trackDto.TrackTitle}");
+                
+                createdTracks.Add(track);
+            }
+
+            await transaction.CommitAsync();
+
+            var result = await albumService.GetAlbumCardByAlbumIdAsync(album.Id);
+            return Ok(result);
+            // Upload track audio file with id
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+
+            logger.LogError(ex, "Error creating album with tracks");
+            return StatusCode(500, $"An error occurred: {ex.Message}");
+        }
     }
 
     /// GET

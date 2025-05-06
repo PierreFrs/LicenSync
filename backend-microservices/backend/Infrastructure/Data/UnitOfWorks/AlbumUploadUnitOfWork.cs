@@ -19,9 +19,10 @@ namespace Infrastructure.Data.UnitOfWorks
             return await context.SaveChangesAsync();
         }
 
-        public async Task BeginTransactionAsync()
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
         {
             _transaction = await context.Database.BeginTransactionAsync();
+            return _transaction;
         }
 
         public async Task CommitTransactionAsync()

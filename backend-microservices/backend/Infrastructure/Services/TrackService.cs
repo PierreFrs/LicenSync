@@ -11,6 +11,7 @@ using Core.Interfaces.IHelpers;
 using Core.Interfaces.IRepositories;
 using Core.Interfaces.IServices;
 using Core.Specifications;
+using Infrastructure.Helpers;
 using Infrastructure.Settings;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
@@ -34,13 +35,38 @@ public class TrackService(
     ),
         ITrackService
 {
-    private readonly IMapper _mapper = mapper;
+    public async Task<TrackDto?> CreateWithAudioFileAsync(TrackCreateDto trackCreateDto, IFormFile file)
+    {
+        string fullAudioFilePath = null;
+        if (file != null)
+        {
+            string audioFolder = GetAudioFolder();
+            fullAudioFilePath = await fileHelpers.SaveFileAsync(file, audioFolder);
+        }
+
+        var track = mapper.Map<Track>(trackCreateDto);
+
+        if (fullAudioFilePath != null)
+        {
+            SetAudioFilePath(track, fullAudioFilePath);
+        }
+
+        var createdTrack = await trackRepository.CreateAsync(track);
+
+        if (createdTrack == null)
+        {
+            return null;
+        }
+
+        return mapper.Map<TrackDto>(createdTrack);
+    }
+
 
     public async Task<List<TrackDto>> GetByUserIdAsync(string userId)
     {
         var specs = new TrackSpecification(userId);
         var tracks = await trackRepository.GetEntityListBySpecificationAsync(specs);
-        return _mapper.Map<List<TrackDto>>(tracks);
+        return mapper.Map<List<TrackDto>>(tracks);
     }
 
     public async Task<IReadOnlyList<TrackCardDto>> GetTrackCardListByUserIdAsync(
@@ -68,7 +94,7 @@ public class TrackService(
             fileValidationService.ValidatePictureFile(visualFile);
         }
 
-        var trackDto = _mapper.Map<TrackDto>(trackCardDto);
+        var trackDto = mapper.Map<TrackCreateDto>(trackCardDto);
         var albumTitle = trackCardDto?.AlbumTitle;
         var firstGenrelabel =
             trackCardDto?.FirstGenre ?? throw new ArgumentException("First genre is required.");
@@ -76,14 +102,12 @@ public class TrackService(
             trackCardDto?.SecondaryGenre
             ?? throw new ArgumentException("Secondary genre is required.");
         var userId = trackCardDto?.UserId ?? throw new ArgumentException("User ID is required.");
-        trackDto.FirstGenreId = await genreService.GetGenreIdByLabelAsync(firstGenrelabel);
-        trackDto.SecondaryGenreId = await genreService.GetGenreIdByLabelAsync(secondaryGenreLabel);
         if (albumTitle != null)
         {
             trackDto.AlbumId = await albumService.GetAlbumIdByTitleAsync(albumTitle, userId);
         }
 
-        var track = await CreateWithFilesAsync(trackDto, audioFile, visualFile) ?? throw new ArgumentException("Error creating track.");
+        var track = await CreateWithAudioFileAsync(trackDto, audioFile) ?? throw new ArgumentException("Error creating track.");
 
         await CreateArtistsForTrack(
             track.Id,
@@ -130,8 +154,10 @@ public class TrackService(
                 throw new ArgumentException($"No track found with ID {id}");
             }
 
+            var album = await albumService.GetByIdAsync(track.Album.Id);
+
             var filePath =
-                track.TrackVisualPath
+                album.AlbumVisualPath
                 ?? throw new ArgumentException("No visual file found for this track.");
 
             var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
@@ -177,17 +203,12 @@ public class TrackService(
 
     protected override string? GetVisualFilePath(Track entity)
     {
-        return entity.TrackVisualPath;
+        return entity.Album.AlbumVisualPath;
     }
 
     protected override void SetAudioFilePath(Track entity, string filePath)
     {
         entity.AudioFilePath = filePath;
-    }
-
-    protected override void SetVisualFilePath(Track entity, string filePath)
-    {
-        entity.TrackVisualPath = filePath;
     }
 
     protected override void SetLength(Track entity, string length)

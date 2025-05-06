@@ -6,7 +6,7 @@
 // Code développé pour le projet : Core
 
 using Core.DTOs.AlbumDTOs;
-using Core.DTOs.CardDTOs;
+using Core.DTOs.TrackDTOs;
 using Core.Entities;
 
 namespace Core.Specifications;
@@ -113,7 +113,6 @@ public class AlbumSpecification : BaseSpecification<Album, AlbumCardDto>
                         .Select(ac => $"{ac.Artist.Firstname} {ac.Artist.Lastname}")
                         .ToList(),
                     TrackAudioFilePath = track.AudioFilePath,
-                    TrackVisualFilePath = track.TrackVisualPath,
                     ReleaseDate = track.ReleaseDate,
                 })
                 .ToList(),

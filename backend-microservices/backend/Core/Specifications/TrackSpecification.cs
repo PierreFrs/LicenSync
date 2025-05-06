@@ -110,7 +110,6 @@ public class TrackSpecification : BaseSpecification<Track, TrackCardDto>
                 .Select(ac => $"{ac.Artist.Firstname} {ac.Artist.Lastname}")
                 .ToList(),
             TrackAudioFilePath = track.AudioFilePath,
-            TrackVisualFilePath = track.TrackVisualPath,
             ReleaseDate = track.ReleaseDate,
         });
     }

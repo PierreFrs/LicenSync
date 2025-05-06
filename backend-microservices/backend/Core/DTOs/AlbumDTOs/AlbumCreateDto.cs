@@ -1,4 +1,5 @@
-﻿using Core.DTOs.TrackDTOs;
+﻿using Core.DTOs.ArtistDTOs;
+using Core.DTOs.TrackDTOs;
 using Core.Entities;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Core.DTOs.AlbumDTOs
 {
-    public class AlbumCreateDto
+    public class AlbumCreateDto : BaseDto
     {
         public string AlbumTitle { get; set; } = string.Empty;
 
@@ -21,6 +22,8 @@ namespace Core.DTOs.AlbumDTOs
         public DateTime ReleaseDate { get; set; }
 
         public string UserId { get; set; } = string.Empty;
+
+        public IList<ArtistCreateDto> Artists { get; set; } = new List<ArtistCreateDto>();
 
         public IList<TrackCreateDto> Tracks { get; set; } = new List<TrackCreateDto>();
     }
